@@ -97,13 +97,6 @@ class game_bord:
         return self.map_
 
 
-
-
-
-
-
-
-
 class card:
     def __init__(self,bordure):
         self.bordure = bordure
@@ -114,6 +107,7 @@ class card:
         return self.bordure
     
     """test run"""
+    
 C1 = card([1,1,1,1]) 
 C2 = card([1,1,1,1]) 
 C3 = card([1,0,0,0]) 
