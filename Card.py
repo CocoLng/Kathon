@@ -13,6 +13,8 @@ class card_action:
         self.description = description
         if hasattr ( card_action , effet ) :
             self.effet = getattr(card_action,effet)
+        else :
+            self.effet = True
         
     def __str__(self):
         res = "Le nom de cette carte action est : "+self.nom
@@ -33,7 +35,8 @@ class card_action_extension(card_action):
     
     def __init__(self,nom,description,effet):
         super().__init__(nom,description,effet)
-        self.effet = getattr(card_action_extension,effet )
+        if self.effet :
+            self.effet = getattr(card_action_extension,effet )
         
     def voleur():
         return print("Ceci est un vol")
@@ -62,7 +65,7 @@ class card_role:
 """
         
         
-C1 = card_action_extension("Pioche Cassée","Cette carte casse la pioche de la cible","voleur")
+C1 = card_action_extension("Pioche Cassée","Cette carte casse la pioche de la cible","break_pioche")
 C1.effet()
 #C1.effet = getattr(effet,"break_pickaxe")
 #doSomething = getattr(user, 'doSomething')
