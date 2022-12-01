@@ -6,7 +6,7 @@ Created on Mon Nov 28 16:00:38 2022
 """
 from abc import ABC  #, abstractmethod
     
-class card(ABC):
+class Card(ABC):
     def __init__ ( self , nom , description ) :
         self.nom = nom
         self.description = description
@@ -18,11 +18,11 @@ class card(ABC):
         
         return res
     
-class card_action(card):
+class CardAction(Card):
     def __init__(self,nom,description,effet):
         super().__init__(nom,description)
-        if hasattr ( card_action , effet ) :
-            self.effet = getattr(card_action,effet)
+        if hasattr ( CardAction , effet ) :
+            self.effet = getattr(CardAction,effet)
         else :
             self.effet = True
 
@@ -36,18 +36,18 @@ class card_action(card):
     def break_lampe():
         return print("test")
     
-class card_action_extension(card_action):
+class CardActionExtension(CardAction):
     def __init__(self,nom,description,effet):
         super().__init__(nom,description,effet)
         if self.effet:
-            self.effet = getattr(card_action_extension,effet )
+            self.effet = getattr(CardActionExtension,effet )
         
     def voleur():
         return print("Ceci est un vol")
        
             
 
-class card_chemins(card):
+class CardChemins(Card):
     def __init__(self,nom,description,bordure,special):
         super().__init__(nom,description)
         self.bordure = bordure
@@ -58,15 +58,15 @@ class card_chemins(card):
         return self.bordure
 
 
-class card_role(card):
+class CardRole(Card):
     def __init__(self,nom,description):
         super().__init__(nom,description)
 
         
         
-C1 = card_action_extension("Pioche Cassée","Cette carte casse la pioche de la cible","break_pioche")
+C1 = CardActionExtension("Pioche Cassée","Cette carte casse la pioche de la cible","break_pioche")
 C1.effet()
-CR = card_role("Mineur", "Tu mines")
+CR = CardRole("Mineur", "Tu mines")
 #C1.effet = getattr(effet,"break_pioche")
 #doSomething = getattr(user, 'doSomething')
 """
