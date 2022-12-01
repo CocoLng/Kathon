@@ -10,8 +10,8 @@ class Card(ABC):
     def __init__ ( self , nom , description ) :
         self.nom = nom
         self.description = description
-        
-                
+
+           
     def __str__(self):
         res = "o-----o "+self.nom+" o-----o"
         res += "\n"+self.description
@@ -19,13 +19,18 @@ class Card(ABC):
         return res
     
 class CardAction(Card):
-    def __init__(self,nom,description,effet):
+    def __init__(self,nom,description,effet=True):#par defaut effet est a définir(True)
         super().__init__(nom,description)
+        self.effet = effet
+        
+    @property
+    def effet ( self ) :
+        return self.__effet
+    @effet.setter
+    def effet ( self,effet ) :
         if hasattr ( CardAction , effet ) :
-            self.effet = getattr(CardAction,effet)
-        else :
-            self.effet = True
-
+            self.__effet = getattr(CardAction,effet)
+             
         
     def quel_joueur():
         print("Sur quel joueur voulez vous appliquer l'effet (taper le chiffre)")
@@ -39,8 +44,18 @@ class CardAction(Card):
 class CardActionExtension(CardAction):
     def __init__(self,nom,description,effet):
         super().__init__(nom,description,effet)
-        if self.effet:
-            self.effet = getattr(CardActionExtension,effet )
+        self.effet = effet
+        
+    @property
+    def effet ( self ) :
+        return self.__effet
+    @effet.setter
+    def effet ( self,effet ) :
+        if effet:#par defaut effet est a définir(True)
+        #si l'effet n'est  pas  contenue dans CardAction alors on regarde s'il l'ai dans celle ci
+            if hasattr ( CardActionExtension , effet ) :
+                self.__effet = getattr(CardActionExtension,effet)
+
         
     def voleur():
         return print("Ceci est un vol")
@@ -52,23 +67,22 @@ class CardChemins(Card):
         super().__init__(nom,description)
         self.bordure = bordure
         self.special = special #non destructible si special, spawn et gold        
-    
-    @property
-    def bordures(self):
-        return self.bordure
 
 
 class CardRole(Card):
     def __init__(self,nom,description):
         super().__init__(nom,description)
+        
+class CardReward(Card):
+    def __init__(self,nom,description,pepite):
+        super().__init__(nom,description)
+        self.pepite = pepite
 
         
         
 C1 = CardActionExtension("Pioche Cassée","Cette carte casse la pioche de la cible","break_pioche")
 C1.effet()
 CR = CardRole("Mineur", "Tu mines")
-#C1.effet = getattr(effet,"break_pioche")
-#doSomething = getattr(user, 'doSomething')
 """
  ...... .. ......... .. ......... .. .. ............................................. ......... .. .
 ................................... .:!!:...........................................................
