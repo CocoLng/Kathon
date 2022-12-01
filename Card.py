@@ -37,7 +37,6 @@ class card_action(card):
         return print("test")
     
 class card_action_extension(card_action):
-    
     def __init__(self,nom,description,effet):
         super().__init__(nom,description,effet)
         if self.effet:
@@ -68,7 +67,7 @@ class card_role(card):
 C1 = card_action_extension("Pioche Cassée","Cette carte casse la pioche de la cible","break_pioche")
 C1.effet()
 CR = card_role("Mineur", "Tu mines")
-#C1.effet = getattr(effet,"break_pickaxe")
+#C1.effet = getattr(effet,"break_pioche")
 #doSomething = getattr(user, 'doSomething')
 """
  ...... .. ......... .. ......... .. .. ............................................. ......... .. .
