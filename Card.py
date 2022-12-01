@@ -4,30 +4,35 @@ Created on Mon Nov 28 16:00:38 2022
 
 @author: coren
 """
-
+from abc import ABC  #, abstractmethod
     
-
-class card_action:
-    def __init__(self,nom,description,effet):
+class card(ABC):
+    def __init__ ( self , nom , description ) :
         self.nom = nom
         self.description = description
+        
+                
+    def __str__(self):
+        res = "o-----o "+self.nom+" o-----o"
+        res += "\n"+self.description
+        
+        return res
+    
+class card_action(card):
+    def __init__(self,nom,description,effet):
+        super().__init__(nom,description)
         if hasattr ( card_action , effet ) :
             self.effet = getattr(card_action,effet)
         else :
             self.effet = True
-        
-    def __str__(self):
-        res = "Le nom de cette carte action est : "+self.nom
-        res += "\n"+self.description
-        
-        return res
+
         
     def quel_joueur():
         print("Sur quel joueur voulez vous appliquer l'effet (taper le chiffre)")
         #mettre une liste de joueur en mode : 1- JeanIve 2-Rodolphe 3-......
-        #return joueur
+        #return joueur  
     def break_pioche():
-        print("1")
+        print("Jtai cassée")
     def break_lampe():
         return print("test")
     
@@ -35,38 +40,34 @@ class card_action_extension(card_action):
     
     def __init__(self,nom,description,effet):
         super().__init__(nom,description,effet)
-        if self.effet :
+        if self.effet:
             self.effet = getattr(card_action_extension,effet )
         
     def voleur():
         return print("Ceci est un vol")
        
             
-"""
-class card_chemins:
-    def __init__(self,bordure,special):
+
+class card_chemins(card):
+    def __init__(self,nom,description,bordure,special):
+        super().__init__(nom,description)
         self.bordure = bordure
-        self.special = special #non destructible si special, spawn et gold
-        self.A = []
-        
-        a activer si on a mis l'extension
-        if extension:
-            self.gemmes
-        
+        self.special = special #non destructible si special, spawn et gold        
     
     @property
     def bordures(self):
         return self.bordure
 
-class card_role:
-    def __init__(self):
 
-        self.A = []
-"""
+class card_role(card):
+    def __init__(self,nom,description):
+        super().__init__(nom,description)
+
         
         
 C1 = card_action_extension("Pioche Cassée","Cette carte casse la pioche de la cible","break_pioche")
 C1.effet()
+CR = card_role("Mineur", "Tu mines")
 #C1.effet = getattr(effet,"break_pickaxe")
 #doSomething = getattr(user, 'doSomething')
 """
