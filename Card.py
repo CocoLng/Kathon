@@ -5,7 +5,7 @@ Created on Mon Nov 28 16:00:38 2022
 @author: coren
 """
 from abc import ABC  #, abstractmethod
-from player import Humain
+from player import Humain, Player
     
 class Card(ABC):
     def __init__ ( self , name , description ) :
@@ -27,48 +27,81 @@ class CardAction(Card):
     @property
     def effect ( self ) :
         return self.__effect
-    @effet.setter
+    @effect.setter
     def effect ( self,effect ) :
         if hasattr ( CardAction , effect ) :
             self.__effect = getattr(CardAction,effect)
              
         
-    def target_player():
-        print("Sur quel joueur voulez vous appliquer l'effet (taper le chiffre)")
+    def target_player(self):
+        print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
         #mettre une liste de joueur en mode : 1- JeanIve 2-Rodolphe 3-......
-        #return joueur  id
+        return P1
         
-    def try_effect(self,name,Target_P):
-        if not self.name in Target_P.statu:
-            return True
-        return False
+    def try_effect(self,effect,Target_P):
+        if not effect in Target_P.statu:
+            return True #si le joueur n'as pas déja l'effet alors on peut lui mettre
+        return False #sinon signaler que c'est impossible
     
 
-    def break_pickaxe(self):
+    def breaker(self,effect_play):
         Target_P = self.target_player()
-        if self.try_effect(Target_P):
-            Target_P.statu.append("pioche")
-            Player.supp_carte()
-            return print("Jtai cassée")
+        if self.try_effect(effect_play,Target_P):
+            Target_P.statu.append(effect_play)
+            #Target_P.supp_carte()
+            return print(f'{effect_play} de {Target_P.name} a était cassée 👾')
         
+    def repair(self,effect_play,effect_play_2=False):
+        Done = False
+        Target_P = self.target_player() 
+        if not(self.try_effect(effect_play,Target_P)):
+            Target_P.statu.remove(effect_play)
+            #Target_P.supp_carte()
+            print(f'{effect_play} de {Target_P.name} a était réparée 🔧')
+        if not(self.try_effect(effect_play_2,Target_P)):
+            Target_P.statu.remove(effect_play_2)
+            print(f'{effect_play_2} de {Target_P.name} a était réparée 🔧')
+            
+        if Done:
+            return True
+        return False
         
-    def break_light():
-        return print("test")
+ 
+    def break_pickaxe(self): 
+        self.breaker("Pickaxe")
+    def break_light(self):
+        self.breaker("Light")
+    def break_cart(self):
+        self.breaker("Cart")
+
+    def repair_pickaxe(self): 
+        self.repair("Pickaxe")
+    def repair_light(self):
+        self.repair("Light")
+    def repair_cart(self):
+        self.repair("Cart")
+
+    def repair_pickaxe_light(self):
+        self.repair("Light","Pickaxe")
+    def repair_cart_light(self):
+        self.repair("Light","Cart")
+    def repair_pickaxe_cart(self):
+        self.repair("Cart","Pickaxe")
     
 class CardActionExtension(CardAction):
-    def __init__(self,nom,description,effet):
-        super().__init__(nom,description,effet)
-        self.effet = effet
+    def __init__(self,name,description,effect):
+        super().__init__(name,description,effect)
+        self.effect = effect
         
     @property
-    def effet ( self ) :
-        return self.__effet
-    @effet.setter
-    def effet ( self,effet ) :
-        if effet:#par defaut effet est a définir(True)
+    def effect ( self ) :
+        return self.__effect
+    @effect.setter
+    def effect ( self,effect ) :
+        if effect:#par defaut effet est a définir(True)
         #si l'effet n'est  pas  contenue dans CardAction alors on regarde s'il l'ai dans celle ci
-            if hasattr ( CardActionExtension , effet ) :
-                self.__effet = getattr(CardActionExtension,effet)
+            if hasattr ( CardActionExtension , effect ) :
+                self.__effect = getattr(CardActionExtension,effect)
 
         
     def voleur():
@@ -77,25 +110,26 @@ class CardActionExtension(CardAction):
             
 
 class CardChemins(Card):
-    def __init__(self,nom,description,bordure,special):
-        super().__init__(nom,description)
+    def __init__(self,name,description,bordure,special):
+        super().__init__(name,description)
         self.bordure = bordure
         self.special = special #non destructible si special, spawn et gold        
 
 
 class CardRole(Card):
-    def __init__(self,nom,description):
-        super().__init__(nom,description)
+    def __init__(self,name,description):
+        super().__init__(name,description)
         
 class CardReward(Card):
-    def __init__(self,nom,description,pepite):
-        super().__init__(nom,description)
+    def __init__(self,name,description,pepite):
+        super().__init__(name,description)
         self.pepite = pepite
 
         
 P1= Humain("Jeanazsd",2)
-# C1 = CardActionExtension("Pioche Cassée","Cette carte casse la pioche de la cible","break_pioche")
-# C1.effet()
+C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","break_pickaxe")
+C2 = CardActionExtension("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_cart_light")
+# C1.effect()
 # CR = CardRole("Mineur", "Tu mines")
 """
  ...... .. ......... .. ......... .. .. ............................................. ......... .. .
