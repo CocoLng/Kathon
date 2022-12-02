@@ -9,19 +9,19 @@ from player import Human
 #from board_game import BordGame
     
 class Card(ABC):
-    def __init__ ( self , name , description ) :
+    def __init__ ( self , name , description ) : #chaque carte possède un nom et une description
         self.name = name
         self.description = description
 
            
-    def __str__(self):
+    def __str__(self): 
         res = "o-----o "+self.name+" o-----o"
         res += "\n"+self.description
         
         return res
     
 class CardAction(Card):
-    def __init__(self,name,description,effect):#par defaut effet est a définir(True)
+    def __init__(self,name,description,effect): #les cartes action sont des cartes avec un effet
         super().__init__(name,description)
         self.effect = effect
         
@@ -30,76 +30,78 @@ class CardAction(Card):
         return self.__effect
     @effect.setter
     def effect ( self,effect ) :
-        self.__effect = getattr(self.__class__,effect)
+        self.__effect = getattr(self.__class__,effect) #stock le pointeur de la function désirée
              
         
+###############################################################################
+#                           Fonctions Communes                                #
+###############################################################################
+
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
         #mettre une liste de joueur en mode : 1- JeanIve 2-Rodolphe 3-......
         return P1
+    
+    def input_player(self,min,max): #demande un input entre min et max et return le res
+        while True:
+            try: #redemande jusqu'a validité
+                selected = input('Taper le chiffre désiré : ')
+                selected = int(selected)
+                if selected < min or selected > max:
+                    raise ValueError
+                break
+            except ValueError :
+                print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {min} et {max}\n')
+        return selected
         
-    def try_effect(self,effect,Target_P):
-        if not effect in Target_P.statuts:
-            return True #si le joueur n'as pas déja l'effet alors on peut lui mettre
-        return False #sinon signaler que c'est impossible
+    def has_effect(self,effect,Target_P):
+        if effect in Target_P.statuts: #regarde si le Target Player possède deja l'effet
+            return True 
+        return False 
     
+    def edit_effect(self,ajout,effect_play,Target_P):
+        Done = False
+        if ajout and not(self.has_effect(effect_play,Target_P)):#si le joueur n'as pas déja l'effet alors on peut lui mettre
+            Target_P.statuts.append(effect_play)
+            Done = True
+        if not(ajout) and self.has_effect(effect_play,Target_P):#si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
+            Target_P.statuts.remove(effect_play)
+            Done = True
+        return Done
+        
     
+ 
 ###############################################################################
 #                           Break & Repair Outils                             #
 ###############################################################################
-   
-    def breaker(self,effect_play,Target_P):
-        Done = False
-        if self.try_effect(effect_play,Target_P):
-            Target_P.statuts.append(effect_play)
-            print(f'{effect_play} de {Target_P.name} a était cassée 👾')
-            Done = True
-        return Done
-        
-    def repair(self,effect_play,Target_P):
-        Done = False
-        if not(self.try_effect(effect_play,Target_P)):
-            Target_P.statuts.remove(effect_play)
-            print(f'{effect_play} de {Target_P.name} a était réparée 🔧')
-            Done = True
-        return Done
-        
- 
-    def break_pickaxe(self):
-        Target_P = self.target_player() 
-        return self.breaker("Pickaxe",Target_P)
-    def break_light(self):
-        Target_P = self.target_player() 
-        return self.breaker("Light",Target_P)
-    def break_cart(self):
-        Target_P = self.target_player() 
-        return self.breaker("Cart",Target_P)
+    """
+    Nom des Cartes qui impactent les outils :
+    
+        Cassage de Pioche || Reparation de Pioche
+        Cassage de Lanterne || Reparation de Lanterne
+        Cassage de Wagon || Reparation de Wagon
 
-    def repair_pickaxe(self): 
-        Target_P = self.target_player() 
-        return self.repair("Pickaxe",Target_P)
-    def repair_light(self):
-        Target_P = self.target_player() 
-        return self.repair("Light",Target_P)
-    def repair_cart(self):
-        Target_P = self.target_player() 
-        return self.repair("Cart",Target_P)
+    Les cartes qui contiennent deux réparations : 
+        Reparation de Pioche et Lanterne
+        Reparation de Pioche et Wagon
+        Reparation de Wagon et Lanterne
+    Les noms peuvent être inversées
+    
+    Lors de l'initialisation le nom[0] de la carte dit si on casse ou repare
+    Le nom[3] nous dit quel est l'outil ciblé'
+    L'effet est lui stocker dans l'attribut "effet" qui pointe vers la fonction "impact_tools"
+    """
 
-    def repair_pickaxe_light(self):
-        Target_P = self.target_player() 
-        Done = self.repair("Pickaxe",Target_P)
-        Done = Done or self.repair("Light",Target_P)
-        return Done
-    def repair_cart_light(self):
-        Target_P = self.target_player() 
-        Done = self.repair("Cart",Target_P)
-        Done = Done or self.repair("Light",Target_P)
-        return Done
-    def repair_pickaxe_cart(self):
-        Target_P = self.target_player() 
-        Done = self.repair("Pickaxe",Target_P)
-        Done = Done or self.repair("Cart",Target_P)
-        return Done
+    def impact_tools(self):
+        Done = False
+        Target_P = self.target_player()
+        Name_list = self.name.split()
+        if Name_list[0]=="Cassage" : # Si nus ne cassons pas nous réparons
+            Done =  self.edit_effect(True,Name_list[2],Target_P)
+        elif len(Name_list)==5 : # Si nous avons deux effet pour la réparation
+            Done =  self.edit_effect(False,Name_list[4],Target_P)
+        Done =  Done or self.edit_effect(False,Name_list[2],Target_P)
+        return Done       
 
 ###############################################################################
 #                         Avalanche & Plan Secret                             #
@@ -107,20 +109,17 @@ class CardAction(Card):
 
     def collapsing(self):
         Done = False
-        #del_card(mab,pos)
-        print("A")
+        #appel de la fonction pos
+        #appelde la fct del carte if not special
+        Done = True
+        return Done
         
     def secret_plan(self):
         Done = False
-        while True:
-            try:
-                selected = int(input('Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas'))
-                if selected < 1 or selected > 3:
-                    raise ValueError
-                break
-            except ValueError:
-                print('Valeur Incorrect, réssayer\n')
+        print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
+        selected = self.input_player(0,3)
         #flip card
+        print(selected)
         Done = True
         
 ###############################################################################
@@ -131,10 +130,51 @@ class CardActionExtension(CardAction):
         super().__init__(name,description,effect)
      
         
-    def voleur(self):
+    def thief(self):
         return print("Ceci est un vol")
+    
+    def no_thief(self):
+        Done = False
+        Done = True
+        return Done
+    
+    def inspect(self):
+        Done = False
+        Done = True
+        return Done
+    
+    def switch_role(self):
+        Done = False
+        Done = True
+        return Done
+    
+    def switch_hand(self):
+        Done = False
+        Done = True
+        return Done
        
-            
+    def freedom(self):
+        Done = False
+        Target_P = self.target_player() 
+        if not(self.has_effect(effect_play,Target_P)):
+            Target_P.statuts.append("Jail")
+            print(f'{Target_P.name} a était emprisoné')
+            Done = True
+        return Done
+    
+    def jail_time(self):
+        Done = False
+        Target_P = self.target_player() 
+        if not(self.has_effect(effect_play,Target_P)):
+            Target_P.statuts.append("Jail")
+            print(f'{Target_P.name} a était emprisoné')
+            Done = True
+        return Done
+        
+     
+"""
+Vous pouvez ajouter vos effet personnels ici, puis crée la carte en l'ajoutant dans /ressource/card_ini.txt
+"""       
 
 class CardChemins(Card):
     def __init__(self,name,description,borders,special,reveal):
@@ -155,40 +195,5 @@ class CardReward(Card):
 
         
 P1= Human("Jeanazsd")
-C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","voleur")
-C2 = CardAction("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_pickaxe_light")
-# C1.effect(C1)
-# CR = CardRole("Mineur", "Tu mines")
-"""
- ...... .. ......... .. ......... .. .. ............................................. ......... .. .
-................................... .:!!:...........................................................
-................................ .:!JP?:............................................................
-.............................. .^?Y55~ .............................................................
-............................. ^?J?5Y: ..............................................................
-........................... .7J!?5J.................................................................
-..........................:75G?J57 ...........J!:?^.................................................
-........................ ^55P5PGP7^:.  .. .?:.....?^ ...............................................
-.........................P5GJ??5GY5YJ?!:..?J.  ...!5:.. ............................................
-........................:GPGPP5G5YYYYY55YY!:^~7JJYY55J?~............................................
-........................~PYYPY7?JY5555YYPPPJY5YYYYYYYJ755: .........................................
-....................... Y5YY5.  ..:^~!7P5P5YYY5Y5PJPYYJ?JY5~ .......................................
-.......................:PYYP^ ......:.^GGP?!77777G5PJ77???GP^:. ...  ...............................
-...................... !PJP! ......J?JJY#Y777775?J?!!P?~~~~7P5Y55YJJ!:...  .........................
-...................... ?55J .......77JYY!~~^^^^7??JY?YJ??!~^~PG&BBGGBJJJ?77~:.......................
-...................... JP5........ :~~57^~~7???7???7777!!J?~!5B#&#BGYJJJJPP5? ......................
-...................... ?B^ ..... ^J5YP5J7!~7J?7!~~~~~~~~^:7J~?5&B#?7JY555P?5^ ......................
-.......................~Y ......^PYYJP!!5PY777Y7~~~~~~~~~::YJJP#B#! ..~7J5?^ .......................
-............................... YPYY5B5~77!!!!~~~~~~~~~~~^:YPP#BB#^ ..  ............................
-................................J55?YGP5??7!~~~~~~~~~~~~~~~PG??5BY..................................
-...............................^~5Y?PGP5P5YJ?7!~~~~~~~~~~~JPPP~!!...................................
-...............................GBBBBB#PPPGBBGGP5YJ?!~~~~~JBGGB?~ ...................................
-.............................. J#BBGBGGBPPBBBGPPGGGGPJ~~YG55PG#G....................................
-.............................. :GBBPBGB#GGGBBGGGGGGGGBPPBGGGPP#Y....................................
-................................P#BB#GPBGPGBBGPPPPPPPPGPPPPGB##~ ...................................
-.............................. ^G#B##BGBBB#BGPPPPPPPPPPPPGGG#5?.....................................
-................................:?Y7^GPPPPPGGGPJ??JJJPBBBGGB?  .....................................
-..................................   5G5PBG57^.  .   .?PYYP? .......................................
-.................................... ?5JYJ~. ..........Y5P7  .......................................
-.................................... 7BGY~:........... J##GPJ~......................................
-.. .. ...... .. .. ...... .. .. .....?BBB#B5~ ..... .. ^7!77!^.. .. ......... .. ...... .. .. ......
-"""
+C1 = CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools")
+C2 = CardAction("Reparation de Pioche et Lanterne","Cette carte casse la pioche de la cible","impact_tools")
