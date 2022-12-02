@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod 
-
+from Card import CardChemins
 
 class Player(ABC):
     
@@ -7,7 +7,7 @@ class Player(ABC):
         self.score = 0
         self.name = name
         self.__main = []
-        self.statu = []
+        self.statuts = []
         self.__carte_max = 5
     
     def __str__ (self):
@@ -15,11 +15,11 @@ class Player(ABC):
         return Aff+f"\n name = {self.name}"+f"\n score = {self.score}"+f"\n card = {self.__main}"+'\n'+Aff
        
     @property    
-    def pick_card(self):
+    def add_card(self):
         return self.__main
     
-    @pick_card.setter
-    def pick_card(self,carte):
+    @add_card.setter
+    def add_card(self,carte):
         self.__main.append(carte) if len(self.__main) < self.__carte_max else print("deffauser, car trop de cartes")        
         
     @property
@@ -49,14 +49,21 @@ class Human(Player):
         self.__main = []
 
     def play_card(self):
-            return input("ou voulez vous poser votre carte ?")
-    
-    def sel_choice(self):
-            return input("quelle action voulez vous faire ?")
+         ID = input("quelle carte voulez vous jouer ?")
+         try:
+             card = self.__main[ID]
+         except:
+             print("print vous n'avez pas asser de cartes")
+             
+         if hasattr(CardChemins,card):
+            if self.__statuts != []: 
+                return False
+         return True
+        
        
     def del_card (self,card):
         
-            if card in self.main:
+            if card in self.__main:
                 self.__main.remove(card)
             else: 
                return print("cette carte n est pas presente dans votre main")
