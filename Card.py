@@ -106,11 +106,23 @@ class CardAction(Card):
 ###############################################################################
 
     def collapsing(self):
+        Done = False
         #del_card(mab,pos)
         print("A")
         
     def secret_plan(self):
-        self.repair("Light","Cart")
+        Done = False
+        while True:
+            try:
+                selected = int(input('Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas'))
+                if selected < 1 or selected > 3:
+                    raise ValueError
+                break
+            except ValueError:
+                print('Valeur Incorrect, réssayer\n')
+        #flip card
+        Done = True
+        
 ###############################################################################
 #                         Chargement d'une Extenion                           #
 ###############################################################################    
@@ -119,15 +131,16 @@ class CardActionExtension(CardAction):
         super().__init__(name,description,effect)
      
         
-    def voleur():
+    def voleur(self):
         return print("Ceci est un vol")
        
             
 
 class CardChemins(Card):
-    def __init__(self,name,description,borders,special):
+    def __init__(self,name,description,borders,special,reveal):
         super().__init__(name,description)
         self.borders = borders
+        self.reveal = reveal
         self.special = special #non destructible si special, spawn et gold        
 
 
@@ -142,7 +155,7 @@ class CardReward(Card):
 
         
 P1= Human("Jeanazsd")
-C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","break_light")
+C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","voleur")
 C2 = CardAction("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_pickaxe_light")
 # C1.effect(C1)
 # CR = CardRole("Mineur", "Tu mines")
