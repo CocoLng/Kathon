@@ -112,7 +112,9 @@ class CardAction(Card):
         
     def secret_plan(self):
         self.repair("Light","Cart")
-    
+###############################################################################
+#                         Chargement d'une Extenion                           #
+###############################################################################    
 class CardActionExtension(CardAction):
     def __init__(self,name,description,effect):
         super().__init__(name,description,effect)
