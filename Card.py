@@ -5,7 +5,8 @@ Created on Mon Nov 28 16:00:38 2022
 @author: coren
 """
 from abc import ABC  #, abstractmethod
-from player import Humain
+from player import Human
+#from board_game import BordGame
     
 class Card(ABC):
     def __init__ ( self , name , description ) :
@@ -20,7 +21,7 @@ class Card(ABC):
         return res
     
 class CardAction(Card):
-    def __init__(self,name,description,effect=True):#par defaut effet est a définir(True)
+    def __init__(self,name,description,effect):#par defaut effet est a définir(True)
         super().__init__(name,description)
         self.effect = effect
         
@@ -29,7 +30,7 @@ class CardAction(Card):
         return self.__effect
     @effect.setter
     def effect ( self,effect ) :
-        if hasattr ( CardAction , effect ) :
+        if hasattr ( self.name.__class__.__name__ , effect ) :
             self.__effect = getattr(CardAction,effect)
              
         
@@ -106,7 +107,8 @@ class CardAction(Card):
 ###############################################################################
 
     def collapsing(self):
-        self.repair("Light","Pickaxe")
+        #del_card(mab,pos)
+        print("A")
         
     def secret_plan(self):
         self.repair("Light","Cart")
@@ -116,18 +118,7 @@ class CardAction(Card):
 class CardActionExtension(CardAction):
     def __init__(self,name,description,effect):
         super().__init__(name,description,effect)
-        self.effect = effect
-        
-    @property
-    def effect ( self ) :
-        return self.__effect
-    @effect.setter
-    def effect ( self,effect ) :
-        if effect:#par defaut effet est a définir(True)
-        #si l'effet n'est  pas  contenue dans CardAction alors on regarde s'il l'ai dans celle ci
-            if hasattr ( CardActionExtension , effect ) :
-                self.__effect = getattr(CardActionExtension,effect)
-
+     
         
     def voleur():
         return print("Ceci est un vol")
@@ -151,7 +142,7 @@ class CardReward(Card):
         self.pepite = pepite
 
         
-P1= Humain("Jeanazsd",2)
+P1= Human("Jeanazsd")
 C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","break_light")
 C2 = CardActionExtension("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_pickaxe_light")
 # C1.effect(C1)
