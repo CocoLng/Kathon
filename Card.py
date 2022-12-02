@@ -30,8 +30,7 @@ class CardAction(Card):
         return self.__effect
     @effect.setter
     def effect ( self,effect ) :
-        if hasattr ( self.name.__class__.__name__ , effect ) :
-            self.__effect = getattr(CardAction,effect)
+        self.__effect = getattr(self.__class__,effect)
              
         
     def target_player(self):
@@ -40,7 +39,7 @@ class CardAction(Card):
         return P1
         
     def try_effect(self,effect,Target_P):
-        if not effect in Target_P.statu:
+        if not effect in Target_P.statuts:
             return True #si le joueur n'as pas déja l'effet alors on peut lui mettre
         return False #sinon signaler que c'est impossible
     
@@ -52,7 +51,7 @@ class CardAction(Card):
     def breaker(self,effect_play,Target_P):
         Done = False
         if self.try_effect(effect_play,Target_P):
-            Target_P.statu.append(effect_play)
+            Target_P.statuts.append(effect_play)
             print(f'{effect_play} de {Target_P.name} a était cassée 👾')
             Done = True
         return Done
@@ -60,7 +59,7 @@ class CardAction(Card):
     def repair(self,effect_play,Target_P):
         Done = False
         if not(self.try_effect(effect_play,Target_P)):
-            Target_P.statu.remove(effect_play)
+            Target_P.statuts.remove(effect_play)
             print(f'{effect_play} de {Target_P.name} a était réparée 🔧')
             Done = True
         return Done
@@ -126,9 +125,9 @@ class CardActionExtension(CardAction):
             
 
 class CardChemins(Card):
-    def __init__(self,name,description,bordure,special):
+    def __init__(self,name,description,borders,special):
         super().__init__(name,description)
-        self.bordure = bordure
+        self.borders = borders
         self.special = special #non destructible si special, spawn et gold        
 
 
@@ -144,7 +143,7 @@ class CardReward(Card):
         
 P1= Human("Jeanazsd")
 C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","break_light")
-C2 = CardActionExtension("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_pickaxe_light")
+C2 = CardAction("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_pickaxe_light")
 # C1.effect(C1)
 # CR = CardRole("Mineur", "Tu mines")
 """
