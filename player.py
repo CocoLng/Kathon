@@ -65,4 +65,3 @@ class Human(Player):
 le score doit etre une input qui ne fonctione pas sur spider
 
 """
-P1 = Human("antoine")
