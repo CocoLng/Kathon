@@ -8,7 +8,7 @@ class BordGame:
     
     #permet de verifier si la carte poser est en acord avec les regles de conection de cartes
     def card_setable(self,card,pos):
-        chemin = card
+        chemin = card.chemin
         X = [self.map_[pos[0]+ ind - 2][pos[1]].chemin[ind - 2] if ind%2 != 0 else self.map_[pos[0]][pos[1] + ind - 1].chemin[ind - 2] for ind in range(len(chemin))]
 
         c = [True if i == j  else False for i,j in zip(chemin,X)]
