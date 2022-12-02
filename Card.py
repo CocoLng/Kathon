@@ -5,7 +5,7 @@ Created on Mon Nov 28 16:00:38 2022
 @author: coren
 """
 from abc import ABC  #, abstractmethod
-from player import Humain, Player
+from player import Humain
     
 class Card(ABC):
     def __init__ ( self , name , description ) :
@@ -43,50 +43,72 @@ class CardAction(Card):
             return True #si le joueur n'as pas déja l'effet alors on peut lui mettre
         return False #sinon signaler que c'est impossible
     
+###############################################################################
+#                           Break & Repair Outils                             #
+###############################################################################
+   
 
-    def breaker(self,effect_play):
-        Target_P = self.target_player()
+    def breaker(self,effect_play,Target_P):
+        Done = False
         if self.try_effect(effect_play,Target_P):
             Target_P.statu.append(effect_play)
             #Target_P.supp_carte()
-            return print(f'{effect_play} de {Target_P.name} a était cassée 👾')
+            print(f'{effect_play} de {Target_P.name} a était cassée 👾')
+            Done = True
+        return Done
         
-    def repair(self,effect_play,effect_play_2=False):
+    def repair(self,effect_play,Target_P):
         Done = False
-        Target_P = self.target_player() 
         if not(self.try_effect(effect_play,Target_P)):
             Target_P.statu.remove(effect_play)
             #Target_P.supp_carte()
             print(f'{effect_play} de {Target_P.name} a était réparée 🔧')
-        if not(self.try_effect(effect_play_2,Target_P)):
-            Target_P.statu.remove(effect_play_2)
-            print(f'{effect_play_2} de {Target_P.name} a était réparée 🔧')
-            
-        if Done:
-            return True
-        return False
+            Done = True
+        return Done
         
  
-    def break_pickaxe(self): 
-        self.breaker("Pickaxe")
+    def break_pickaxe(self):
+        Target_P = self.target_player() 
+        self.breaker("Pickaxe",Target_P)
     def break_light(self):
-        self.breaker("Light")
+        Target_P = self.target_player() 
+        self.breaker("Light",Target_P)
     def break_cart(self):
-        self.breaker("Cart")
+        Target_P = self.target_player() 
+        self.breaker("Cart",Target_P)
 
     def repair_pickaxe(self): 
-        self.repair("Pickaxe")
+        Target_P = self.target_player() 
+        self.repair("Pickaxe",Target_P)
     def repair_light(self):
-        self.repair("Light")
+        Target_P = self.target_player() 
+        self.repair("Light",Target_P)
     def repair_cart(self):
-        self.repair("Cart")
+        Target_P = self.target_player() 
+        self.repair("Cart",Target_P)
 
     def repair_pickaxe_light(self):
-        self.repair("Light","Pickaxe")
+        Target_P = self.target_player() 
+        self.repair("Pickaxe",Target_P)
+        self.repair("Light",Target_P)
     def repair_cart_light(self):
-        self.repair("Light","Cart")
+        Target_P = self.target_player() 
+        self.repair("Cart",Target_P)
+        self.repair("Light",Target_P)
     def repair_pickaxe_cart(self):
-        self.repair("Cart","Pickaxe")
+        Target_P = self.target_player() 
+        self.repair("Pickaxe",Target_P)
+        self.repair("Cart",Target_P)
+
+###############################################################################
+#                         Avalanche & Plan Secret                             #
+###############################################################################
+
+    def collapsing(self):
+        self.repair("Light","Pickaxe")
+        
+    def secret_plan(self):
+        self.repair("Light","Cart")
     
 class CardActionExtension(CardAction):
     def __init__(self,name,description,effect):
@@ -128,7 +150,7 @@ class CardReward(Card):
         
 P1= Humain("Jeanazsd",2)
 C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","break_pickaxe")
-C2 = CardActionExtension("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_cart_light")
+C2 = CardActionExtension("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_pickaxe_light")
 # C1.effect()
 # CR = CardRole("Mineur", "Tu mines")
 """
