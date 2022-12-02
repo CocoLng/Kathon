@@ -48,7 +48,6 @@ class CardAction(Card):
 #                           Break & Repair Outils                             #
 ###############################################################################
    
-
     def breaker(self,effect_play,Target_P):
         Done = False
         if self.try_effect(effect_play,Target_P):
@@ -69,7 +68,6 @@ class CardAction(Card):
     def break_pickaxe(self):
         Target_P = self.target_player() 
         return self.breaker("Pickaxe",Target_P)
-        
     def break_light(self):
         Target_P = self.target_player() 
         return self.breaker("Light",Target_P)
@@ -154,7 +152,7 @@ class CardReward(Card):
 
         
 P1= Humain("Jeanazsd",2)
-C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","break_cart")
+C1 = CardActionExtension("Cassage de Pioche","Cette carte casse la pioche de la cible","break_light")
 C2 = CardActionExtension("Réparage de Pioche","Cette carte casse la pioche de la cible","repair_pickaxe_light")
 # C1.effect(C1)
 # CR = CardRole("Mineur", "Tu mines")
