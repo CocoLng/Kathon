@@ -1,125 +1,85 @@
-"""
-project pyhton 2022 M1
-"""
 
-
-class game_bord:
-    ### ID = identiter de l'objet
-    ### pose = position ou l on veux poser la carte
+class BordGame:
+    
     def __init__(self):
-        self.map_ = [[[]]]
-        self.init = True
-        self.tableau_carte = ''
-                    
+        self.map_ = [[]]
         
-    def __str__(self):
+    def card_setable(self,card,pos):
+        chemin = card
+        X = [self.map_[pos[0]+ ind - 2][pos[1]].chemin[ind - 2] if ind%2 != 0 else self.map_[pos[0]][pos[1] + ind - 1].chemin[ind - 2] for ind in range(len(chemin))]
+
+        c = [True if i == j  else False for i,j in zip(chemin,X)]
         
-        for i in range(len(self.map_[0])):
-            tab1 = ""
-            tab2 = ""
-            tab3 = ""
-            for j in range(len(self.map_)):
-                if self.map_[j][i] != []:        
-                    tab1 += "( " + ("|" if self.map_[j][i].bordures[0] == 1 else ' ') + ' )'  
-                    tab2 += ("--" if self.map_[j][i].bordures[1] == 1 else '( ') +'x'+ ('--' if self.map_[j][i].bordures[3] == 1 else ' )')  
-                    tab3 += "( " + ("|" if self.map_[j][i].bordures[2] == 1 else ' ') + ' )'      
-                else:
-                    tab1 += '(   )'
-                    tab2 += '(   )'  
-                    tab3 += '(   )'  
-                    
-            self.tableau_carte =  self.tableau_carte  + '\n' + tab1 +'\n'+ tab2 +'\n'+ tab3
+        if False in c:
+            return False
+        return True
    
-        return(print(self.tableau_carte))
+    
+    def del_card(self,pos):
+        self.map_[pos[0]][pos[1]] = []
+       
+    def add_card(self,card,pos):
+
+        if len(self.map_) <= pos[0] or pos[0] < 0 :Xa = True 
+        else: Xa = False
         
+        if len(self.map_[0]) <= pos[1] or pos[1] < 0:Ya = True 
+        else: Ya = False
         
-        
-    def del_connection(self,pose):
-        if self.map_[pose[0]][pose[1]] != []:
-            self.map_[pose[0]][pose[1]] = []
+        if not(Xa) and not(Ya): 
+            
+            if  self.map_[pos[0]][pos[1]] == []:
+                 self.map_[pos[0]][pos[1]] = card
+                
+            else: print("carte deja presente")
+            
         else:
-            return print("il n'y a pas de carte a supprimer")
-        
-
-
-    def connection(self,pose,carte,ID):
-        
-        ## genere les conections entre les carte une case a 8 ports 4 entrant 4 sortant 
-        ## ils permettent de savoir si les chemins sont detaché et qu'elle equipe a gagné 
-        ## la manche
-        decalagex = 0
-        decalagey = 0        
-        verife = [-1,1]
-        for i in verife:
-           
-            try:
-                ## verification en x
-                ##carte_cote = map_[x][y]  
-                if pose[0]+i < 0:    
-                    self.map_.insert(0,[[]*len(self.map_[0])])
-                    decalagex = 1
-                
-                carte_cote_x = self.map_[pose[0] + i + decalagex][pose[1] + decalagey]
-
-                if carte_cote_x != []:
-                    if  carte.bordures[i+2] != carte_cote_x.bordures[i] and carte_cote_x.bordures[i] != []:
-                        return print("vous pouvez pas poser la carte")
-
-            except:
-                self.map_.append([]) 
-                for i in range(len(self.map_[0])):
-                    self.map_[len(self.map_)-1].append([])                 
-
-
-        for i in verife:
-            try:
-                ## verification en y
-                ##carte_cote = map_[x][y]    
-                if pose[1]+i < 0:  
-                    for i in range(len(self.map_)):
-                        self.map_[i].insert(0,[])
-                        decalagey = 1
+            a = pos[0]
+            b = pos[1]
+            if Xa:
+                L = len(self.map_[0])
+                if pos[0] >= 0:
+                    Xlen = pos[0]-len(self.map_) 
+                else:
+                    a = 0
+                    Xlen = pos[0]+1
                     
-                carte_cote_y = self.map_[pose[0] + decalagex] [pose[1]+ i + decalagey]
+                [self.map_.append([]) if a > 0 else self.map_.insert(0,[]) for i in range(abs(Xlen)+1)]
 
-                if carte_cote_y != []:
-                    if  carte.bordures[i+1] != carte_cote_y.bordures[i+3] and  carte_cote_y.bordures[i+3] != '':
-                        return print("vous pouvez pas poser la carte") 
-            except:
-                for i in range(len(self.map_)):
-                    self.map_[i].append([])
-                
-        self.map_[pose[0]+ decalagex][pose[1]+ decalagey] = carte
-     
-   
-    @property
-    def MAP(self):
-        return self.map_
+                for k in range(len(self.map_)):   
+                        if len(self.map_[k]) < L:
+                            [self.map_[k].append([]) if pos[1] > i else self.map_[k].insert(0,[]) for i in range(L)]  
+
+            if Ya:
+                if pos[1] >= 0:
+                    Ylen = pos[1]-len(self.map_[0])
+                else:
+                    b = 0
+                    Ylen = pos[1]+1
+                    
+                for j in range(len(map_)):
+                    [self.map_[j].append([]) if b > 0 else self.map_[j].insert(0,[]) for i in range(abs(Ylen)+1)]  
+            
+            self.map_[a][b] = card  
+"""
+*******************************************************************************************************************
+*                                                                                                                 *
+*                                                                                                                 *
+*                                                      TEST                                                       *
+*                                                                                                                 *
+*                                                                                                                 *
+*******************************************************************************************************************
+"""
+map_ = [[]]
+mab = BordGame(map_)
+
+mab.add("C1",[0,0])
+mab.add("C2",[0,0])
+mab.add("C3",[0,0])
+mab.add("C4",[0,0])
+mab.add("C5",[0,0])
+mab.add("C6",[0,0])
 
 
-class card:
-    def __init__(self,bordure):
-        self.bordure = bordure
-        self.A = []
-    
-    @property
-    def bordures(self):
-        return self.bordure
-    
-    """test run"""
-    
-C1 = card([1,1,1,1]) 
-C2 = card([1,1,1,1]) 
-C3 = card([1,0,0,0]) 
-C4 = card([1,1,0,0]) 
-C5 = card([0,0,0,0]) 
-map_ = game_bord()
-
-map_.connection([0,0],C1,0)
-
-
-map_.connection([2,3],C5,0)
-map_.__str__()
-
-del(map_)
-map_.__str__()
+print(mab.map_)
+del(mab)
