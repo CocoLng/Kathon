@@ -5,6 +5,7 @@ Created on Mon Nov 28 16:00:38 2022
 @author: coren
 """
 from abc import ABC
+from main import P_list
     
 class Card(ABC):
     def __init__ ( self , name , description ) : #chaque carte possède un nom et une description
@@ -34,10 +35,10 @@ class CardAction(Card):
 #                             Méthodes Communes                               #
 ###############################################################################
 
-    def target_player(self,List):
+    def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
-        sel = input("choisir un joueur")
-        return  List[sel]
+        print(self.main.P_list)
+        return  self.input_player(1, len(self.main.P_list))
     
     def input_player(self,min,max): #demande un input entre min et max et return le res
         while True:
@@ -90,9 +91,9 @@ class CardAction(Card):
     Donc effect = impact_tools a l'inistialisation pour appeler la fonction
     """
 
-    def impact_tools(self,List):
+    def impact_tools(self):
         Done = False
-        Target_P = self.target_player(List)
+        Target_P = self.target_player()
         Name_list = self.name.split()
         if Name_list[0]=="Cassage" : # Si nous ne cassons pas nous réparons
             return self.edit_status(True,Name_list[2],Target_P)

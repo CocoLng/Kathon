@@ -22,8 +22,8 @@ A3 = CardActionExtension("Eboulement","Cette carte casse la pioche de la cible",
 
 
 
-A2.impact_tools(P_list)
-
+#A2.impact_tools(P_list)
+#A2.effect(P_list)
 
 
 
