@@ -47,20 +47,24 @@ class Human(Player):
     def __init__(self,name):
         super().__init__(name)
         self.__main = []
-
+    
+    def skip_turn(self):
+        if self.__main == []: return False
+        return True
+       
     def play_card(self):
-         ID = input("quelle carte voulez vous jouer ?")
-         try:
-             card = self.__main[ID]
-         except:
-             print("print vous n'avez pas asser de cartes")
+        ID = input("quelle carte voulez vous jouer ?")
+        try:
+            card = self.__main[ID]
+        except:
+            print("print vous n'avez pas asser de cartes")
              
-         if hasattr(CardChemins,card):
+        if hasattr(CardChemins,card):
             if self.__statuts != []: 
                 return False
-         return True
-        
-       
+        self.__main.remove(card)
+        return True
+              
     def del_card (self,card):
         
             if card in self.__main:
