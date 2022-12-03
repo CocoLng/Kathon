@@ -64,7 +64,7 @@ class CardAction(Card):
         if ajout and not(self.has_effect(effect_play,Target_P)):#si le joueur n'as pas déja l'effet alors on peut lui mettre
             Target_P.statuts.append(effect_play)
             Done = True
-        if not(ajout) and self.has_effect(effect_play,Target_P):#si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
+        elif not(ajout) and self.has_effect(effect_play,Target_P):#si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
             Target_P.statuts.remove(effect_play)
             Done = True
         return Done
@@ -90,6 +90,7 @@ class CardAction(Card):
     Lors de l'initialisation le nom[0] de la carte dit si on casse ou repare
     Le nom[3] nous dit quel est l'outil ciblé'
     L'effet est lui stocker dans l'attribut "effet" qui pointe vers la fonction "impact_tools"
+    Donc effect = impact_tools a l'inistialisation pour appeler la fonction
     """
 
     def impact_tools(self):
@@ -97,7 +98,7 @@ class CardAction(Card):
         Target_P = self.target_player()
         Name_list = self.name.split()
         if Name_list[0]=="Cassage" : # Si nus ne cassons pas nous réparons
-            Done =  self.edit_effect(True,Name_list[2],Target_P)
+            return self.edit_effect(True,Name_list[2],Target_P)
         elif len(Name_list)==5 : # Si nous avons deux effet pour la réparation
             Done =  self.edit_effect(False,Name_list[4],Target_P)
         Done =  Done or self.edit_effect(False,Name_list[2],Target_P)
@@ -152,24 +153,16 @@ class CardActionExtension(CardAction):
         Done = False
         Done = True
         return Done
-       
-    def freedom(self):
-        Done = False
-        Target_P = self.target_player() 
-        if not(self.has_effect(effect_play,Target_P)):
-            Target_P.statuts.append("Jail")
-            print(f'{Target_P.name} a était emprisoné')
-            Done = True
-        return Done
-    
-    def jail_time(self):
-        Done = False
-        Target_P = self.target_player() 
-        if not(self.has_effect(effect_play,Target_P)):
-            Target_P.statuts.append("Jail")
-            print(f'{Target_P.name} a était emprisoné')
-            Done = True
-        return Done
+    """
+    Gère les effet d'emprisonnement et de libération en réutilisant edit_effet
+    A l'initialisation, le nom doit être "Emprisonnement" pour mettre en prison, choix libre pour libérer
+    L'effet doit être "jail_handler"
+    """
+    def jail_handler(self):
+        Target_P = self.target_player()
+        if self.name=="Emprisonnement" : # Réutilisation de edit_effet
+            return self.edit_effect(True,"Emprisonnement",Target_P)
+        return self.edit_effect(False,"Emprisonnement",Target_P)# si on emprisonne pas alors on libère
         
      
 """
@@ -196,4 +189,4 @@ class CardReward(Card):
         
 P1= Human("Jeanazsd")
 C1 = CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools")
-C2 = CardAction("Reparation de Pioche et Lanterne","Cette carte casse la pioche de la cible","impact_tools")
+C2 = CardAction("Reparation de Wagon et Pioche","Cette carte casse la pioche de la cible","impact_tools")
