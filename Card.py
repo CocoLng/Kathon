@@ -130,14 +130,6 @@ class CardActionExtension(CardAction):
     def __init__(self,name,description,effect):
         super().__init__(name,description,effect)
      
-        
-    def thief(self):
-        return print("Ceci est un vol")
-    
-    def no_thief(self):
-        Done = False
-        Done = True
-        return Done
     
     def inspect(self):
         Done = False
@@ -154,7 +146,7 @@ class CardActionExtension(CardAction):
         Done = True
         return Done
     """
-    Gère les effet d'emprisonnement et de libération en réutilisant edit_effet
+    Gère l'effet d'emprisonnement et de libération en réutilisant edit_effet
     A l'initialisation, le nom doit être "Emprisonnement" pour mettre en prison, choix libre pour libérer
     L'effet doit être "jail_handler"
     """
@@ -163,7 +155,17 @@ class CardActionExtension(CardAction):
         if self.name=="Emprisonnement" : # Réutilisation de edit_effet
             return self.edit_effect(True,"Emprisonnement",Target_P)
         return self.edit_effect(False,"Emprisonnement",Target_P)# si on emprisonne pas alors on libère
-        
+    
+    """
+    Gère l'effet de vol et de retrait via la carte pas touche
+    A l'initialisation, le nom doit être "Voleur" pour activer le vol en fin de manche, choix libre pour le retirer
+    L'effet doit être "thief_handler"
+    """    
+    def thief_handler(self):
+        Target_P = self.target_player()
+        if self.name=="Voleur" : # Réutilisation de edit_effet
+            return self.edit_effect(True,"Voleur",Target_P)
+        return self.edit_effect(False,"Voleur",Target_P)
      
 """
 Vous pouvez ajouter vos effet personnels ici, puis crée la carte en l'ajoutant dans /ressource/card_ini.txt
