@@ -34,10 +34,10 @@ class CardAction(Card):
 #                             Méthodes Communes                               #
 ###############################################################################
 
-    def target_player(self):
+    def target_player(self,List):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
-       
-        return P2
+        sel = input("choisir un joueur")
+        return  List[sel]
     
     def input_player(self,min,max): #demande un input entre min et max et return le res
         while True:
@@ -90,9 +90,9 @@ class CardAction(Card):
     Donc effect = impact_tools a l'inistialisation pour appeler la fonction
     """
 
-    def impact_tools(self):
+    def impact_tools(self,List):
         Done = False
-        Target_P = self.target_player()
+        Target_P = self.target_player(List)
         Name_list = self.name.split()
         if Name_list[0]=="Cassage" : # Si nous ne cassons pas nous réparons
             return self.edit_status(True,Name_list[2],Target_P)
