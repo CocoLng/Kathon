@@ -6,12 +6,14 @@ Created on Mon Nov 28 16:00:38 2022
 """
 #from abc import ABC  #, abstractmethod
     
-from player import *
+from player import Human
 from board_game import BordGame
-from card import *
+from card import CardActionExtension,CardAction
 
         
-P1= Human("Jeanazsd")
+P1= Human("Moi")
+P2= Human("Cible")
+P_list=[P1,P2]
 A1 = CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools")
 A2 = CardAction("Reparation de Wagon et Pioche","Cette carte casse la pioche de la cible","impact_tools")
 A3 = CardActionExtension("Eboulement","Cette carte casse la pioche de la cible","collapsing")

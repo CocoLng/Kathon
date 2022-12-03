@@ -10,7 +10,6 @@ class Card(ABC):
     def __init__ ( self , name , description ) : #chaque carte possède un nom et une description
         self.name = name
         self.description = description
-
            
     def __str__(self): 
         res = "o-----o "+self.name+" o-----o"
@@ -37,8 +36,8 @@ class CardAction(Card):
 
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
-        #mettre une liste de joueur en mode : 1- JeanIve 2-Rodolphe 3-......
-        return P1
+       
+        return P2
     
     def input_player(self,min,max): #demande un input entre min et max et return le res
         while True:
