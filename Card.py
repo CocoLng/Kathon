@@ -55,17 +55,17 @@ class CardAction(Card):
         return selected
         
     def has_effect(self,effect,Target_P):
-        if effect in Target_P.statuts: #regarde si le Target Player possède deja l'effet
+        if effect in Target_P.status: #regarde si le Target Player possède deja l'effet
             return True 
         return False 
     
-    def edit_effect(self,ajout,effect_play,Target_P):
+    def edit_status(self,ajout,effect_play,Target_P):
         Done = False
         if ajout and not(self.has_effect(effect_play,Target_P)):#si le joueur n'as pas déja l'effet alors on peut lui mettre
-            Target_P.statuts.append(effect_play)
+            Target_P.status.append(effect_play)
             Done = True
         elif not(ajout) and self.has_effect(effect_play,Target_P):#si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
-            Target_P.statuts.remove(effect_play)
+            Target_P.status.remove(effect_play)
             Done = True
         return Done
         
@@ -98,10 +98,10 @@ class CardAction(Card):
         Target_P = self.target_player()
         Name_list = self.name.split()
         if Name_list[0]=="Cassage" : # Si nous ne cassons pas nous réparons
-            return self.edit_effect(True,Name_list[2],Target_P)
+            return self.edit_status(True,Name_list[2],Target_P)
         elif len(Name_list)==5 : # Si nous avons deux effet pour la réparation
-            Done =  self.edit_effect(False,Name_list[4],Target_P)
-        Done =  Done or self.edit_effect(False,Name_list[2],Target_P)
+            Done =  self.edit_status(False,Name_list[4],Target_P)
+        Done =  Done or self.edit_status(False,Name_list[2],Target_P)
         return Done       
 
 ###############################################################################
@@ -154,8 +154,8 @@ class CardActionExtension(CardAction):
     def jail_handler(self):
         Target_P = self.target_player()
         if self.name=="Emprisonnement" : # Réutilisation de edit_effet
-            return self.edit_effect(True,"Emprisonnement",Target_P)
-        return self.edit_effect(False,"Emprisonnement",Target_P)# si on emprisonne pas alors on libère
+            return self.edit_status(True,"Emprisonnement",Target_P)
+        return self.edit_status(False,"Emprisonnement",Target_P)# si on emprisonne pas alors on libère
     
     """
     Gère l'effet de vol et de retrait via la carte pas touche
@@ -165,8 +165,8 @@ class CardActionExtension(CardAction):
     def thief_handler(self):
         Target_P = self.target_player()
         if self.name=="Voleur" : # Réutilisation de edit_effet
-            return self.edit_effect(True,"Voleur",Target_P)
-        return self.edit_effect(False,"Voleur",Target_P)
+            return self.edit_status(True,"Voleur",Target_P)
+        return self.edit_status(False,"Voleur",Target_P)
      
 """
 Vous pouvez ajouter vos effet personnels ici, puis crée la carte en l'ajoutant dans /ressource/card_ini.txt
@@ -174,7 +174,7 @@ Vous avez juste lors de l'initialisation a mettre dans effet le même nom que ce
 """       
 
 class CardChemins(Card):
-    def __init__(self,name,description,borders,special,reveal):
+    def __init__(self,name,description,borders,special=False,reveal=False):
         super().__init__(name,description)
         self.borders = borders
         self.reveal = reveal
@@ -191,6 +191,6 @@ class CardReward(Card):
         self.pepite = pepite
 
         
-P1= Human("Jeanazsd")
+#P1= Human("Jeanazsd")
 C1 = CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools")
 C2 = CardAction("Reparation de Wagon et Pioche","Cette carte casse la pioche de la cible","impact_tools")
