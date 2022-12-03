@@ -1,5 +1,4 @@
-from abc import ABC, abstractmethod 
-from Card import CardChemins
+from abc import ABC
 
 class Player(ABC):
     
@@ -7,7 +6,7 @@ class Player(ABC):
         self.score = 0
         self.name = name
         self.__main = []
-        self.statuts = []
+        self.status = []
         self.__carte_max = 5
     
     def __str__ (self):
@@ -60,7 +59,7 @@ class Human(Player):
             print("print vous n'avez pas asser de cartes")
              
         if hasattr(CardChemins,card):
-            if self.__statuts != []: 
+            if self.__status != []: 
                 return False
         self.__main.remove(card)
         return True

@@ -4,9 +4,7 @@ Created on Mon Nov 28 16:00:38 2022
 
 @author: coren
 """
-from abc import ABC  #, abstractmethod
-from player import Human
-#from board_game import BordGame
+from abc import ABC
     
 class Card(ABC):
     def __init__ ( self , name , description ) : #chaque carte possède un nom et une description
@@ -109,11 +107,8 @@ class CardAction(Card):
 ###############################################################################
 
     def collapsing(self):
-        Done = False
-        #appel de la fonction pos
-        #appelde la fct del carte if not special
-        Done = True
-        return Done
+        return mab.del_card(mab.ask_pos())
+
         
     def secret_plan(self):
         Done = False
@@ -190,7 +185,3 @@ class CardReward(Card):
         super().__init__(name,description)
         self.pepite = pepite
 
-        
-#P1= Human("Jeanazsd")
-C1 = CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools")
-C2 = CardAction("Reparation de Wagon et Pioche","Cette carte casse la pioche de la cible","impact_tools")

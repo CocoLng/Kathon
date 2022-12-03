@@ -1,4 +1,3 @@
-
 class BordGame:
     
     def __init__(self):
