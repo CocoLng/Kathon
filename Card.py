@@ -97,7 +97,7 @@ class CardAction(Card):
         Done = False
         Target_P = self.target_player()
         Name_list = self.name.split()
-        if Name_list[0]=="Cassage" : # Si nus ne cassons pas nous réparons
+        if Name_list[0]=="Cassage" : # Si nous ne cassons pas nous réparons
             return self.edit_effect(True,Name_list[2],Target_P)
         elif len(Name_list)==5 : # Si nous avons deux effet pour la réparation
             Done =  self.edit_effect(False,Name_list[4],Target_P)
