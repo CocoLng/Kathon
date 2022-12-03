@@ -89,7 +89,7 @@ class CardAction(Card):
     
     Lors de l'initialisation le nom[0] de la carte dit si on casse ou repare
     Le nom[3] nous dit quel est l'outil ciblé'
-    L'effet est lui stocker dans l'attribut "effet" qui pointe vers la fonction "impact_tools"
+    L'effet est lui stocker dans l'attribut "effet" qui pointe vers la méthode "impact_tools"
     Donc effect = impact_tools a l'inistialisation pour appeler la fonction
     """
 
@@ -145,6 +145,7 @@ class CardActionExtension(CardAction):
         Done = False
         Done = True
         return Done
+    
     """
     Gère l'effet d'emprisonnement et de libération en réutilisant edit_effet
     A l'initialisation, le nom doit être "Emprisonnement" pour mettre en prison, choix libre pour libérer
@@ -169,6 +170,7 @@ class CardActionExtension(CardAction):
      
 """
 Vous pouvez ajouter vos effet personnels ici, puis crée la carte en l'ajoutant dans /ressource/card_ini.txt
+Vous avez juste lors de l'initialisation a mettre dans effet le même nom que celle de la méthode'
 """       
 
 class CardChemins(Card):
