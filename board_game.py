@@ -130,10 +130,7 @@ mab = BordGame()
 C1 = [True,True,True,True]
 
 mab.add_card(C1,[0,0])
-mab.add_card(C1,[5,10])
-mab.add_card(C1,[1,1])
-mab.add_card(C1,[-5,2])
-mab.add_card(C1,[-4,-5])
+mab.add_card(C1,[0,6])
 
 
 
