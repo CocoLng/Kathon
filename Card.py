@@ -5,7 +5,6 @@ Created on Mon Nov 28 16:00:38 2022
 @author: coren
 """
 from abc import ABC
-from main import P_list
     
 class Card(ABC):
     def __init__ ( self , name , description ) : #chaque carte possède un nom et une description
@@ -19,9 +18,12 @@ class Card(ABC):
         return res
     
 class CardAction(Card):
-    def __init__(self,name,description,effect): #les cartes action sont des cartes avec un effet
+    def __init__(self,name,description,effect,P_list=None): #les cartes action sont des cartes avec un effet
         super().__init__(name,description)
         self.effect = effect
+        if P_list is None:
+            P_list = []
+        self.P_list = P_list
         
     @property
     def effect ( self ) :
@@ -37,8 +39,9 @@ class CardAction(Card):
 
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
-        print(self.main.P_list)
-        return  self.input_player(1, len(self.main.P_list))
+        [print(i,':',x.name,end='  ') for i,x in enumerate(self.P_list,1)]
+        print('')
+        return  self.P_list[self.input_player(1, len(self.P_list))-1]
     
     def input_player(self,min,max): #demande un input entre min et max et return le res
         while True:
@@ -106,8 +109,8 @@ class CardAction(Card):
 #                         Avalanche & Plan Secret                             #
 ###############################################################################
 
-    def collapsing(self):
-        return mab.del_card(mab.ask_pos())
+    # def collapsing(self):
+    #     return mab.del_card(mab.ask_pos())
 
         
     def secret_plan(self):
@@ -122,8 +125,8 @@ class CardAction(Card):
 #                         Chargement d'une Extenion                           #
 ###############################################################################    
 class CardActionExtension(CardAction):
-    def __init__(self,name,description,effect):
-        super().__init__(name,description,effect)
+    def __init__(self,name,description,effect,P_list=None):
+        super().__init__(name,description,effect,P_list)
      
     
     def inspect(self):
