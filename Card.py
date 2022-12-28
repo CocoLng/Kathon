@@ -5,6 +5,7 @@ Created on Mon Nov 28 16:00:38 2022
 @author: coren
 """
 from abc import ABC
+from sys import exit
     
 class Card(ABC):
     def __init__ ( self , name , description ) : #chaque carte possède un nom et une description
@@ -39,7 +40,7 @@ class CardAction(Card):
 
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
-        [print(i,':',x.name,end='  ') for i,x in enumerate(self.P_list,1)]
+        [print(i,': ',x.name,sep='',end='  ') for i,x in enumerate(self.P_list,1)]
         print('')
         return  self.P_list[self.input_player(1, len(self.P_list))-1]
     
@@ -53,6 +54,13 @@ class CardAction(Card):
                 break
             except ValueError :
                 print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {min} et {max}\n')
+                continue
+            except KeyboardInterrupt:
+                print("\nVous quittez le programme, aurevoir")
+                exit()
+            else:
+                print('break')
+                break
         return selected
         
     def has_effect(self,effect,Target_P):
@@ -91,7 +99,7 @@ class CardAction(Card):
     Lors de l'initialisation le nom[0] de la carte dit si on casse ou repare
     Le nom[3] nous dit quel est l'outil ciblé'
     L'effet est lui stocker dans l'attribut "effet" qui pointe vers la méthode "impact_tools"
-    Donc effect = impact_tools a l'inistialisation pour appeler la fonction
+    Donc effect = impact_tools a l'initialisation pour appeler la fonction
     """
 
     def impact_tools(self):
