@@ -8,24 +8,22 @@ Created on Mon Nov 28 16:00:38 2022
     
 from player import Human
 #from board_game import BordGame
-from Card import CardActionExtension,CardAction
-
+import Card
         
 P1= Human("Moi")
 P2= Human("Cible")
 P_list=[P1,P2]
 
 
-A3 = CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools",P_list)
-A2 = CardAction("Reparation : Wagon & Pioche","Cette carte casse la pioche de la cible","impact_tools",P_list)
+A3 = Card.CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools",P_list)
+A2 = Card.CardAction("Reparation : Wagon & Pioche","Cette carte casse la pioche de la cible","impact_tools",P_list)
 
-#A1 = CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","secret_plan",)
-
-
+A1 = Card.CardActionExtension("Inspection","Cette carte casse la pioche de la cible","inspect",P_list)
 
 
-print(A3.effect(A3))
-print(A2.effect(A2))
+print(A3.effect())
+print(A2.effect)
+print(A1.effect)
 
 
 # mab = BordGame()
