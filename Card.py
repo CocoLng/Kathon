@@ -37,7 +37,6 @@ class CardAction(Card):
     def effect(self, effect):
         # stock le pointeur de la function désirée
         self.__effect = getattr(self.__class__, effect)
-        self.__i
 
 
 ###############################################################################
@@ -163,7 +162,9 @@ class CardActionExtension(CardAction):
         print("Entre quels joueurs souhaitez-vous inverser les decks de cartes ?")
         Target_P1 = self.target_player()
         Target_P2 = self.target_player()
-        #temp = Target_P1
+        temp = Target_P1._Player__main
+        Target_P1._Player__main =  Target_P2._Player__main
+        Target_P2._Player__main = temp
         Done = True
         return Done
 
