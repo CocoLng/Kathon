@@ -15,15 +15,15 @@ P2= Human("Cible")
 P_list=[P1,P2]
 
 
-A3 = Card.CardActionExtension("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools",P_list)
+A3 = Card.CardAction("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools",P_list)
 A2 = Card.CardAction("Reparation : Wagon & Pioche","Cette carte casse la pioche de la cible","impact_tools",P_list)
 
-A1 = Card.CardActionExtension("Inspection","Cette carte casse la pioche de la cible","switch_hand",P_list)
+A1 = Card.CardAction("Inspection","Cette carte casse la pioche de la cible","switch_hand",P_list)
 
-#J'arrive pas a add de cartes
+#J'arrive pas a add de cartes dans player
 #P1.add_card(P1, A2)
 
-print(A1.effect(A1))
+print(A3.effect(A3))
 # print(A2.effect)
 # print(A1.effect)
 
