@@ -17,6 +17,7 @@ P_list=[P1,P2]
 
 A3 = Card.CardAction("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools",P_list)
 A2 = Card.CardAction("Reparation : Wagon & Pioche","Cette carte casse la pioche de la cible","impact_tools",P_list)
+"Eboulement","Cette carte détruit un chemin, pouvant empecher la progression des joueurs. Si le chemin n'est plus relié au spawn alors il faut impérativement réparer le chemin avant de continuer","collapsing"
 
 A1 = Card.CardAction("Inspection","Cette carte casse la pioche de la cible","switch_hand",P_list)
 

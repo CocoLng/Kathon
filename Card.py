@@ -23,7 +23,7 @@ class Card(ABC):
         return res
 
 class CardChemins(Card):
-    def __init__(self, name, description, borders, special=False, reveal=False):
+    def __init__(self, name, description, borders, special=False, reveal=False,indestructible = False):
         super().__init__(name, description)
         self.borders = borders
         self.reveal = reveal
@@ -40,12 +40,12 @@ class CardReward(Card):
         
 class CardAction(Card):
     # les cartes action sont des cartes avec un effet
-    def __init__(self, name, description, effect, P_list=None):#les cartes actions ne nécéssitent pas tous la listes des joueurs
+    def __init__(self, name, description, effect, arg=None):#les cartes actions ne nécéssitent pas tous la listes des joueurs
         super().__init__(name, description)
         self.effect = globals()[effect] #on ajoute la méthode contenant le nom effect dans notre object, les autres ne sont pas chargés car inutiles
-        if P_list is None:
-            P_list = []
-        self.P_list = P_list
+        if arg is None:
+            arg = []
+        self.arg = arg
 
 ###############################################################################
 #                             Méthodes Communes                               #
