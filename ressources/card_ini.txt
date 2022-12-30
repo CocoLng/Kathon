@@ -1,28 +1,28 @@
 ACTION
 
-Eboulement;Cette carte detruit un chemin, pouvant empecher la progression des joueurs. Si le chemin n est plus relie au spawn alors il faut imperativement reparer le chemin avant de pouvoir continuer;collapsing
+3;Eboulement;Cette carte detruit un chemin, pouvant empecher la progression des joueurs. Si le chemin n est plus relie au spawn alors il faut imperativement reparer le chemin avant de pouvoir continuer;collapsing
 
-Reparation : Pioche & Lanterne;Cette carte repare la pioche et la lanterne de la cible;impact_tools
-Reparation : Lanterne & Wagon;Cette carte repare la lanterne et le wagon/chariot de la cible;impact_tools
-Reparation : Pioche & Wagon;Cette carte repare la pioche et le wagon/chariot de la cible;impact_tools
+1;Reparation : Pioche & Lanterne;Cette carte repare la pioche et la lanterne de la cible;impact_tools
+1;Reparation : Lanterne & Wagon;Cette carte repare la lanterne et le wagon/chariot de la cible;impact_tools
+1;Reparation : Pioche & Wagon;Cette carte repare la pioche et le wagon/chariot de la cible;impact_tools
 
-Reparation de Wagon;Cette carte repare le wagon/chariot de la cible;impact_tools
-Cassage de Wagon;Cette carte casse le wagon/chariot de la cible;impact_tools
+2;Reparation de Wagon;Cette carte repare le wagon/chariot de la cible;impact_tools
+3;Cassage de Wagon;Cette carte casse le wagon/chariot de la cible;impact_tools
 
-Reparation de Pioche;Cette carte repare la pioche de la cible;impact_tools
-Cassage de Pioche;Cette carte casse la pioche de la cible;impact_tools
+2;Reparation de Pioche;Cette carte repare la pioche de la cible;impact_tools
+3;Cassage de Pioche;Cette carte casse la pioche de la cible;impact_tools
 
-Reparation de Lanterne;Cette carte repare la lanterne de la cible;impact_tools
-Cassage de Lanterne;Cette carte casse la lanterne de la cible;impact_tools
+2;Reparation de Lanterne;Cette carte repare la lanterne de la cible;impact_tools
+3;Cassage de Lanterne;Cette carte casse la lanterne de la cible;impact_tools
 
-Plan Secret;Cette carte permet de prendre connaissance d'une des cartes Arivee;secret_plan
+6;lan Secret;Cette carte permet de prendre connaissance d'une des cartes Arivee;secret_plan
 
 EXTENSION
 
-Inspection de Role;Permet de regarder secretement le role d un joueur;inspect
+2;Inspection de Role;Permet de regarder secretement le role d un joueur;inspect
 
-Changement de Role;Permet de changer de role d une cible en le fesant piocher une nouvelle carte role;switch_role
-Changement de Main;Permet de changer la main entre deux joueurs choisies;switch_hand
+2;Changement de Role;Permet de changer de role d une cible en le fesant piocher une nouvelle carte role;switch_role
+2;Changement de Main;Permet de changer la main entre deux joueurs choisies;switch_hand
 
-Emprisonnement;Permet d emprisonner une cible;jail_handler
-Enfin Libre;Permet de liberer une cible;jail_handler
+3;Emprisonnement;Permet d emprisonner une cible;jail_handler
+4;Enfin Libre;Permet de liberer une cible;jail_handler

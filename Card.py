@@ -54,8 +54,8 @@ class CardAction(Card):
 
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
-        [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(self.P_list, 1)]
-        return self.P_list[self.input_player(1, len(self.P_list))-1]
+        [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(self.arg[1], 1)]
+        return self.arg[1][self.input_player(1, len(self.arg[1]))-1]
 
     def input_player(self, min, max):  # demande un input entre min et max et return le res
         while True:
@@ -72,8 +72,8 @@ class CardAction(Card):
                 print("\nVous quittez le programme, aurevoir")
                 exit()
             else:
-                print('break')
-                break
+                print('break, Erreur inconnue')
+                exit()
         return selected
 
     def has_effect(self, effect, Target_P):
@@ -138,8 +138,8 @@ def impact_tools(self):
 #                         Avalanche & Plan Secret                             #
 ###############################################################################
 
-# def collapsing(self):
-#     return mab.del_card(mab.ask_pos())
+def collapsing(self):
+    return True
 
 def secret_plan(self):
     Done = False

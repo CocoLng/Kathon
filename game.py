@@ -17,6 +17,8 @@ P_list=[P1,P2]
 
 P_current= P1
 
+arg=[P_current,P_list]
+
 with open(new_path,'r') as f:
     for line in f:
         line = line.strip()
@@ -27,7 +29,15 @@ with open(new_path,'r') as f:
             break
         elif status == "ACTION" and line !="":
             line = line.split(';')
-            globals()['A%s' % i] = card.CardAction(line[0],line[1],line[2])
+            globals()['A%s' % i] = card.CardAction(line[1],line[2],line[3])
             i+=1
         
-        
+A3 = card.CardAction("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools")
+A2 = card.CardAction("Reparation : Wagon & Pioche","Cette carte casse la pioche de la cible","impact_tools")
+
+A1 = card.CardAction("Inspection","Cette carte casse la pioche de la cible","switch_hand")
+
+#J'arrive pas a add de cartes dans player
+#P1.add_card(P1, A2)
+A3.arg = arg
+print(A3.effect(A3))
