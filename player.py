@@ -1,4 +1,5 @@
-from abc import ABC
+from Card import *
+from board_game import *
 
 class Player(ABC):
     
@@ -24,6 +25,7 @@ class Player(ABC):
     @property
     def score(self):
         return self.__score
+    
     @score.setter
     def score(self,score):
         if score >= 0:
@@ -48,22 +50,37 @@ class Human(Player):
         self.__main = []
     
     def skip_turn(self):
-        if self.__main == []: return False
-        return True
-       
-    def play_card(self):
+        if self.__main == []: return True
+        return False
+  
+        
+  
+    def play_card(self,MAP,Pl_lt):
         ID = input("quelle carte voulez vous jouer ?")
         try:
-            card = self.__main[ID]
-        except:
+            
+            card = self.__main[ID-1]    
+            if hasattr(CardChemins,card):
+                if self.__status == []: 
+                    if MAP.card_setable():
+                        MAP.add_card(card,False)
+                        self.__main.remove(card)
+                        return True
+                
+            if hasattr(CardAction,card):
+                card.P_list = Pl_lt
+                if card.effect():
+                    self.__main.remove(card)
+                    return True
+                
+            return False
+        
+        except IndexError:
             print("print vous n'avez pas asser de cartes")
-             
-        if hasattr(CardChemins,card):
-            if self.__status != []: 
-                return False
-        self.__main.remove(card)
-        return True
-              
+            return False
+  
+
+            
     def del_card (self,card):
         
             if card in self.__main:
@@ -71,7 +88,3 @@ class Human(Player):
             else: 
                return print("cette carte n est pas presente dans votre main")
 
-"""
-le score doit etre une input qui ne fonctione pas sur spider
-
-"""
