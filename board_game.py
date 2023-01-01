@@ -1,3 +1,5 @@
+from detect_region import *
+
 class BordGame:
     
     def __init__(self):
@@ -15,9 +17,7 @@ class BordGame:
         aff_barre = " " *(ma_leny+2)
         for j in range(len(self.__map_)):
             x = len(f"{j+self.__decalage[0]}")
-            aff_barre += "|"+" "*((ma_lenx-x)//2+(ma_lenx-x)%2) +f"{j+self.__decalage[0]}"+" "*((ma_lenx-x)//2)+"|"
-
-            
+            aff_barre += "|"+" "*((ma_lenx-x)//2+(ma_lenx-x)%2) +f"{j+self.__decalage[0]}"+" "*((ma_lenx-x)//2)+"|"  
             
         for i in range(len(self.__map_[0])):
             y = len(f"{i+self.__decalage[1]}")
@@ -41,6 +41,9 @@ class BordGame:
         return aff_barre+"\n"+aff
     
     
+    
+    
+    
     def ask_pos(self):
         X = [] 
         while True:
@@ -54,8 +57,10 @@ class BordGame:
         return P
     
 
-    
+
     #permet de verifier si la carte poser est en accord avec les regles de conection de cartes
+    #permet de verifier si la carte poser est en acord avec les regles de conection de cartes
+
     def card_setable(self,card):
         pos = self.ask_pos()
         chemin = card.chemin
@@ -76,6 +81,7 @@ class BordGame:
             break             
         return True 
    
+
     
     #permet de suprimer des cartes a une positon precise si il reussi renvoi True sinon False
     def del_card(self):
