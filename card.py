@@ -103,6 +103,7 @@ class CardChemin(Card):
         self.borders = []
         self.special = None
         self.reveal = None
+    
         if len(arg)>=6 : 
             self.special = arg[6]  # non destructible si special, spawn et gold
         if len(arg)>=7:

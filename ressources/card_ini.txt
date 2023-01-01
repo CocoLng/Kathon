@@ -30,7 +30,7 @@ EXTENSION
 END
 
 CHEMIN
-1;Chemin1_classic;descri1;0000:0000:0000:1110;up,left,down,right,START
+1;Chemin1_classic;descri1;0000:0000:0000:1110;up,left,down,right;START
 1;Pont Chemin;descri1;0000:0000:1000:0100;up,left,down,right
 
 EXTENSION
