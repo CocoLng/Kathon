@@ -26,3 +26,21 @@ EXTENSION
 
 3;Emprisonnement;Permet d emprisonner une cible;jail_handler
 4;Enfin Libre;Permet de liberer une cible;jail_handler
+
+END
+
+CHEMIN
+1;Chemin1_classic;descri1;0000:0000:0000:1110;up,left,down,right
+
+EXTENSION
+1;Pont Chemin;descri1;0000:0000:1000:0100;up,left,down,right
+
+
+END
+
+ROLE
+Chercheurs d'or;Vous devez parvenir a trouver la pepite d or
+Saboteur;Empechez les chercheur de trouver l or
+
+
+

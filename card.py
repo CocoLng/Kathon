@@ -31,24 +31,40 @@ class Deck:
         return shuffle(self.list_card)    
         
     def load_cards(self):
-        status=None
+        i = 1
+        write = False
+        status = None
         with open(path_init,'r') as f: #ferme automatiquement le fichier a la fin de la lecture
             for line in f:
                 line = line.strip()
-                if (line == self.name and self.extension[1]==False)or(line == "EXTENSION" and self.extension[0]==True):
-                     status = self.name
-                     i = 1
-                elif line == "EXTENSION" and self.extension[0]==False:
-                    status = None
-                elif line !="" and status !=None:
+                if line == self.name:
+                    status = self.name
+                    if self.extension[1]==True:
+                        write = False
+                    else :
+                        write = True
+                elif line == "EXTENSION" and status == self.name and self.extension[0]==True :
+                     write = True 
+                elif (status == self.name and line =="END") or (line == "EXTENSION"and self.extension[0]==False and status == self.name ): 
+                    break
+                elif line !="" and write:
                     line = line.split(';')
                     if status == "ACTION" :
                         globals()['A%s' % i] = CardAction(line[1],line[2],line[3])
                         self.list_card+=int(line[0])*[globals()['A%s' % i]]                    
+                    elif status == "CHEMIN":
+                        globals()['C%s' % i] = CardChemin(line[1],line[2],line[3],line[4])
+                        self.list_card+=int(line[0])*[globals()['C%s' % i]]
                     elif status == "ROLE":
-                        globals()['A%s' % i] = CardRole(line[1],line[2],line[3])
+                        globals()['C%s' % i] = CardRole(line[1],line[2],line[3])
                         self.list_card+=int(line[0])*[globals()['A%s' % i]]
+                    elif status == "REWARD":
+                        globals()['C%s' % i] = CardReward(line[1],line[2],line[3])
+                        self.list_card+=int(line[0])*[globals()['A%s' % i]]
+                    else :
+                        print("Deck avec le nom de propriété indéfinis ! ERREUR")
                     i+=1
+
  
     def __str__(self):
         res = "o-----o "+ self.__class__.__name__ +" o-----o"
@@ -70,12 +86,25 @@ class Card(ABC):
 
         return res
 
-class CardChemins(Card):
-    def __init__(self, name, description, borders, special="", reveal=False,indestructible = False):
+class CardChemin(Card):
+    def __init__(self, name, description, config,port, special=None, reveal=False):
         super().__init__(name, description)
-        self.borders = borders
+        self.config = config
+        self.port = port
+        self.borders = []
         self.reveal = reveal
         self.special = special  # non destructible si special, spawn et gold
+        
+        
+        self.config = list(self.config.split(":"))
+        self.port = list(self.port.split(","))
+        for i in self.port:
+            self.borders.append(detect_region.ConnectionEdge(i))
+        temp = zip(self.config,self.borders)
+        for chemins,portes in temp:
+            print(chemins)
+            [portes.connect(portes_) for connections, portes_ in zip(chemins,self.borders) if int(connections) ==1]
+            
 
 class CardRole(Card):
     def __init__(self, name, description):
