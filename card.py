@@ -21,16 +21,16 @@ Name correspond au nom du deck que nous souhaitons crée, il doit s'appeler comm
     ACTION / CHEMIN / ROLE / REWARD
 """
 class Deck:
-    def __init__(self, name,extension=[False,False]):  # chaque carte possède un nom et une description
+    def __init__(self, name,extension=[False,False],nb_players = 3):  # chaque carte possède un nom et une description
         self.name=name    
         self.extension = extension
         self.list_card= []
-        self.load_cards()
+        self.load_cards(nb_players)
         
     def shuffle(self):
         return shuffle(self.list_card)    
         
-    def load_cards(self):
+    def load_cards(self,nb_players):
         i = 1
         write = False
         status = None
@@ -45,26 +45,34 @@ class Deck:
                         write = True
                 elif line == "EXTENSION" and status == self.name and self.extension[0]==True :
                      write = True 
-                elif (status == self.name and line =="END") or (line == "EXTENSION"and self.extension[0]==False and status == self.name ): 
+                elif status == self.name and ((line =="END") or (line == "EXTENSION" and self.extension[0]==False)): 
                     break
                 elif line !="" and write:
                     line = line.split(';')
                     if status == "ACTION" :
                         globals()['A%s' % i] = CardAction(line[1],line[2],line[3])
-                        self.list_card+=int(line[0])*[globals()['A%s' % i]]                    
+                        self.list_card+=int(line[0])*[globals()['A%s' % i]]  
+                        
                     elif status == "CHEMIN":
-                        globals()['C%s' % i] = CardChemin(line[1],line[2],line[3],line[4])
+                        globals()['C%s' % i] = CardChemin(line)
                         self.list_card+=int(line[0])*[globals()['C%s' % i]]
+                        
                     elif status == "ROLE":
-                        globals()['C%s' % i] = CardRole(line[1],line[2],line[3])
-                        self.list_card+=int(line[0])*[globals()['A%s' % i]]
+                        globals()['R_%s' % line[2]] = CardRole(line[0],line[1],line[2])
+                        if self.extension[0]==False:
+                            nb = 3 #le nombre de chercheur de abse est définis a 3
+                            if nb_players == 4 : nb +=1 #si il y a quatre joueur, nous passons a 4 chercheur
+                            while  nb/nb_players < 0.7 : nb+=1 #la proportion de chercheur doit toujours est au moins de 70% dans la manche
+                            if  line[2] == "saboteur" : nb = (nb_players-nb)+1 #formule pour obtenir le nombre de saboteur
+                        self.list_card+=nb*[globals()['R_%s' % line[2]]]
+                        
                     elif status == "REWARD":
-                        globals()['C%s' % i] = CardReward(line[1],line[2],line[3])
-                        self.list_card+=int(line[0])*[globals()['A%s' % i]]
+                        globals()['OR_%s' % int(line[3])] = CardReward(line[1],line[2],line[3])
+                        self.list_card+=int(line[0])*[globals()['OR_%s' % int(line[3])]]
                     else :
                         print("Deck avec le nom de propriété indéfinis ! ERREUR")
                     i+=1
-
+#temp reward, fin de manche ajout def
  
     def __str__(self):
         res = "o-----o "+ self.__class__.__name__ +" o-----o"
@@ -87,28 +95,33 @@ class Card(ABC):
         return res
 
 class CardChemin(Card):
-    def __init__(self, name, description, config,port, special=None, reveal=False):
-        super().__init__(name, description)
-        self.config = config
-        self.port = port
+    def __init__(self, arg):
+        print(arg)
+        super().__init__(arg[1], arg[2])
+        self.config = arg[3]
+        self.port = arg[4]
         self.borders = []
-        self.reveal = reveal
-        self.special = special  # non destructible si special, spawn et gold
+        self.special = None
+        self.reveal = None
+        if len(arg)==6 : 
+            self.special = arg[6]  # non destructible si special, spawn et gold
+        if len(arg)==7:
+            self.reveal = arg[7]
         
         
         self.config = list(self.config.split(":"))
         self.port = list(self.port.split(","))
         for i in self.port:
-            self.borders.append(detect_region.ConnectionEdge(i))
-        temp = zip(self.config,self.borders)
-        for chemins,portes in temp:
-            print(chemins)
+            self.borders.append(detect_region.ConnectionEdge(i,self.special, self.special=='START'))
+        
+        for chemins,portes in zip(self.config,self.borders):
             [portes.connect(portes_) for connections, portes_ in zip(chemins,self.borders) if int(connections) ==1]
             
 
 class CardRole(Card):
-    def __init__(self, name, description):
+    def __init__(self, name, description,role):
         super().__init__(name, description)
+        self.role = role
 
 class CardReward(Card):
     def __init__(self, name, description, pepite):

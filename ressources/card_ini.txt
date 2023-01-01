@@ -30,17 +30,24 @@ EXTENSION
 END
 
 CHEMIN
-1;Chemin1_classic;descri1;0000:0000:0000:1110;up,left,down,right
+1;Chemin1_classic;descri1;0000:0000:0000:1110;up,left,down,right,START
+1;Pont Chemin;descri1;0000:0000:1000:0100;up,left,down,right
 
 EXTENSION
 1;Pont Chemin;descri1;0000:0000:1000:0100;up,left,down,right
 
+END
+
+REWARD
+5; 3 Pépites d or; Cette carte vaut 3 pépites d or;3
+10; 2 Pépites d or; Cette carte vaut 2 pépites d or;2
+13; 1 Pépite d or; Cette carte vaut 1 seul pépite d or;1
 
 END
 
 ROLE
-Chercheurs d'or;Vous devez parvenir a trouver la pepite d or
-Saboteur;Empechez les chercheur de trouver l or
+Chercheurs d or;Vous devez parvenir a trouver la pepite d or;chercheur
+Saboteur;Empechez les chercheur de trouver l or;saboteur
 
 
 
