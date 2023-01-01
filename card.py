@@ -105,9 +105,9 @@ class CardChemin(Card):
         self.reveal = None
     
         if len(arg)>=6 : 
-            self.special = arg[6]  # non destructible si special, spawn et gold
+            self.special = arg[5]  # non destructible si special, spawn et gold
         if len(arg)>=7:
-            self.reveal = arg[7]
+            self.reveal = arg[6]
         
         
         self.config = list(self.config.split(":"))
