@@ -9,6 +9,7 @@ from sys import exit
 from random import shuffle
 import types
 import os
+import detect_region
 
 
 path_init = os.path.join(os.path.dirname(__file__),'ressources\\card_ini.txt')
@@ -41,9 +42,9 @@ class Deck:
                     status = None
                 elif line !="" and status !=None:
                     line = line.split(';')
-                    if status == "Action_Chemin" :
+                    if status == "ACTION" :
                         globals()['A%s' % i] = CardAction(line[1],line[2],line[3])
-                        self.list_card+=int(line[0])*[globals()['A%s' % i]]
+                        self.list_card+=int(line[0])*[globals()['A%s' % i]]                    
                     elif status == "ROLE":
                         globals()['A%s' % i] = CardRole(line[1],line[2],line[3])
                         self.list_card+=int(line[0])*[globals()['A%s' % i]]
