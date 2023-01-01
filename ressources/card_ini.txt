@@ -29,6 +29,7 @@ EXTENSION
 
 END
 
+
 CHEMIN
 1;Chemin1_classic;descri1;0000:0000:0000:1110;up,left,down,right;START
 1;Pont Chemin;descri1;0000:0000:1000:0100;up,left,down,right
@@ -38,12 +39,14 @@ EXTENSION
 
 END
 
+
 REWARD
 5; 3 Pépites d or; Cette carte vaut 3 pépites d or;3
 10; 2 Pépites d or; Cette carte vaut 2 pépites d or;2
 13; 1 Pépite d or; Cette carte vaut 1 seul pépite d or;1
 
 END
+
 
 ROLE
 Chercheurs d or;Vous devez parvenir a trouver la pepite d or;chercheur
@@ -56,6 +59,5 @@ EXTENSION
 1;Profiteur;Vous etes toujours gagnant, peut importe qui remporte, cependant vous recevez 2 pepites de moins si vous ne posez pas la derniere connexion;profiteur
 2;Géologue;Vous jouez en solo, votre recompense n est pas de l or mais des cristaux visibles sur la map. A la fin de la manche vous recevez les cristaux visibles;geologue
 3;Saboteur;Empechez les chercheur de trouver l or;saboteur
-	
 
 END
