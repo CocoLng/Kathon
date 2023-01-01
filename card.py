@@ -58,13 +58,16 @@ class Deck:
                         self.list_card+=int(line[0])*[globals()['C%s' % i]]
                         
                     elif status == "ROLE":
-                        globals()['R_%s' % line[2]] = CardRole(line[0],line[1],line[2])
                         if self.extension[0]==False:
+                            globals()['R_%s' % line[2]] = CardRole(line[0],line[1],line[2])
                             nb = 3 #le nombre de chercheur de abse est définis a 3
                             if nb_players == 4 : nb +=1 #si il y a quatre joueur, nous passons a 4 chercheur
                             while  nb/nb_players < 0.7 : nb+=1 #la proportion de chercheur doit toujours est au moins de 70% dans la manche
                             if  line[2] == "saboteur" : nb = (nb_players-nb)+1 #formule pour obtenir le nombre de saboteur
-                        self.list_card+=nb*[globals()['R_%s' % line[2]]]
+                            self.list_card+=nb*[globals()['R_%s' % line[2]]]
+                        else :
+                            globals()['R_%s' % line[3]] = CardRole(line[1],line[2],line[3])
+                            self.list_card+=int(line[0])*[globals()['R_%s' % line[3]]]
                         
                     elif status == "REWARD":
                         globals()['OR_%s' % int(line[3])] = CardReward(line[1],line[2],line[3])
@@ -96,14 +99,13 @@ class Card(ABC):
 
 class CardChemin(Card):
     def __init__(self, arg):
-        print(arg)
         super().__init__(arg[1], arg[2])
         self.config = arg[3]
         self.port = arg[4]
         self.borders = []
         self.special = None
         self.reveal = None
-    
+        
         if len(arg)>=6 : 
             self.special = arg[5]  # non destructible si special, spawn et gold
         if len(arg)>=7:

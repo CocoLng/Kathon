@@ -49,5 +49,13 @@ ROLE
 Chercheurs d or;Vous devez parvenir a trouver la pepite d or;chercheur
 Saboteur;Empechez les chercheur de trouver l or;saboteur
 
+EXTENSION
+4;Chercheurs d or Team Vert;Vous devez parvenir a trouver la pepite d or avec votre equipe VERTE;chercheurVert
+4;Chercheurs d or Team Bleu;Vous devez parvenir a trouver la pepite d or avec votre equipe BLEU;chercheurBleu
+1;Boss;Membre des deux equipes, vous gagnez s il l une d elle gagne,mais toujours une pepite de moins que les Chercheurs.;boss
+1;Profiteur;Vous etes toujours gagnant, peut importe qui remporte, cependant vous recevez 2 pepites de moins si vous ne posez pas la derniere connexion;profiteur
+2;Géologue;Vous jouez en solo, votre recompense n est pas de l or mais des cristaux visibles sur la map. A la fin de la manche vous recevez les cristaux visibles;geologue
+3;Saboteur;Empechez les chercheur de trouver l or;saboteur
+	
 
-
+END
