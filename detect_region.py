@@ -2,7 +2,7 @@
 # des objets a une sources et de savoir si l'objet regarde est 
 # connecté a la source voulue
 
-class Connection_edge:
+class ConnectionEdge:
     
     def __init__(self,name,flag=None,source=False):
             self.delet = False
