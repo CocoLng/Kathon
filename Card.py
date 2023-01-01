@@ -6,6 +6,53 @@ Created on Mon Nov 28 16:00:38 2022
 """
 from abc import ABC
 from sys import exit
+from random import shuffle
+import types
+import os
+
+
+path_init = os.path.join(os.path.dirname(__file__),'ressources\\card_ini.txt')
+###############################################################################
+#                              Deck                                           #
+###############################################################################
+"""
+Name correspond au nom du deck que nous souhaitons crée, il doit s'appeler comme ceci :
+    ACTION / CHEMIN / ROLE / REWARD
+"""
+class Deck:
+    def __init__(self, name,extension=[False,False]):  # chaque carte possède un nom et une description
+        self.name=name    
+        self.extension = extension
+        self.list_card= []
+        self.load_cards()
+        
+    def shuffle(self):
+        return shuffle(self.list_card)    
+        
+    def load_cards(self):
+        status=None
+        with open(path_init,'r') as f: #ferme automatiquement le fichier a la fin de la lecture
+            for line in f:
+                line = line.strip()
+                if (line == self.name and self.extension[1]==False)or(line == "EXTENSION" and self.extension[0]==True):
+                     status = self.name
+                     i = 1
+                elif line == "EXTENSION" and self.extension[0]==False:
+                    status = None
+                elif line !="" and status !=None:
+                    line = line.split(';')
+                    if status == "Action_Chemin" :
+                        globals()['A%s' % i] = CardAction(line[1],line[2],line[3])
+                        self.list_card+=int(line[0])*[globals()['A%s' % i]]
+                    elif status == "ROLE":
+                        globals()['A%s' % i] = CardRole(line[1],line[2],line[3])
+                        self.list_card+=int(line[0])*[globals()['A%s' % i]]
+                    i+=1
+ 
+    def __str__(self):
+        res = "o-----o "+ self.__class__.__name__ +" o-----o"
+        res += "\n"+"Ceci est un deck de cartes"
+        return res
 
 ###############################################################################
 #                             Structures Cartes                               #
@@ -23,7 +70,7 @@ class Card(ABC):
         return res
 
 class CardChemins(Card):
-    def __init__(self, name, description, borders, special=False, reveal=False,indestructible = False):
+    def __init__(self, name, description, borders, special="", reveal=False,indestructible = False):
         super().__init__(name, description)
         self.borders = borders
         self.reveal = reveal
@@ -42,7 +89,7 @@ class CardAction(Card):
     # les cartes action sont des cartes avec un effet
     def __init__(self, name, description, effect, arg=None):#les cartes actions ne nécéssitent pas tous la listes des joueurs
         super().__init__(name, description)
-        self.effect = globals()[effect] #on ajoute la méthode contenant le nom effect dans notre object, les autres ne sont pas chargés car inutiles
+        self.effect = types.MethodType(globals()[effect], self) #on ajoute la méthode contenant le nom effect dans notre object, les autres ne sont pas chargés car inutiles
         if arg is None:
             arg = []
         self.arg = arg
@@ -170,12 +217,11 @@ def switch_role(self):
 
 def switch_hand(self):
     Done = False
-    print("Entre quels joueurs souhaitez-vous inverser les decks de cartes ?")
+    print("Avec quel joueur souhaitez-vous inverser votre deck de cartes ?")
     Target_P1 = self.target_player()
-    Target_P2 = self.target_player()
     temp = Target_P1._Player__main
-    Target_P1._Player__main =  Target_P2._Player__main
-    Target_P2._Player__main = temp
+    Target_P1._Player__main =  self.arg[0]._Player__main
+    self.arg[0]._Player__main = temp
     Done = True
     return Done
 
@@ -199,9 +245,9 @@ L'effet doit être "thief_handler"
 """
 
 def thief_handler(self):
-    Target_P = self.target_player()
     if self.name == "Voleur":  # Réutilisation de edit_effet
-        return self.edit_status(True, "Voleur", Target_P)
+        return self.edit_status(True, "Voleur", self.arg[0]) #applique l'effet voleur au joueur actuel
+    Target_P = self.target_player()
     return self.edit_status(False, "Voleur", Target_P)
 
 

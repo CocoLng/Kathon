@@ -8,8 +8,7 @@ import card
 from player import Human
 import os
 
-cur_path = os.path.dirname(__file__)
-new_path = os.path.join(cur_path,'ressources\\card_ini.txt')
+path_init = os.path.join(os.path.dirname(__file__),'ressources\\card_ini.txt')
 
 P1= Human("Moi")
 P2= Human("Cible")
@@ -19,7 +18,7 @@ P_current= P1
 
 arg=[P_current,P_list]
 
-with open(new_path,'r') as f:
+with open(path_init,'r') as f: #ferme automatiquement le fichier a la fin de la lecture
     for line in f:
         line = line.strip()
         if line == ("ACTION" or "CHEMIN" or "ROLE" or "REWARD"):
@@ -40,4 +39,4 @@ A1 = card.CardAction("Inspection","Cette carte casse la pioche de la cible","swi
 #J'arrive pas a add de cartes dans player
 #P1.add_card(P1, A2)
 A3.arg = arg
-print(A3.effect(A3))
+print(A3.effect())

@@ -1,6 +1,6 @@
 ACTION
 
-3;Eboulement;Cette carte detruit un chemin, pouvant empecher la progression des joueurs. Si le chemin n est plus relie au spawn alors il faut imperativement reparer le chemin avant de pouvoir continuer;collapsing
+3;Eboulement;Cette carte detruit un chemin, pouvant empecher la progression des joueurs. Si le chemin n est plus relie au depart alors il faut imperativement reparer le chemin avant de pouvoir continuer;collapsing
 
 1;Reparation : Pioche & Lanterne;Cette carte repare la pioche et la lanterne de la cible;impact_tools
 1;Reparation : Lanterne & Wagon;Cette carte repare la lanterne et le wagon/chariot de la cible;impact_tools
@@ -15,7 +15,7 @@ ACTION
 2;Reparation de Lanterne;Cette carte repare la lanterne de la cible;impact_tools
 3;Cassage de Lanterne;Cette carte casse la lanterne de la cible;impact_tools
 
-6;lan Secret;Cette carte permet de prendre connaissance d'une des cartes Arivee;secret_plan
+6;Plan Secret;Cette carte permet de prendre connaissance d'une des cartes Arivee;secret_plan
 
 EXTENSION
 
