@@ -1,16 +1,20 @@
 # la classe connection edge permet de gerer les connections entre 
-# des objets a une sources et de savoir si l'objet regarder est 
-# connecté a une source en particulier
+# des objets a une sources et de savoir si l'objet regarde est 
+# connecté a la source voulue
+
 class Connection_edge:
     
-    def __init__(self,flag=None,source=False):
+    def __init__(self,name,flag=None,source=False):
             self.delet = False
             self.__flag = flag
             self.__source = source 
             self.__inputo = []
             self.__outputo = []
             self.is_check = False
-            
+            self.name = name
+    
+    def __str__(self):
+        return self.name
             
 # flag_loop et __flag_ pemettent de recuperer l'information a quelle source
 # est connecté l'objet concerné d'objet connecté a une source
@@ -23,7 +27,7 @@ class Connection_edge:
             if self.__inputo != []:
                 if start != self.__inputo[0]:
                     return self.__inputo[0].__flag_(start)
-            return "flag source not set"
+            return None
                 
     @property
     def flag_loop(self): 
@@ -85,7 +89,12 @@ class Connection_edge:
             except ValueError:
                 print("les objets ne sont pas connecte")
                 
-                
+ #permet dedetruire l'integraliter de l'objet et ses connections               
+    def delete_connection(self):
+        in_out = [self.outputo[i] if i < len(self.outputo) else self.inputo[i-len(self.outputo)] for i in range(len(self.outputo)+len(self.inputo))]
+        [self.disconnect(i) for i in in_out]
+
+        
 # a utiliser lorsque l'on deconnecte deux objet si l'on veux recree correctement
 # les chemins j'usqua l'objet source
     def reconstruc_path(self,source_flag):
