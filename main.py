@@ -7,7 +7,7 @@ Created on Mon Nov 28 16:00:38 2022
 import os
 from scripts.player import Human
 from scripts.card import input_player #nous réutilisons la fonction input player de card.py
-from scripts.game import run_round
+from scripts.game import init_round
 
 def readfile(path_join,part_explain = 0):
     with open(os.path.join(os.path.dirname(__file__),path_join),'r') as f: 
@@ -58,7 +58,7 @@ list_players = init_player(extension)
 nb_manches = 1
 while True :
     readfile('ressources\\SaboteurTxtMenu.txt',1)
-    run_round(extension,list_players)
+    init_round(extension,list_players)
     nb_manches +=1
     if nb_manches > 3 : break
 
