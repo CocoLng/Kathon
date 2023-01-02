@@ -4,38 +4,59 @@ Created on Mon Nov 28 16:00:38 2022
 
 @author: coren
 """
-#from abc import ABC  #, abstractmethod
-    
-from player import Human
-#from board_game import BordGame
-import Card
+import os
+from card import input_player #nous réutilisons la fonction input player de card.py
+
+
+def readfile(path_join,part_explain = 0):
+    with open(os.path.join(os.path.dirname(__file__),path_join),'r') as f: 
+        f_split = f.read().split("SUB_EXPLAIN")
+        print(f_split[part_explain])
         
-P1= Human("Moi")
-P2= Human("Cible")
-P_list=[P1,P2]
+def init_player(extension):
+    list_players = []
+    print("\nSaisir 'STOP'(ou Ctrl+C) pour arreter la saisie, ne rien taper entraine egalement l arret")
+    while True :
+        try:  # redemande jusqu'a validité
+            New_input = input("Taper le nom d'un joueur : ")
+            New_input = New_input.strip()
+            if New_input == "" : raise KeyboardInterrupt 
+            if New_input.upper() == "STOP" : raise KeyboardInterrupt
+            list_players.append(New_input)
+            if (len(list_players)==10 and not(extension) )or(len(list_players)==12 and extension) : raise KeyboardInterrupt
+        except ValueError:
+            print(f'❌ Valeur incorrecte, veuillez réessayer entre {min} et {max}\n')
+            continue
+        except KeyboardInterrupt:
+            if (len(list_players)<3 and not(extension) )or(len(list_players)<2 and extension) : 
+                print("Le nombre de joueurs minimum n'est pas atteint, veuillez continuer")
+                continue
+            print("\nFin de la saisie des Joueurs, voici la liste :")
+            [print(i, ': ', x, sep='', end='  ') for i, x in enumerate(list_players, 1)]
+            break
+   
+while True : 
+    readfile('ressources\\SaboteurTitle.txt')
+    res_input = input_player(0, 3)
+    if res_input == 1 :
+         readfile('ressources\\PresentationSubMenu.txt')
+         readfile('ressources\\PresentationSubMenu.txt',input_player(0, 2))
+         input_player(0, 1)
+    if res_input == 2:
+        extension = False
+        break
+    if res_input == 3:
+        extension = True
+        break
 
+init_player(extension)
+         
 
-A3 = Card.CardAction("Cassage de Wagon","Cette carte casse la pioche de la cible","impact_tools",P_list)
-A2 = Card.CardAction("Reparation : Wagon & Pioche","Cette carte casse la pioche de la cible","impact_tools",P_list)
-"Eboulement","Cette carte détruit un chemin, pouvant empecher la progression des joueurs. Si le chemin n'est plus relié au spawn alors il faut impérativement réparer le chemin avant de continuer","collapsing"
+# with open(os.path.join(os.path.dirname(__file__),'ressources\\SaboteurTitle.txt'),'r') as f: # The with keyword automatically closes the file when you are done
+#     print (f.read())
+    
+# 
 
-A1 = Card.CardAction("Inspection","Cette carte casse la pioche de la cible","switch_hand",P_list)
-
-#J'arrive pas a add de cartes dans player
-#P1.add_card(P1, A2)
-
-print(A3.effect(A3))
-# print(A2.effect)
-# print(A1.effect)
-
-
-# mab = BordGame()
-# W1 = [True,True,True,True]
-
-# mab.add_card(W1,[0,0])
-# mab.add_card(W1,[5,10])
-# mab.add_card(W1,[1,1])
-# mab.add_card(W1,[-5,2])
-# mab.add_card(W1,[-4,-5])
-
-# mab.del_card([5,10])
+# with open(os.path.join(os.path.dirname(__file__),'ressources\\SaboteurTitle.txt'),'r') as f: # The with keyword automatically closes the file when you are done
+#     print (f.read())
+        

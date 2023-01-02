@@ -135,6 +135,7 @@ class CardAction(Card):
     # les cartes action sont des cartes avec un effet
     def __init__(self, name, description, effect, arg=None):#les cartes actions ne nécéssitent pas tous la listes des joueurs
         super().__init__(name, description)
+        
         self.effect = types.MethodType(globals()[effect], self) #on ajoute la méthode contenant le nom effect dans notre object, les autres ne sont pas chargés car inutiles
         if arg is None:
             arg = []
@@ -143,48 +144,52 @@ class CardAction(Card):
 ###############################################################################
 #                             Méthodes Communes                               #
 ###############################################################################
-#Les méthodes si dessous sont chargès dans tous nos objets, car essentiels au fonctionnement de nos méthodes effect
+#Les fonctions si dessous peuvent êtres appelés dans tous type de cartes, en revanche elle ne nécissite pas de faire partie de chaque objet, mais juste 
+#d'etre accessible par ces dernières, sauf la méthode target_player qui est uniquement appelée dans CardAction et depend de ses arguments
 
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
         [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(self.arg[1], 1)]
-        return self.arg[1][self.input_player(1, len(self.arg[1]))-1]
+        return self.arg[1][input_player(1, len(self.arg[1]))-1]
 
-    def input_player(self, min, max):  # demande un input entre min et max et return le res
-        while True:
-            try:  # redemande jusqu'a validité
-                selected = input('\nTaper le chiffre désiré : ')
-                selected = int(selected)
-                if selected < min or selected > max:
-                    raise ValueError
-                break
-            except ValueError:
-                print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {min} et {max}\n')
-                continue
-            except KeyboardInterrupt:
-                print("\nVous quittez le programme, aurevoir")
-                exit()
-            else:
-                print('break, Erreur inconnue')
-                exit()
-        return selected
+# les fonctions si desous sont appelable par tous type de cartes
 
-    def has_effect(self, effect, Target_P):
-        if effect in Target_P.status:  # regarde si le Target Player possède deja l'effet
-            return True
-        return False
+def has_effect(effect, Target_P):
+    if effect in Target_P.status:  # regarde si le Target Player possède deja l'effet
+        return True
+    return False
 
-    def edit_status(self, ajout, effect_play, Target_P):
-        Done = False
-        # si le joueur n'as pas déja l'effet alors on peut lui mettre
-        if ajout and not(self.has_effect(effect_play, Target_P)):
-            Target_P.status.append(effect_play)
-            Done = True
-        # si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
-        elif not(ajout) and self.has_effect(effect_play, Target_P):
-            Target_P.status.remove(effect_play)
-            Done = True
-        return Done
+def edit_status(ajout, effect_play, Target_P):
+    Done = False
+    # si le joueur n'as pas déja l'effet alors on peut lui mettre
+    if ajout and not(has_effect(effect_play, Target_P)):
+        Target_P.status.append(effect_play)
+        Done = True
+    # si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
+    elif not(ajout) and has_effect(effect_play, Target_P):
+        Target_P.status.remove(effect_play)
+        Done = True
+    return Done
+    
+def input_player(min, max):  # demande un input entre min et max et return le res #self remove pour test !!!
+    while True:
+        try:  # redemande jusqu'a validité
+            selected = input('Taper le chiffre désiré : ')
+            selected = int(selected)
+            if selected < min or selected > max:
+                raise ValueError
+            if selected == 0 : raise KeyboardInterrupt #permet de quittez si 0 est entrer et que nous sommes dans le menu
+            break
+        except ValueError:
+            print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {min} et {max}\n')
+            continue
+        except KeyboardInterrupt:
+            print("\nVous quittez le programme, aurevoir")
+            exit()
+        else:
+            print('break, Erreur inconnue')
+            exit()
+    return selected
 ###############################################################################
 #                      Listes des Effets Disponibles                          #
 ###############################################################################
@@ -221,10 +226,10 @@ def impact_tools(self):
     Target_P = self.target_player()
     Name_list = self.name.split()
     if Name_list[0] == "Cassage":  # Si nous ne cassons pas nous réparons
-        return self.edit_status(True, Name_list[2], Target_P)
+        return edit_status(True, Name_list[2], Target_P)
     elif len(Name_list) == 5:  # Si nous avons deux effet pour la réparation
-        Done = self.edit_status(False, Name_list[4], Target_P)
-    Done = Done or self.edit_status(False, Name_list[2], Target_P)
+        Done = edit_status(False, Name_list[4], Target_P)
+    Done = Done or edit_status(False, Name_list[2], Target_P)
     return Done
 
 ###############################################################################
@@ -237,7 +242,7 @@ def collapsing(self):
 def secret_plan(self):
     Done = False
     print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
-    selected = self.input_player(0, 3)
+    selected = input_player(0, 3)
     #flip card
     print(selected)
     Done = True
@@ -280,9 +285,9 @@ L'effet doit être "jail_handler"
 def jail_handler(self):
     Target_P = self.target_player()
     if self.name == "Emprisonnement":  # Réutilisation de edit_effet
-        return self.edit_status(True, "Emprisonnement", Target_P)
+        return edit_status(True, "Emprisonnement", Target_P)
     # si on emprisonne pas alors on libère
-    return self.edit_status(False, "Emprisonnement", Target_P)
+    return edit_status(False, "Emprisonnement", Target_P)
 
 """
 Gère l'effet de vol et de retrait via la carte pas touche
@@ -292,9 +297,9 @@ L'effet doit être "thief_handler"
 
 def thief_handler(self):
     if self.name == "Voleur":  # Réutilisation de edit_effet
-        return self.edit_status(True, "Voleur", self.arg[0]) #applique l'effet voleur au joueur actuel
+        return edit_status(True, "Voleur", self.arg[0]) #applique l'effet voleur au joueur actuel
     Target_P = self.target_player()
-    return self.edit_status(False, "Voleur", Target_P)
+    return edit_status(False, "Voleur", Target_P)
 
 
 """

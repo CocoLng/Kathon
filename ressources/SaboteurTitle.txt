@@ -1,0 +1,16 @@
+========================================================================
+                             SABOTEUR
+                   Les mineurs contre-attaquent !
+========================================================================
+
+Bienvenu dans une version terminal du jeu Saboteur !
+Si vous debutez nous vous recommandons de ne pas activer l extension.
+
+Que souhaitez-vous faire ?
+
+[1] Voir les explications du jeu a son implementation
+[2] Commencer une partie du jeu de base
+[3] Commencer une partie du jeu avec l EXTENSION
+
+[0] Quittez le programme (Ctrl + C)
+ 

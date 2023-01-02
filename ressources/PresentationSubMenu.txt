@@ -1,0 +1,77 @@
+
+========================================================================
+                            Explication
+========================================================================
+
+Choisissez la categorie dont vous souhaitez avoir des renseignements :
+
+[1] Voir le Principe du jeu de base
+
+[2] Voir le Principe du jeu avec l EXTENSION
+
+[3] Avoir des renseignement sur l implementation du jeu
+
+[0] Quittez le programme (Ctrl + C)
+SUB_EXPLAIN
+========================================================================
+                       Principe du jeu de base
+========================================================================
+
+Chacun joue soit le role d un Chercheur d or, soit le role d un Saboteur qui entrave la prospection. 
+Mais personne ne connait le role des autres joueurs !
+Les deux groupes s affrontent donc sans savoir qui fait quoi. A la fin de la manche, le partage des pepites d or (score) s effectue,
+si les Chercheurs d or sont arrives au tresor, ils gagnent des pepites et les Saboteurs ne gagnent rien.
+Mais si les prospecteurs sont bredouilles, les Saboteurs raflent le butin ! 
+Apres 3 manches, le joueur qui a gagne le plus de pepites remporte la partie.
+
+A chaque manche vous obtiendrez un nouveau role et une nouvelle "main" composee de cartes actions et chemins.
+Les cartes action permettent de declancher des evenement tandis que les cartes chemins permettent de se moivoir dans la carte.
+A vous de voir selon votre role si vous devez atteindre l objectif ou tous faire pour empecher d y arriver.
+
+Chaque tour, vous ne pouvez poser q une seule carte. Vous piochez une carte a la fin de votre tour tant que la pioche n est pas encore vide.
+Vous pouvez passer votre tour en jetant une carte si vous le desirez.
+Si cette derniere et vide et vous n avez plus de cartes alors vous ne pouvez plus jouer.
+
+Si la pepite d or est trouve, alors les chercheurs gagnent, si plus personne ne peux jouer alors les saboteurs gagnent.
+
+Il y a 3 manches.
+
+LORS DE VOTRE TOUR, SELECTIONNEZ UNE CARTE ET VOUS POURREZ VOIR SON DESCRIPTIF POUR COMPRENDRE CE QU ELLE FAIT.
+
+[0] Quittez le programme (Ctrl + C)
+[1] Retour au menu principal
+SUB_EXPLAIN
+========================================================================
+                       Saboteur, l EXTENSION
+========================================================================
+(Il est preferable de connaitre les regles du jeu de base avant de se lancer dans l extension.)
+
+Les chercheurs d or sont maintenant divises en 2 equipes, VERT et BLEU.
+NOUVEAU ROLES :
+- BOSS : Membre des deux equipes, vous gagnez s il l une d elle gagne,mais toujours une pepite de moins que les Chercheurs.
+- PROFITEUR : Vous etes toujours gagnant, peut importe qui remporte, cependant vous recevez 2 pepites de moins si vous ne posez pas la derniere connexion
+- GEOLOGUES : Vous jouez en solo, votre recompense n est pas de l or mais des cristaux visibles sur la map. A la fin de la manche vous recevez les cristaux visibles
+
+NOUVELLES CARTES ACTION ET CHEMIN :
+Pendant votre tour selectionnez une carte et vous verrez sa description/explication.
+
+NOUVELLE REGLE : DEFAUSSER DE 2 CARTES
+Si vous avez un outil casse ou etes en prison, se deffausser de 2 cartes permet de retirer un malus, a la fin vous piochez une carte, ce qui reduit votre main d une carte !
+
+MODIFICATION REGLE : PASSER SON TOUR
+Le joueur peut desormais passer son tour en se defaussant d 1,2 ou 3 cartes puis pioche le nombre de cartes defausser.
+
+La regle de fin de manche est la meme, le calcul des score est fait automatiquement, cependant des vols de pepites peuvent avoir lieu, faites donc attention.
+Partie en 3 manches.
+
+[0] Quittez le programme (Ctrl + C)
+[1] Retour au menu principal
+SUB_EXPLAIN
+========================================================================
+                       Implementation du jeu
+========================================================================
+
+explique le code python et notre approche
+
+[0] Quittez le programme (Ctrl + C)
+[1] Retour au menu principal
