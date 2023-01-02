@@ -1,14 +1,17 @@
-from Card import *
-from board_game import *
-
+import card 
+import board_game 
+from abc import ABC
+import card 
 class Player(ABC):
     
     def __init__(self,name):
         self.score = 0
         self.name = name
+        self.role = None
         self.__main = []
         self.status = []
         self.__carte_max = 5
+        self.card_number = 0
     
     def __str__ (self):
         Aff = "-"*20 
@@ -34,15 +37,6 @@ class Player(ABC):
             print("impssible de retirer des point au joueur")
         
 
-
-class IA(Player):
-    
-    def __init__(self,name):
-        super().__init__(name)
-        self.__main = []
-
-
-
 class Human(Player):
     
     def __init__(self,name):
@@ -50,27 +44,27 @@ class Human(Player):
         self.__main = []
     
     def skip_turn(self):
-        if self.__main == []: return True
-        return False
-  
-        
+        if self.card_number == 0: return True
+        return False       
   
     def play_card(self,MAP,Pl_lt):
         ID = input("quelle carte voulez vous jouer ?")
         try:
             
             card = self.__main[ID-1]    
-            if hasattr(CardChemins,card):
+            if isinstance(card,'CardChemin'):
                 if self.__status == []: 
                     if MAP.card_setable():
                         MAP.add_card(card,False)
                         self.__main.remove(card)
+                        self.card_number = len(self.__main)
                         return True
                 
-            if hasattr(CardAction,card):
+            if isinstance(card,'CardAction'):
                 card.P_list = Pl_lt
                 if card.effect():
                     self.__main.remove(card)
+                    self.card_number = len(self.__main)
                     return True
                 
             return False
@@ -78,13 +72,23 @@ class Human(Player):
         except IndexError:
             print("print vous n'avez pas asser de cartes")
             return False
-  
 
             
-    def del_card (self,card):
-        
-            if card in self.__main:
-                self.__main.remove(card)
-            else: 
-               return print("cette carte n est pas presente dans votre main")
+    def del_card (self,quantite = 1):
+            if self.card_number < quantite:
+                print('vous n avez pas asser de cartes')
+                return False
+            for i in range(quantite):
+                ID = input("quelle carte voulez vous jouer ?")
+                card = self.__main[ID-1] 
+                if card in self.__main:
+                    self.__main.remove(card)
+                else: 
+                    return print("cette carte n est pas presente dans votre main")
+           
+    def get_card(self,card):
+        if len(self.__main) <= self.__carte_max:
+            self.__main.append(card)
+            return True
+        return False
 

@@ -13,8 +13,8 @@ class ConnectionEdge:
             self.is_check = False
             self.name = name
     
-    def __str__(self):
-        return self.name
+    #def __str__(self):
+     #   return self.name
             
 # flag_loop et __flag_ pemettent de recuperer l'information a quelle source
 # est connecté l'objet concerné d'objet connecté a une source
@@ -133,7 +133,6 @@ class ConnectionEdge:
                     # que l'on veut que 'i' soit l'input de notre objet
                     self.disconnect(i)
                     self.connect(i)   
-        print(self.is_check)
         # permet de gerer les fin de lignes conecter a des noeuds
         self.is_check = not(self.is_check)
         
