@@ -31,9 +31,10 @@ class BordGame:
         for i in range(len(self.__map_[0])):
             y = len(f"{i+self.__decalage[1]}")
             aff1 ="|" + " "*ma_leny+"|"
-            aff2 ="|"+" "*((ma_leny-y)//2+(ma_leny-y)%2) +f"{i+self.__decalage[1]}"+" "*((ma_leny-y)//2)+"|"
-            aff3 ="|"+" "*ma_leny+"|"
-            count += 1
+            aff2 ="|" + " "*ma_leny+"|"
+            aff3 ="|" + " "*((ma_leny-y)//2+(ma_leny-y)%2) +f"{i+self.__decalage[1]}"+" "*((ma_leny-y)//2)+"|"
+            aff4 ="|" + " "*ma_leny+"|"
+            aff5 ="|" + " "*ma_leny+"|"
 
             for j in range(len(self.__map_)):
                 if self.__map_[j][i] == []:
@@ -41,6 +42,8 @@ class BordGame:
                     aff1 +="     "
                     aff2 +="     "
                     aff3 +="     "
+                    aff4 +="     "
+                    aff5 +="     "
                 
                 else:
                     print('\n\n\n')
@@ -66,7 +69,7 @@ class BordGame:
                          
                             if not(O.name in PATH):
                                 PATH.append(O.name)
-                    for 
+                     
                     
                     C[4],C[5],C[6],C[9],C[10] = False,False,False,False,False
                     if not('up' in PATH):
@@ -101,11 +104,13 @@ class BordGame:
                                                           
                     center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] # + '▚'*C[11]+'▞'*C[12]
 
-                    aff1 += "┏━"+ ("║" if "up" in HELLO else "━") + "━┓"  
-                    aff2 += ("══" if "left" in HELLO else "┃ ")+ center + ("══" if "right" in HELLO else " ┃") 
-                    aff3 += "┗━"+("║" if "down" in HELLO else "━")+ "━┛" 
+                    aff1 += "┏━"+ ("║" if "up" in HELLO else " ") + "━┓" 
+                    aff2 += "┃ "+ ("║" if "up" in HELLO else " ") + " ┃" 
+                    aff3 += ("══" if "left" in HELLO else "┃ ")+ center + ("══" if "right" in HELLO else " ┃") 
+                    aff4 += "┃ "+ ("║" if "up" in HELLO else " ") + " ┃" 
+                    aff5 += "┗━"+("║" if "down" in HELLO else "━")+ "━┛" 
                     
-            aff += aff1 + "\n" + aff2 + "\n" + aff3 + "\n"
+            aff += aff1 + "\n" + aff2 + "\n" + aff3 + "\n" + aff4 + "\n" + aff5 + "\n" 
         return aff_barre+"\n"+aff
 
     
