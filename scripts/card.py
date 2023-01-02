@@ -38,7 +38,7 @@ class Deck:
             for line in f:
                 line = line.strip()
                 if line == self.name:
-                    status = self.name
+                    status = self.name.upper()
                     if self.extension[1]==True:
                         write = False
                     else :
@@ -74,6 +74,7 @@ class Deck:
                         self.list_card+=int(line[0])*[globals()['OR_%s' % int(line[3])]]
                     else :
                         print("Deck avec le nom de propriété indéfinis ! ERREUR")
+                        exit()
                     i+=1
 #temp reward, fin de manche ajout def
  

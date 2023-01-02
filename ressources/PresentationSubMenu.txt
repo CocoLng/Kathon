@@ -6,9 +6,7 @@
 Choisissez la categorie dont vous souhaitez avoir des renseignements :
 
 [1] Voir le Principe du jeu de base
-
 [2] Voir le Principe du jeu avec l EXTENSION
-
 [3] Avoir des renseignement sur l implementation du jeu
 
 [0] Quittez le programme (Ctrl + C)
