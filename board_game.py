@@ -23,11 +23,11 @@ class BordGame:
         if ma_lenx < 4:
             ma_lenx =3
         aff_barre = " " *(ma_leny+2)
-        print()
+
         for j in range(len(self.__map_)):
             x = len(f"{j+self.__decalage[0]}")
             aff_barre += "|"+" "*((ma_lenx-x)//2+(ma_lenx-x)%2) +f"{j+self.__decalage[0]}"+" "*((ma_lenx-x)//2)+"|"  
-        count = 0
+
         for i in range(len(self.__map_[0])):
             y = len(f"{i+self.__decalage[1]}")
             aff1 ="|" + " "*ma_leny+"|"
@@ -50,7 +50,6 @@ class BordGame:
                     HELLO_I = [K.inputo for K in M.borders]
                     HELLO_O = [K.outputo for K in M.borders]
 
-                    print(HELLO)
                     PATH = []
                     for name,connect_I,connect_O in zip(HELLO,HELLO_I,HELLO_O):
                         if not(name in PATH):
@@ -67,7 +66,8 @@ class BordGame:
                          
                             if not(O.name in PATH):
                                 PATH.append(O.name)
-                            
+                    for 
+                    
                     C[4],C[5],C[6],C[9],C[10] = False,False,False,False,False
                     if not('up' in PATH):
                         C = [not(val) for val in C]
