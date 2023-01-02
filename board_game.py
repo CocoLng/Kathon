@@ -1,4 +1,12 @@
-from detect_region import *
+import detect_region
+import card
+import sys
+
+
+def stop():
+    raise StopIteration
+
+
 
 class BordGame:
     
@@ -15,32 +23,91 @@ class BordGame:
         if ma_lenx < 4:
             ma_lenx =3
         aff_barre = " " *(ma_leny+2)
+        print()
         for j in range(len(self.__map_)):
             x = len(f"{j+self.__decalage[0]}")
             aff_barre += "|"+" "*((ma_lenx-x)//2+(ma_lenx-x)%2) +f"{j+self.__decalage[0]}"+" "*((ma_lenx-x)//2)+"|"  
-            
+        count = 0
         for i in range(len(self.__map_[0])):
             y = len(f"{i+self.__decalage[1]}")
             aff1 ="|" + " "*ma_leny+"|"
             aff2 ="|"+" "*((ma_leny-y)//2+(ma_leny-y)%2) +f"{i+self.__decalage[1]}"+" "*((ma_leny-y)//2)+"|"
             aff3 ="|"+" "*ma_leny+"|"
+            count += 1
 
             for j in range(len(self.__map_)):
-            
-                chemin = self.__map_[j][i]
-                if chemin != []:
-                    aff1 += "( " + ("|" if chemin[0] else " ") + " )"
-                    aff2 += ("--" if chemin[1] else "( ") +"+"+ ("--" if chemin[3] else " )")
-                    aff3 += "( " + ("|" if chemin[2] else " ") + " )"
+                if self.__map_[j][i] == []:
+                    
+                    aff1 +="     "
+                    aff2 +="     "
+                    aff3 +="     "
+                
                 else:
-                    aff1 +="(   )"
-                    aff2 +="(   )"
-                    aff3 +="(   )"
+                    print('\n\n\n')
+                    M = self.__map_[j][i]
+                    C = [True for creat in range(13)]
+                    HELLO = [K.name for K in M.borders]
+                    HELLO_I = [K.inputo for K in M.borders]
+                    HELLO_O = [K.outputo for K in M.borders]
+
+                    print(HELLO)
+                    PATH = []
+                    for name,connect_I,connect_O in zip(HELLO,HELLO_I,HELLO_O):
+                        if not(name in PATH):
+                            PATH.append(name)
+                        
+                        for I,O in zip(connect_I,connect_O):
+
+                          if (I != []) and (I in M.borders):
+                           
+                              if not(I.name in PATH):
+                                  PATH.append(I.name)
+                                  
+                          if (O != []) and (O in M.borders):
+                         
+                            if not(O.name in PATH):
+                                PATH.append(O.name)
+                            
+                    C[4],C[5],C[6],C[9],C[10] = False,False,False,False,False
+                    if not('up' in PATH):
+                        C = [not(val) for val in C]
+                    
+                    lock = [val for val in C]
+                        
+                    C[3],C[7],C[8],C[9],C[10] = False,False,False,False,False
+                    if not('down'in PATH):
+                        C = [not(c) if l == True else False for l,c in zip(lock,C)]
+                    
+                    lock = [val for val in C]
+                        
+                    C[1],C[5],C[7],C[9],C[11] = False,False,False,False,False
+                    if not('left' in PATH):
+                        C = [not(c) if l == True else False for l,c in zip(lock,C)]
+                    
+                    lock = [val for val in C]
+                        
+                    C[2],C[6],C[8],C[9],C[11] = False,False,False,False,False
+                    if not('right' in PATH):
+                        C = [not(c) if l == True else False for l,c in zip(lock,C)]
+                    
+                    lock = [val for val in C]
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                          
+                    center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] # + '▚'*C[11]+'▞'*C[12]
+
+                    aff1 += "┏━"+ ("║" if "up" in HELLO else "━") + "━┓"  
+                    aff2 += ("══" if "left" in HELLO else "┃ ")+ center + ("══" if "right" in HELLO else " ┃") 
+                    aff3 += "┗━"+("║" if "down" in HELLO else "━")+ "━┛" 
                     
             aff += aff1 + "\n" + aff2 + "\n" + aff3 + "\n"
         return aff_barre+"\n"+aff
-    
-    
+
     
     
     
@@ -61,41 +128,90 @@ class BordGame:
     #permet de verifier si la carte poser est en accord avec les regles de conection de cartes
     #permet de verifier si la carte poser est en acord avec les regles de conection de cartes
 
-    def card_setable(self,card):
-        pos = self.ask_pos()
-        chemin = card.chemin
-        X = [self.__map_[pos[0]+ ind - 2][pos[1]].chemin[ind - 2] if ind%2 != 0 else self.__map_[pos[0]][pos[1] + ind - 1].chemin[ind - 2] for ind in range(len(chemin))]
-        c = [True if i == j  else False for i,j in zip(chemin,X)]
-        
-        if False in c:
-            return False
-        return True
-    #
-    def flag_spread(self):
-        card_to_spread = []
-        row = 0
-        col = 0
-        self.__map_.index()
-        while True:
-            
-            break             
-        return True 
-   
+    def card_set(self,card,pos):
 
+        card_p = []
+        borders_to_connect = []
+        
+        antipode_d_u = ['down','up']
+        antipode_l_r = ['right','left']
+        
+        flag = False
+        if pos[0] < 0:
+            pos[0] = pos[0] - self.__decalage[0]
+        if pos[1] < 0:
+            pos[1] = pos[1] - self.__decalage[1]
+
+        for x_y in [-1,1]:          
+          if  pos[0]+x_y >= 0 and pos[0]+x_y < len(self.__map_):
+            try:
+                INTE1 = [True if I.name  == antipode_l_r[(x_y+1)//2] else False for I in self.__map_[pos[0]+x_y][pos[1]].borders]
+                INTE = [True if I.name == antipode_l_r[(x_y-1)//2] else False for I in card.borders ] 
+                if (True in INTE) == (True in INTE1):
+                    
+                    card_p.append(self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)])
+                    borders_to_connect.append(card.borders[INTE.index(True)])
+                    
+                    if (True in INTE1):
+                        if self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)].flag_loop != None:
+                            flag = True
+                else:
+                    print('probleme lors de la connection des cartes en X')
+                    return False  
+            except(AttributeError,IndexError,ValueError):
+                pass
+
+          if  pos[1]+x_y >= 0 and pos[1]+x_y < len(self.__map_[0]): 
+            try:
+
+                INTE1 = [True if I.name  == antipode_d_u[(x_y+1)//2] else False for I in self.__map_[pos[0]][pos[1]+x_y].borders]
+                INTE = [True if I.name == antipode_d_u[(x_y-1)//2] else False for I in card.borders ] 
+
+                if (True in INTE) == (True in INTE1):
+                    
+                        card_p.append(self.__map_[pos[0]][pos[1]+x_y].borders[INTE1.index(True)])
+                        borders_to_connect.append(card.borders[INTE.index(True)])
+
+                        if self.__map_[pos[0]][pos[1]+x_y].borders[INTE1.index(True)].flag_loop != None:
+                            flag = True
+                else:
+                    print('probleme lors de la connection des cartes en Y')
+                    return False
+            except(AttributeError,IndexError,ValueError):
+                pass
+        
+        if not(flag):
+            print('non connecté au start')
+            return False
+        
+        for exterieur,interieur in zip(card_p,borders_to_connect):
+            interieur.connect(exterieur)
+        
+        self.__map_[pos[0]][pos[1]] = card
+        self.__map_[self.__decalage[0]][self.__decalage[1]].borders[0].reconstruc_path(self.__map_[self.__decalage[0]][self.__decalage[1]].borders[0])
+        
+
+        return True
+                
     
-    #permet de suprimer des cartes a une positon precise si il reussi renvoi True sinon False
+    
+    
+    
+        #permet de suprimer des cartes a une positon precise si il reussi renvoi True sinon False
     def del_card(self):
+        
         pos = self.ask_pos()
         if self.__map_[pos[0]][pos[1]] != []:
             if self.__map_[pos[0]][pos[1]].special:
                 print("vous ne pouvez pas detruire une carte special")
-            else:  
+            else:
+                [i.delete_connection() for i in self.__map_[pos[0]][pos[1]].borders]
                 self.__map_[pos[0]][pos[1]] = []
             return True
         else:
             return False
-   
- 
+
+        
    #permet de rajouter des carte a une position precise 
    #si la carte est en dehors de la __map deja cree 
    #des lignes/colonnes ou les deux seront ajouté pour pouvoir placer la carte
@@ -103,33 +219,27 @@ class BordGame:
     def add_card(self,card,admin):
         
         pos = self.ask_pos()
-        if not(admin):
-           if not(self.card_setable(pos)):
-               return False
         #on verifie si la carte est en dehors de la __map"
         #debut verification"
         pos[0] = pos[0]-self.__decalage[0]
         pos[1] = pos[1]-self.__decalage[1]
-        print(pos)
+        
+        #si elle est a l exterieur nous devont ettendre la carte
+        a = pos[0]
+        b = pos[1]
+        
         if len(self.__map_) <= pos[0] or pos[0] < 0 :Xa = True 
         else: Xa = False
         
         if len(self.__map_[0]) <= pos[1] or pos[1] < 0:Ya = True 
         else: Ya = False
-        #fin verification"
-           
+        
         #si elle est a l interieur de la carte crée on peut la rajouter
         if not(Xa) and not(Ya): 
-            
-            if  self.__map_[pos[0]][pos[1]] == []:
-                 self.__map_[pos[0]][pos[1]] = card
-                
-            else: print("carte deja presente")
-                
+            if  not(self.__map_[pos[0]][pos[1]] == []):
+                print("carte deja presente")
+                return False
         else:
-        #si elle est a l exterieur nous devont ettendre la carte
-            a = pos[0]
-            b = pos[1]
         #Xa et Ya nous donne l information sur si on est a l'exteriur en x ou en y donc soit rajouter une/des ligne(s) ou une/des colonne(s)
         #ici Xa donc rajout de case sur X
             if Xa:
@@ -163,27 +273,21 @@ class BordGame:
                 #on rajoute une ligne soit en haut de la __map soit en bas de la __map
                 for j in range(len(self.__map_)):
                     [self.__map_[j].append([]) if b>0 else self.__map_[j].insert(0,[]) for i in range(Ylen)]  
-            
-            self.__map_[a][b] = card  
-            print( self.__decalage)
-            return True
-            
-            
-            
-######################################################################################                                                                                    #                                                                                                                 *
-#                                        TEST                                        #               *
-######################################################################################
-
-mab = BordGame()
-C1 = [True,True,True,True]
-C2 = [True,True,True,False]
-
-mab.add_card(C1,True)
-mab.add_card(C1,True)
-
-
-
-
-
-
+            # on ajoute la carte sur un tableau contenant les connection
+            # cree par la carte chemin [up,left,down,right]
+        if not(admin):
+            if not((pos[0] < -1 or pos[0] > len(self.__map_)+1) and ( pos[1] < -1 or pos[1] > len(self.__map_[0]+1))):
+                if self.card_set(card,pos):
+                    return True
+                return False
+            else:
+                return False
+        else:
+            self.__map_[a][b] = card
+"""
+ch = Deck('CHEMIN')
+ch.load_cards
+mab = BordGame() 
+mab.add_card(ch.list_card[0],True)
 print(mab)
+"""
