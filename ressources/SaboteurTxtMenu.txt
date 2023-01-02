@@ -13,4 +13,8 @@ Que souhaitez-vous faire ?
 [3] Commencer une partie du jeu avec l EXTENSION
 
 [0] Quittez le programme (Ctrl + C)
- 
+SUB_PART
+
+========================================================================
+                       Initialisation...
+========================================================================

@@ -10,7 +10,7 @@ from card import input_player #nous réutilisons la fonction input player de car
 
 def readfile(path_join,part_explain = 0):
     with open(os.path.join(os.path.dirname(__file__),path_join),'r') as f: 
-        f_split = f.read().split("SUB_EXPLAIN")
+        f_split = f.read().split("SUB_PART")
         print(f_split[part_explain])
         
 def init_player(extension):
@@ -22,21 +22,25 @@ def init_player(extension):
             New_input = New_input.strip()
             if New_input == "" : raise KeyboardInterrupt 
             if New_input.upper() == "STOP" : raise KeyboardInterrupt
+            if New_input in list_players: raise ValueError
             list_players.append(New_input)
             if (len(list_players)==10 and not(extension) )or(len(list_players)==12 and extension) : raise KeyboardInterrupt
         except ValueError:
-            print(f'❌ Valeur incorrecte, veuillez réessayer entre {min} et {max}\n')
+            print(f'❌ Erreur, le nom "{New_input}" est déja utilisé, veuillez en séléctionner un autre')
             continue
         except KeyboardInterrupt:
             if (len(list_players)<3 and not(extension) )or(len(list_players)<2 and extension) : 
-                print("Le nombre de joueurs minimum n'est pas atteint, veuillez continuer")
+                if extension  : New_input = 2-len(list_players)
+                else : New_input = 3-len(list_players)
+                print(f"\n❌ Le nombre de joueurs minimum n'est pas atteint, veuillez rajouter encore {New_input} joueurs")
                 continue
-            print("\nFin de la saisie des Joueurs, voici la liste :")
+            print("\n\nFin de la saisie des Joueurs, voici la liste :")
             [print(i, ': ', x, sep='', end='  ') for i, x in enumerate(list_players, 1)]
             break
+    return list_players
    
 while True : 
-    readfile('ressources\\SaboteurTitle.txt')
+    readfile('ressources\\SaboteurTxtMenu.txt')
     res_input = input_player(0, 3)
     if res_input == 1 :
          readfile('ressources\\PresentationSubMenu.txt')
@@ -49,14 +53,11 @@ while True :
         extension = True
         break
 
-init_player(extension)
+list_players = init_player(extension)
+nb_manches = 1
+while True :
+    readfile('ressources\\SaboteurTxtMenu.txt',1)
+    nb_manches +=1
+    if nb_manches > 3 : break
+
          
-
-# with open(os.path.join(os.path.dirname(__file__),'ressources\\SaboteurTitle.txt'),'r') as f: # The with keyword automatically closes the file when you are done
-#     print (f.read())
-    
-# 
-
-# with open(os.path.join(os.path.dirname(__file__),'ressources\\SaboteurTitle.txt'),'r') as f: # The with keyword automatically closes the file when you are done
-#     print (f.read())
-        

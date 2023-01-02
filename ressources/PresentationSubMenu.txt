@@ -12,7 +12,7 @@ Choisissez la categorie dont vous souhaitez avoir des renseignements :
 [3] Avoir des renseignement sur l implementation du jeu
 
 [0] Quittez le programme (Ctrl + C)
-SUB_EXPLAIN
+SUB_PART
 ========================================================================
                        Principe du jeu de base
 ========================================================================
@@ -40,7 +40,7 @@ LORS DE VOTRE TOUR, SELECTIONNEZ UNE CARTE ET VOUS POURREZ VOIR SON DESCRIPTIF P
 
 [0] Quittez le programme (Ctrl + C)
 [1] Retour au menu principal
-SUB_EXPLAIN
+SUB_PART
 ========================================================================
                        Saboteur, l EXTENSION
 ========================================================================
@@ -66,7 +66,7 @@ Partie en 3 manches.
 
 [0] Quittez le programme (Ctrl + C)
 [1] Retour au menu principal
-SUB_EXPLAIN
+SUB_PART
 ========================================================================
                        Implementation du jeu
 ========================================================================
