@@ -102,9 +102,10 @@ class CardChemin(Card):
         self.reveal = None
         
         if len(arg)>=6:
-            self.is_start = arg[5]
+            self.special = arg[5]  # non destructible si special, spawn et gold
         if len(arg)>=7 : 
-            self.special = arg[6]  # non destructible si special, spawn et gold
+            self.is_start = arg[6]
+            
         if len(arg)>=8:
             self.reveal = arg[7]
         
@@ -308,6 +309,9 @@ Il faudra, lors de l'initialisation, mettre dans effet le même nom que celle de
 methode pour definir la forme des cartes et les stockées dans les objets card chemins
 """
 
+###############################################################################
+#                          Affichage d'une Carte                              #
+###############################################################################
 def aff_ch(card,special):
     C = [True for creat in range(14)]
     
