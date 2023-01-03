@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 28 16:00:38 2022
-
-@author: coren
-"""
 from abc import ABC
 from sys import exit
 from random import shuffle
@@ -101,6 +95,7 @@ class Card(ABC):
 class CardChemin(Card):
     def __init__(self, arg):
         super().__init__(arg[1], arg[2])
+        
         self.config = arg[3]
         self.port = arg[4]
         self.borders = []
@@ -112,15 +107,16 @@ class CardChemin(Card):
         if len(arg)>=7:
             self.reveal = arg[6]
         
-        
         self.config = list(self.config.split(":"))
         self.port = list(self.port.split(","))
+
         for i in self.port:
-            self.borders.append(detect_region.ConnectionEdge(i,self.special, self.special=='START'))
-        
+                self.borders.append(detect_region.ConnectionEdge(i,self.special , self.special=='START'))
+
         for chemins,portes in zip(self.config,self.borders):
             [portes.connect(portes_) for connections, portes_ in zip(chemins,self.borders) if int(connections) ==1]
-            
+        
+        self.aff = aff_ch(self.borders,self.special)
 
 class CardRole(Card):
     def __init__(self, name, description,role):
@@ -307,3 +303,102 @@ def thief_handler(self):
 Vous pouvez ajouter vos effet personnels ici, puis crée la carte en l'ajoutant dans /ressource/card_ini.txt
 Il faudra, lors de l'initialisation, mettre dans effet le même nom que celle de la méthode'
 """
+"""
+methode pour definir la forme des cartes et les stockées dans les objets card chemins
+"""
+
+def aff_ch(card,special):
+    C = [True for creat in range(14)]
+    
+    HELLO_I = [K.inputo for K in card]
+    HELLO_O = [K.outputo for K in card]
+                    
+    PATH = []
+    COM = [] 
+
+    for K,connect_I,connect_O in zip(card,HELLO_I,HELLO_O):
+        if not(K.name in PATH):
+            PATH.append(K.name)
+            
+            for CI in connect_I:
+
+                if CI in card:
+                    if COM == [] and CI != []:
+                        COM.append(K)
+           
+                    if COM != [] and (K in COM):
+                        for CI_ in connect_I:
+                            if CI_ in card:
+                                if not(CI_ in COM):
+                                    COM.append(CI_)
+            for CO in connect_O:
+                        
+                if CO in card:
+                    if COM == [] and CO != []:
+                        COM.append(K)
+                        
+                    if COM != [] and (K in COM):
+                        for CO_ in connect_O:
+                            if CO_ in card:
+                                if not(CO_ in COM):
+                                    COM.append(CO_)
+                                    
+                                      
+    C[4],C[5],C[6],C[9],C[10] = False,False,False,False,False
+    if not('up' in PATH):
+        C = [not(val) for val in C]
+    
+    lock = [val for val in C]
+        
+    C[3],C[7],C[8],C[9],C[10] = False,False,False,False,False
+    if not('down'in PATH):
+        C = [not(c) if l == True else False for l,c in zip(lock,C)]
+    
+    lock = [val for val in C]
+        
+    C[1],C[5],C[7],C[9],C[11] = False,False,False,False,False
+    if not('left' in PATH):
+        C = [not(c) if l == True else False for l,c in zip(lock,C)]
+    
+    lock = [val for val in C]
+        
+    C[2],C[6],C[8],C[9],C[11] = False,False,False,False,False
+    if not('right' in PATH):
+        C = [not(c) if l == True else False for l,c in zip(lock,C)]
+    
+    lock = [val for val in C]
+    
+    C[0],C[9],C[12],C[13] = False,False,False,False
+    
+    if len(COM) == 4:
+        C[0] = True
+    if len(COM) == 0:
+        C = [False for val in C]
+        C[9] = True
+    if len(COM) == 2:
+        C = [False for val in C]
+        NAME = [K.name for K in COM]
+        if "up" in NAME and "left" in NAME:
+            C[12] = True                        
+        elif"up" in NAME and "Down" in NAME:
+            C[13] = True
+            
+    center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
+    
+    if special == 'blue_door':
+        center = 'B'
+    if special == 'green_door':
+        center = 'G'
+    if special == 'cristaux':
+        center = 'C'
+    if special == 'START':
+        center = 'S'
+    
+    aff1 = "┏━"+ ("║" if "up" in PATH else "━") + "━┓" 
+    aff2 = "┃ "+ ("║" if "up" in PATH else " ") + " ┃" 
+    aff3 = ("══" if "left" in PATH else "┃ ")+ center + ("══" if "right" in PATH else " ┃") 
+    aff4 = "┃ "+("║" if "down" in PATH else " ")+ " ┃" 
+    aff5 = "┗━"+("║" if "down" in PATH else "━")+ "━┛" 
+    
+    return [aff1,aff2,aff3,aff4,aff5] 
+ 
