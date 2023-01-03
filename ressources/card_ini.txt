@@ -31,7 +31,9 @@ END
 
 
 CHEMIN
-
+1;entree;entre_de_la_mine;00:10;left,down;PIERRE;True
+1;entree;entre_de_la_mine;00:10;down,right;PIERRE;True
+1;entree;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;PEPITE;True
 1;entree;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;START;True
 5;cheminclassique;a_la_croiser_des_chemins;0000:0000:0000:1110;up,left,down,right;
 5;cheminclassique;a_la_croiser_des_chemins;000:000:110;up,left,right;
@@ -53,12 +55,12 @@ CHEMIN
 
 EXTENSION
 2;PontChemin;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
-2;Echelle;a_la_croiser_des_chemins;0;down;START
-2;Echelle;a_la_croiser_des_chemins;0;left;START
+2;Echelle;a_la_croiser_des_chemins;0;down;START;False
+2;Echelle;a_la_croiser_des_chemins;0;left;START;False
 2;DoubleCourbe;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
 3;PontChemin;a_la_croiser_des_chemins;0000:00;left,down;gree_door
 3;PontChemin;a_la_croiser_des_chemins;0000:00;left,down;blue_door
-10;PontChemin;a_la_croiser_des_chemins;000:000:000:110;up,down,right;cristaux
+10;PontChemin;a_la_croiser_des_chemins;000:000:000:110;up,down,right;cristaux;False
 
 END
 
