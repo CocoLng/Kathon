@@ -31,8 +31,8 @@ END
 
 
 CHEMIN
-1;entree;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;START
 
+1;entree;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;START
 5;cheminclassique;a_la_croiser_des_chemins;0000:0000:0000:1110;up,left,down,right;
 5;cheminclassique;a_la_croiser_des_chemins;000:000:110;up,left,right;
 5;cheminclassique;a_la_croiser_des_chemins;000:000:110;up,left,down;

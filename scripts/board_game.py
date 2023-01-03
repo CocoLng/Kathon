@@ -1,13 +1,3 @@
-import detect_region
-import card
-import sys
-
-
-def stop():
-    raise StopIteration
-
-
-
 class BordGame:
     
     def __init__(self):
