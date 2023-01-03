@@ -44,7 +44,17 @@ class Human(Player):
     def skip_turn(self):
         if self.card_number == 0: return True
         return False       
-  
+    
+    def __flip_card_(self,ID):
+        antipode_d_u = ['down','up']
+        antipode_l_r = ['right','left']
+        try:
+            [CARD.name(antipode_d_u.index(CARD.name)-1)for CARD in self.__main[ID-1] if CARD.name in antipode_d_u]
+            [CARD.name(antipode_l_r.index(CARD.name)-1)for CARD in self.__main[ID-1] if CARD.name in antipode_l_r]   
+        except (IndexError,ValueError):
+            return False
+        return True
+        
     def play_card(self,MAP,Pl_lt):
         ID = input("quelle carte voulez vous jouer ?")
         try:
@@ -88,5 +98,6 @@ class Human(Player):
         if len(self.__main) <= self.__carte_max:
             self.__main.append(card)
             return True
+        print('cous avez trop de cartes')
         return False
 

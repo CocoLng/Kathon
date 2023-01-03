@@ -11,23 +11,38 @@ class ConnectionEdge:
             self.__inputo = []
             self.__outputo = []
             self.is_check = False
-            self.name = name
+            self.__name = name
     
     #def __str__(self):
      #   return self.name
             
 # flag_loop et __flag_ pemettent de recuperer l'information a quelle source
 # est connecté l'objet concerné d'objet connecté a une source
-
-    def __flag_(self,start):
+    @property
+    def source(self):
+        return self.__source
+    @property
+    def name(self):
+        return self.__name
+    
+    #condition propre au jeux sur les nom de nos objets
+    @name.setter
+    def name(self,name):
+        if name in ['up','down','right','left']:
+            self.__name = name
+        else:
+            pass
+            #print('le nom de l objet cree ne correspond pas aux different nom attendu, pour retier cette ligne de code aller: detect_region.py ligne 33')
         
+    def __flag_(self,start):
         if self.__source:
             return self.__flag
         else:
             if self.__inputo != []:
-                if start != self.__inputo[0]:
-                    return self.__inputo[0].__flag_(start)
-            return None
+                if len(self.__inputo) == 1 :
+                    if start != self.__inputo[0]: 
+                        return self.__inputo[0].__flag_(start)
+        return None
                 
     @property
     def flag_loop(self): 
@@ -87,7 +102,7 @@ class ConnectionEdge:
                 self.outputo = obj
                 obj.inputo = self 
             except ValueError:
-                print("les objets ne sont pas connecte")
+                pass
                 
  #permet dedetruire l'integraliter de l'objet et ses connections               
     def delete_connection(self):
@@ -99,7 +114,7 @@ class ConnectionEdge:
 # les chemins j'usqua l'objet source
     def reconstruc_path(self,source_flag):
         if not(self.is_check):
-            in_out = [self.outputo[i] if i < len(self.outputo) else self.inputo[i-len(self.outputo)] for i in range(len(self.outputo)+len(self.inputo))]
+            in_out = [self.outputo[i] if i < len(self.outputo) else self.inputo[i-len(self.outputo)-1] for i in range(len(self.outputo)+len(self.inputo))]
             # melange les input et les output de l'objet et les redefinies
             # en fonction de la direction de la source
             # par la suite on isoleras la source et considererons que tous les autres ports
@@ -107,12 +122,18 @@ class ConnectionEdge:
             # le programe commnceras par explorer une direction de ce noeud une fois l'exploration de la ligne terminé
             # nous retournons sur le noeud et explorons une autre direction
             self.is_check = True   
+            
             for i in in_out:
+                i.disconnect(self)
                 if i != source_flag:
                     #on verifie si l'objet suivent a deja ete verifier par le programme
-                    if not(i.is_check):
+                    if not(i.is_check):   
+                        # on detruit les chemins existent avant de 
+                        # les reconnecter a fin d'eviter une copie des input/output dans l'objet
+                        i.connect(self)
                         #si il ne la pas ete on continue la recontruction de chemin
                         i.reconstruc_path(self)
+
                     else:
                         
                         # si il a ete verifier on regarde si le prochain objet
@@ -120,21 +141,20 @@ class ConnectionEdge:
                         # correspond a une fin de ligne donc self.check doit rester a TRUE 
                         # afin d'indiquer au noeud que la ligne a deja ete verifier
                         # cela evite de reverifier la ligne quand on repartiras du noeud
-                        if self.is_check and (len(i.outputo)+len(i.inputo)) > 2:
+                        if (len(i.outputo)+len(i.inputo)) > 2:
                             self.is_check = not(self.is_check)
                         else:
                             i.is_check = False
-                    # on detruit les chemins existent avant de 
-                    # les reconnecter a fin d'eviter une copie des input/output dans l'objet
-                    i.disconnect(self)
-                    i.connect(self)
+                            
                 else:
-                    # si on detect que 'i' correspond a la source on indique on programe
-                    # que l'on veut que 'i' soit l'input de notre objet
-                    self.disconnect(i)
-                    self.connect(i)   
+                    if i.is_check:
+                        if not(self.source):
+                            # si on detect que 'i' correspond a la source on indique on programe
+                            # que l'on veut que 'i' soit l'input de notre objet
+                            self.connect(i)   
         # permet de gerer les fin de lignes conecter a des noeuds
         self.is_check = not(self.is_check)
+
         
 # cette classe serat utilisé afin de gere entre sorti des 
 # cartes chemins ainssi que leurs connections intern

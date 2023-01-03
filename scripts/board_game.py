@@ -36,88 +36,12 @@ class BordGame:
                     aff5 +="     "
                 
                 else:
-
-                    M = self.__map_[j][i]
-                    C = [True for creat in range(14)]
-
-                    HELLO_I = [K.inputo for K in M.borders]
-                    HELLO_O = [K.outputo for K in M.borders]
-                    
-                    PATH = []
-                    COM = [] 
-
-                    for K,connect_I,connect_O in zip(M.borders,HELLO_I,HELLO_O):
-                        if not(K.name in PATH):
-                            PATH.append(K.name)
-                        
-                        for CI in connect_I:
-
-                            if CI in M.borders:
-                                if COM == [] and CI != []:
-                                    COM.append(K)
-           
-                                if COM != [] and (K in COM):
-                                    for CI_ in connect_I:
-                                        if CI_ in M.borders:
-                                            if not(CI_ in COM):
-                                                COM.append(CI_)
-                        for CO in connect_O:
-                            
-                            if CO in M.borders:
-                                if COM == [] and CO != []:
-                                    COM.append(K)
-                                    
-                                if COM != [] and (K in COM):
-                                    for CO_ in connect_O:
-                                        if CO_ in M.borders:
-                                            if not(CO_ in COM):
-                                                COM.append(CO_)
-                                    
-                                      
-                    C[4],C[5],C[6],C[9],C[10] = False,False,False,False,False
-                    if not('up' in PATH):
-                        C = [not(val) for val in C]
-                    
-                    lock = [val for val in C]
-                        
-                    C[3],C[7],C[8],C[9],C[10] = False,False,False,False,False
-                    if not('down'in PATH):
-                        C = [not(c) if l == True else False for l,c in zip(lock,C)]
-                    
-                    lock = [val for val in C]
-                        
-                    C[1],C[5],C[7],C[9],C[11] = False,False,False,False,False
-                    if not('left' in PATH):
-                        C = [not(c) if l == True else False for l,c in zip(lock,C)]
-                    
-                    lock = [val for val in C]
-                        
-                    C[2],C[6],C[8],C[9],C[11] = False,False,False,False,False
-                    if not('right' in PATH):
-                        C = [not(c) if l == True else False for l,c in zip(lock,C)]
-                    
-                    lock = [val for val in C]
-                    
-                    C[0],C[9],C[12],C[13] = False,False,False,False
-                    
-                    if len(COM) == 4:
-                        C[0] = True
-                    if len(COM) == 0:
-                        C[9] = True
-                    if len(COM) == 2:
-                        NAME = [K.name for K in COM]
-                        if "up" in NAME and "left" in NAME:
-                            C[12] = True
-                        else:
-                            C[13] = True
-                            
-                    center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
-
-                    aff1 += "┏━"+ ("║" if "up" in PATH else "━") + "━┓" 
-                    aff2 += "┃ "+ ("║" if "up" in PATH else " ") + " ┃" 
-                    aff3 += ("══" if "left" in PATH else "┃ ")+ center + ("══" if "right" in PATH else " ┃") 
-                    aff4 += "┃ "+("║" if "down" in PATH else " ")+ " ┃" 
-                    aff5 += "┗━"+("║" if "down" in PATH else "━")+ "━┛" 
+                    self.__map_[j][i].aff
+                    aff1 += self.__map_[j][i].aff[0]
+                    aff2 += self.__map_[j][i].aff[1]
+                    aff3 += self.__map_[j][i].aff[2]
+                    aff4 += self.__map_[j][i].aff[3]
+                    aff5 += self.__map_[j][i].aff[4]
                     
             aff += aff1 + "\n" + aff2 + "\n" + aff3 + "\n" + aff4 + "\n" + aff5 + "\n" 
         return aff_barre+"\n"+aff
@@ -143,7 +67,6 @@ class BordGame:
     #permet de verifier si la carte poser est en acord avec les regles de conection de cartes
 
     def card_set(self,card,pos):
-
         card_p = []
         borders_to_connect = []
         
@@ -166,9 +89,8 @@ class BordGame:
                     card_p.append(self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)])
                     borders_to_connect.append(card.borders[INTE.index(True)])
                     
-                    if (True in INTE1):
-                        if self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)].flag_loop != None:
-                            flag = True
+                    if self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)].flag_loop != None:
+                        flag = True
                 else:
                     print('probleme lors de la connection des cartes en X')
                     return False  
@@ -193,23 +115,28 @@ class BordGame:
                     return False
             except(AttributeError,IndexError,ValueError):
                 pass
-        
+            
         if not(flag):
             print('non connecté au start')
             return False
-        
+        for i in card.borders:
+            if i != []:
+                print(i.flag_loop)
         for exterieur,interieur in zip(card_p,borders_to_connect):
             interieur.connect(exterieur)
         
         self.__map_[pos[0]][pos[1]] = card
-        self.__map_[self.__decalage[0]][self.__decalage[1]].borders[0].reconstruc_path(self.__map_[self.__decalage[0]][self.__decalage[1]].borders[0])
+
+        for i in self.__map_[self.__decalage[0]][self.__decalage[1]].borders:
+           i.reconstruc_path(i)
         
+        print('\n\n')    
+        for i in card.borders:
+               if i != []:
+                   print(i.flag_loop)
 
         return True
                 
-    
-    
-    
     
         #permet de suprimer des cartes a une positon precise si il reussi renvoi True sinon False
     def del_card(self):
@@ -298,10 +225,3 @@ class BordGame:
                 return False
         else:
             self.__map_[a][b] = card
-"""
-ch = Deck('CHEMIN')
-ch.load_cards
-mab = BordGame() 
-mab.add_card(ch.list_card[0],True)
-print(mab)
-"""
