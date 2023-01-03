@@ -46,31 +46,44 @@ class BordGame:
                     aff5 +="     "
                 
                 else:
-                    print('\n\n\n')
+
                     M = self.__map_[j][i]
-                    C = [True for creat in range(13)]
-                    HELLO = [K.name for K in M.borders]
+                    C = [True for creat in range(14)]
+
                     HELLO_I = [K.inputo for K in M.borders]
                     HELLO_O = [K.outputo for K in M.borders]
-
-                    PATH = []
-                    for name,connect_I,connect_O in zip(HELLO,HELLO_I,HELLO_O):
-                        if not(name in PATH):
-                            PATH.append(name)
-                        
-                        for I,O in zip(connect_I,connect_O):
-
-                          if (I != []) and (I in M.borders):
-                           
-                              if not(I.name in PATH):
-                                  PATH.append(I.name)
-                                  
-                          if (O != []) and (O in M.borders):
-                         
-                            if not(O.name in PATH):
-                                PATH.append(O.name)
-                     
                     
+                    PATH = []
+                    COM = [] 
+
+                    for K,connect_I,connect_O in zip(M.borders,HELLO_I,HELLO_O):
+                        if not(K.name in PATH):
+                            PATH.append(K.name)
+                        
+                        for CI in connect_I:
+
+                            if CI in M.borders:
+                                if COM == [] and CI != []:
+                                    COM.append(K)
+           
+                                if COM != [] and (K in COM):
+                                    for CI_ in connect_I:
+                                        if CI_ in M.borders:
+                                            if not(CI_ in COM):
+                                                COM.append(CI_)
+                        for CO in connect_O:
+                            
+                            if CO in M.borders:
+                                if COM == [] and CO != []:
+                                    COM.append(K)
+                                    
+                                if COM != [] and (K in COM):
+                                    for CO_ in connect_O:
+                                        if CO_ in M.borders:
+                                            if not(CO_ in COM):
+                                                COM.append(CO_)
+                                    
+                                      
                     C[4],C[5],C[6],C[9],C[10] = False,False,False,False,False
                     if not('up' in PATH):
                         C = [not(val) for val in C]
@@ -95,20 +108,26 @@ class BordGame:
                     
                     lock = [val for val in C]
                     
+                    C[0],C[9],C[12],C[13] = False,False,False,False
                     
-                    
-                    
-                    
-                    
-                    
-                                                          
-                    center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] # + '▚'*C[11]+'▞'*C[12]
+                    if len(COM) == 4:
+                        C[0] = True
+                    if len(COM) == 0:
+                        C[9] = True
+                    if len(COM) == 2:
+                        NAME = [K.name for K in COM]
+                        if "up" in NAME and "left" in NAME:
+                            C[12] = True
+                        else:
+                            C[13] = True
+                            
+                    center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
 
-                    aff1 += "┏━"+ ("║" if "up" in HELLO else " ") + "━┓" 
-                    aff2 += "┃ "+ ("║" if "up" in HELLO else " ") + " ┃" 
-                    aff3 += ("══" if "left" in HELLO else "┃ ")+ center + ("══" if "right" in HELLO else " ┃") 
-                    aff4 += "┃ "+ ("║" if "up" in HELLO else " ") + " ┃" 
-                    aff5 += "┗━"+("║" if "down" in HELLO else "━")+ "━┛" 
+                    aff1 += "┏━"+ ("║" if "up" in PATH else "━") + "━┓" 
+                    aff2 += "┃ "+ ("║" if "up" in PATH else " ") + " ┃" 
+                    aff3 += ("══" if "left" in PATH else "┃ ")+ center + ("══" if "right" in PATH else " ┃") 
+                    aff4 += "┃ "+("║" if "down" in PATH else " ")+ " ┃" 
+                    aff5 += "┗━"+("║" if "down" in PATH else "━")+ "━┛" 
                     
             aff += aff1 + "\n" + aff2 + "\n" + aff3 + "\n" + aff4 + "\n" + aff5 + "\n" 
         return aff_barre+"\n"+aff

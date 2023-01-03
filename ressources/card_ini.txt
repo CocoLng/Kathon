@@ -32,26 +32,33 @@ END
 
 CHEMIN
 1;entree;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;START
-5;cheminclassique;a_lalcroiser_des_chemins;0000:0000:0000:1110;up,left,down,right;
-5;cheminclassique;a_lalcroiser_des_chemins;000:000:110;up,left,right;
-5;cheminclassique;a_lalcroiser_des_chemins;000:000:110;up,left,down;
-4;cheminclassique;a_lalcroiser_des_chemins;00:10;up,down;
-3;cheminclassique;a_lalcroiser_des_chemins;00:10;left,right;
-4;cheminclassique;a_lalcroiser_des_chemins;00:10;right,down;
-5;cheminclassique;a_lalcroiser_des_chemins;00:10;left,down;
 
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;0000:0000:0000:0000;up,left,down,right;
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;000:000:000;up,left,right;
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;000:000:000;up,left,down;
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;00:00;up,down;
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;00:00;left,right;
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;00:00;right,down;
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;00:00;left,down;
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;0;down;
-1;cheminclassique;a_lalcroiser_des_culs_de_sacs;0;left;
+5;cheminclassique;a_la_croiser_des_chemins;0000:0000:0000:1110;up,left,down,right;
+5;cheminclassique;a_la_croiser_des_chemins;000:000:110;up,left,right;
+5;cheminclassique;a_la_croiser_des_chemins;000:000:110;up,left,down;
+4;cheminclassique;a_la_croiser_des_chemins;00:10;up,down;
+3;cheminclassique;a_la_croiser_des_chemins;00:10;left,right;
+4;cheminclassique;a_la_croiser_des_chemins;00:10;right,down;
+5;cheminclassique;a_la_croiser_des_chemins;00:10;left,down;
+
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;0000:0000:0000:0000;up,left,down,right;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;000:000:000;up,left,right;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;000:000:000;up,left,down;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;up,down;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;left,right;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;right,down;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;left,down;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;0;down;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;0;left;
 
 EXTENSION
-1;Pont Chemin;descri1;0000:0000:1000:0100;up,left,down,right
+2;PontChemin;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
+2;Echelle;a_la_croiser_des_chemins;0;down;START
+2;Echelle;a_la_croiser_des_chemins;0;left;START
+2;DoubleCourbe;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
+3;PontChemin;a_la_croiser_des_chemins;0000:00;left,down;gree_door
+3;PontChemin;a_la_croiser_des_chemins;0000:00;left,down;blue_door
+10;PontChemin;a_la_croiser_des_chemins;000:000:000:110;up,down,right;cristaux
 
 END
 

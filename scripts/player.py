@@ -73,7 +73,8 @@ class Human(Player):
             print("print vous n'avez pas asser de cartes")
             return False
 
-            
+    def flip_card(self,card):
+        
     def del_card (self,quantite = 1):
             if self.card_number < quantite:
                 print('vous n avez pas asser de cartes')
