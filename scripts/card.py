@@ -96,14 +96,17 @@ class CardChemin(Card):
         
         self.config = arg[3]
         self.port = arg[4]
+        self.is_start = False
         self.borders = []
         self.special = None
         self.reveal = None
         
-        if len(arg)>=6 : 
-            self.special = arg[5]  # non destructible si special, spawn et gold
-        if len(arg)>=7:
-            self.reveal = arg[6]
+        if len(arg)>=6:
+            self.is_start = arg[5]
+        if len(arg)>=7 : 
+            self.special = arg[6]  # non destructible si special, spawn et gold
+        if len(arg)>=8:
+            self.reveal = arg[7]
         
         self.config = list(self.config.split(":"))
         self.port = list(self.port.split(","))
