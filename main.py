@@ -58,7 +58,7 @@ list_players = init_player(extension)
 nb_manches = 1
 while True :
     readfile('ressources\\SaboteurTxtMenu.txt',1)
-    init_round(extension,list_players)
+    Decks = init_round(extension,list_players)
     nb_manches +=1
     if nb_manches > 3 : break
 

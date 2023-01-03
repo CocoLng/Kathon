@@ -3,10 +3,10 @@ from sys import exit
 from random import shuffle
 import types
 import os
-import detect_region
+from scripts.detect_region import ConnectionEdge
 
 
-path_init = os.path.join(os.path.dirname(__file__),'ressources\\card_ini.txt')
+path_init = os.path.join(os.path.dirname(__file__),'..\\ressources\\card_ini.txt')
 ###############################################################################
 #                              Deck                                           #
 ###############################################################################
@@ -44,12 +44,10 @@ class Deck:
                 elif line !="" and write:
                     line = line.split(';')
                     if status == "ACTION" :
-                        globals()['A%s' % i] = CardAction(line[1],line[2],line[3])
-                        self.list_card+=int(line[0])*[globals()['A%s' % i]]  
+                        self.list_card.append(CardAction(line[1],line[2],line[3]))
                         
                     elif status == "CHEMIN":
-                        globals()['C%s' % i] = CardChemin(line)
-                        self.list_card+=int(line[0])*[globals()['C%s' % i]]
+                        self.list_card.append(CardChemin(line))
                         
                     elif status == "ROLE":
                         if self.extension[0]==False:
@@ -111,7 +109,7 @@ class CardChemin(Card):
         self.port = list(self.port.split(","))
 
         for i in self.port:
-                self.borders.append(detect_region.ConnectionEdge(i,self.special , self.special=='START'))
+                self.borders.append(ConnectionEdge(i,self.special , self.special=='START'))
 
         for chemins,portes in zip(self.config,self.borders):
             [portes.connect(portes_) for connections, portes_ in zip(chemins,self.borders) if int(connections) ==1]
