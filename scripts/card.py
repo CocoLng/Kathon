@@ -90,31 +90,65 @@ class CardChemin(Card):
     def __init__(self, arg):
         super().__init__(arg[1], arg[2])
         
-        self.config = arg[3]
-        self.port = arg[4]
-        self.is_start = False
-        self.borders = []
-        self.special = None
+        self.is_start = arg[5]
+        self.special = arg[5]
         self.reveal = None
+        self.config = list(arg[3].split(":"))
+        self.port = list(arg[4].port.split(","))
+        self.borders = self.port
+        self.aff = aff_ch(self.borders,self.special)
         
-        if len(arg)>=6:
-            self.special = arg[5]  # non destructible si special, spawn et gold
-        if len(arg)>=7 : 
-            self.is_start = arg[6]
+        
+    @property
+    def special(self):
+        return self.__special
+    
+    @special.setter
+    def special(self,special):
+        self.special = None
+        if len(special)>=6:
+            self.__special = special[5]  # non destructible si special, spawn et gold
             
-        if len(arg)>=8:
-            self.reveal = arg[7]
-        
-        self.config = list(self.config.split(":"))
-        self.port = list(self.port.split(","))
-
-        for i in self.port:
-                self.borders.append(ConnectionEdge(i,self.special , self.special=='START'))
-
+    @property
+    def is_start(self):
+        return self.__is_start
+    
+    @is_start.setter
+    def is_start(self,is_start):
+        self.__is_start = False
+        if len(is_start)>=7 : 
+            self.__is_start = is_start[6]      
+            
+    @property
+    def reveal(self):
+        return self.__reveal
+    
+    @reveal.setter
+    def reveal(self,reveal):
+        #soit bool soit list
+        self.__reveal = False
+        try:
+            if len(reveal)>=8:
+                self.__reveal = reveal[7]
+        except IndexError:
+                self.__reveal = reveal
+                  
+    @property
+    def borders(self):
+        return self.__borders
+    
+    @borders.setter
+    def borders(self,port):
+        [self.borders.append(ConnectionEdge(i,self.special , self.special=='START')) for i in port]
         for chemins,portes in zip(self.config,self.borders):
             [portes.connect(portes_) for connections, portes_ in zip(chemins,self.borders) if int(connections) ==1]
-        
-        self.aff = aff_ch(self.borders,self.special)
+
+    @property
+    def aff(self):
+        if self.reveal:
+            return self.__aff
+        return ["┏━━━┓","┃   ┃","┃   ┃","┃   ┃","┗━━━┛"] 
+
 
 class CardRole(Card):
     def __init__(self, name, description,role):

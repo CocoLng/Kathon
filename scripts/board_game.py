@@ -57,7 +57,7 @@ class BordGame:
                 x,y = X.split()
                 P = [int(x),int(y)]
                 break
-            except ValueError:
+            except (KeyboardInterrupt,ValueError):
                 print("pas les bonnes valeurs")
         return P
     
@@ -73,12 +73,6 @@ class BordGame:
         antipode_d_u = ['down','up']
         antipode_l_r = ['right','left']
         
-        flag = False
-        if pos[0] < 0:
-            pos[0] = pos[0] - self.__decalage[0]
-        if pos[1] < 0:
-            pos[1] = pos[1] - self.__decalage[1]
-
         for x_y in [-1,1]:          
           if  pos[0]+x_y >= 0 and pos[0]+x_y < len(self.__map_):
             try:
@@ -119,18 +113,18 @@ class BordGame:
         if not(flag):
             print('non connecté au start')
             return False
-        for i in card.borders:
-            if i != []:
-                print(i.flag_loop)
+#        for i in card.borders:
+#            if i != []:
+#                print(i.flag_loop)
         for exterieur,interieur in zip(card_p,borders_to_connect):
             interieur.connect(exterieur)
-        
+ #       print(pos)
         self.__map_[pos[0]][pos[1]] = card
 
-        for i in self.__map_[self.__decalage[0]][self.__decalage[1]].borders:
-           i.reconstruc_path(i)
-        
-        print('\n\n')    
+        for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
+            print(i)
+            i.reconstruc_path(i)
+
         for i in card.borders:
                if i != []:
                    print(i.flag_loop)
@@ -189,7 +183,7 @@ class BordGame:
                 if pos[0] >= 0:
                     Xlen = pos[0]-len(self.__map_)+1
                 else:
-                    a = False
+                    a = 0
                     Xlen = abs(pos[0])
                     self.__decalage[0] += pos[0]
 
@@ -218,7 +212,7 @@ class BordGame:
             # cree par la carte chemin [up,left,down,right]
         if not(admin):
             if not((pos[0] < -1 or pos[0] > len(self.__map_)+1) and ( pos[1] < -1 or pos[1] > len(self.__map_[0]+1))):
-                if self.card_set(card,pos):
+                if self.card_set(card,[a,b]):
                     return True
                 return False
             else:
