@@ -3,7 +3,7 @@ from sys import exit
 from random import shuffle
 import types
 import os
-from scripts.detect_region import ConnectionEdge
+from detect_region import ConnectionEdge
 
 
 path_init = os.path.join(os.path.dirname(__file__),'..\\ressources\\card_ini.txt')
