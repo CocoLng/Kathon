@@ -1,4 +1,4 @@
-ACTION
+ACTION_CHEMIN
 
 3;Eboulement;Cette carte detruit un chemin, pouvant empecher la progression des joueurs. Si le chemin n est plus relie au depart alors il faut imperativement reparer le chemin avant de pouvoir continuer;collapsing
 
@@ -17,20 +17,9 @@ ACTION
 
 6;Plan Secret;Cette carte permet de prendre connaissance d'une des cartes Arivee;secret_plan
 
-EXTENSION
-
-2;Inspection de Role;Permet de regarder secretement le role d un joueur;inspect
-
-2;Changement de Role;Permet de changer de role d une cible en le fesant piocher une nouvelle carte role;switch_role
-2;Changement de Main;Permet de changer la main entre deux joueurs choisies;switch_hand
-
-3;Emprisonnement;Permet d emprisonner une cible;jail_handler
-4;Enfin Libre;Permet de liberer une cible;jail_handler
-
-END
 
 
-CHEMIN
+
 1;PIERRE;entre_de_la_mine;00:10;left,down;PIERRE;
 1;PIERRE;entre_de_la_mine;00:10;down,right;PIERRE;
 1;GOLD;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;PEPITE;
@@ -61,6 +50,17 @@ EXTENSION
 3;PontChemin;a_la_croiser_des_chemins;0000:00;left,down;gree_door
 3;PontChemin;a_la_croiser_des_chemins;0000:00;left,down;blue_door
 10;PontChemin;a_la_croiser_des_chemins;000:000:000:110;up,down,right;cristaux;False
+
+
+
+
+2;Inspection de Role;Permet de regarder secretement le role d un joueur;inspect
+
+2;Changement de Role;Permet de changer de role d une cible en le fesant piocher une nouvelle carte role;switch_role
+2;Changement de Main;Permet de changer la main entre deux joueurs choisies;switch_hand
+
+3;Emprisonnement;Permet d emprisonner une cible;jail_handler
+4;Enfin Libre;Permet de liberer une cible;jail_handler
 
 END
 
