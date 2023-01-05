@@ -22,7 +22,11 @@ class Deck:
         self.load_cards(len(nb_players))
         
     def shuffle(self):
-        return shuffle(self.list_card)    
+        return shuffle(self.list_card)   
+    
+    def get_card(self):
+        if len(self.list_card)==0 : return False
+        return self.list_card.pop(0)
         
     def load_cards(self,nb_players):
         i = 1
@@ -180,8 +184,8 @@ class CardAction(Card):
 
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
-        [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(self.arg[1], 1)]
-        return self.arg[1][input_player(1, len(self.arg[1]))-1]
+        [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(self.arg[0], 1)]#laisse le joueur pouvoir se cibler
+        return self.arg[0][input_player(1, len(self.arg[0]))-1]
 
 # les fonctions si desous sont appelable par tous type de cartes
 
@@ -302,8 +306,8 @@ def switch_hand(self):
     print("Avec quel joueur souhaitez-vous inverser votre deck de cartes ?")
     Target_P1 = self.target_player()
     temp = Target_P1._Player__main
-    Target_P1._Player__main =  self.arg[0]._Player__main
-    self.arg[0]._Player__main = temp
+    Target_P1._Player__main =  self.arg[0][0]._Player__main
+    self.arg[0][0]._Player__main = temp
     Done = True
     return Done
 
@@ -328,7 +332,7 @@ L'effet doit être "thief_handler"
 
 def thief_handler(self):
     if self.name == "Voleur":  # Réutilisation de edit_effet
-        return edit_status(True, "Voleur", self.arg[0]) #applique l'effet voleur au joueur actuel
+        return edit_status(True, "Voleur", self.arg[0][0]) #applique l'effet voleur au joueur actuel
     Target_P = self.target_player()
     return edit_status(False, "Voleur", Target_P)
 
