@@ -1,4 +1,4 @@
-class BordGame:
+class BoardGame:
     
     def __init__(self):
         #initialise une carte de X = 0 y = 0

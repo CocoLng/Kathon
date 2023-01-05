@@ -20,27 +20,27 @@ ACTION_CHEMIN
 
 
 
-1;PIERRE;entre_de_la_mine;00:10;left,down;PIERRE;
-1;PIERRE;entre_de_la_mine;00:10;down,right;PIERRE;
-1;GOLD;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;PEPITE;
-1;ENTREE;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;START;True
-5;Croisement;a_la_croiser_des_chemins;0000:0000:0000:1110;up,left,down,right;
-5;Croisement_T;a_la_croiser_des_chemins;000:000:110;up,left,right;
-5;Croisement_T;a_la_croiser_des_chemins;000:000:110;up,left,down;
-4;cheminclassique;a_la_croiser_des_chemins;00:10;up,down;
-3;cheminclassique;a_la_croiser_des_chemins;00:10;left,right;
-4;cheminclassique;a_la_croiser_des_chemins;00:10;right,down;
-5;cheminclassique;a_la_croiser_des_chemins;00:10;left,down;
+1;PIERRE;entre_de_la_mine;00:10;left,down;False;PIERRE;False
+1;PIERRE;entre_de_la_mine;00:10;down,right;False;PIERRE;False
+1;GOLD;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;False;PEPITE	
+1;ENTREE;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;True;START;True
+5;Croisement;a_la_croiser_des_chemins;0000:0000:0000:1110;up,left,down,right
+5;Croisement_T;a_la_croiser_des_chemins;000:000:110;up,left,right
+5;Croisement_T;a_la_croiser_des_chemins;000:000:110;up,left,down
+4;cheminclassique;a_la_croiser_des_chemins;00:10;up,down
+3;cheminclassique;a_la_croiser_des_chemins;00:10;left,right
+4;cheminclassique;a_la_croiser_des_chemins;00:10;right,down
+5;cheminclassique;a_la_croiser_des_chemins;00:10;left,down
 
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;0000:0000:0000:0000;up,left,down,right;
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;000:000:000;up,left,right;
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;000:000:000;up,left,down;
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;up,down;
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;left,right;
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;right,down;
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;left,down;
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;0;down;
-1;cheminclassique;a_la_croiser_des_culs_de_sacs;0;left;
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;0000:0000:0000:0000;up,left,down,right
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;000:000:000;up,left,right
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;000:000:000;up,left,down
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;up,down
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;left,right
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;right,down
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;00:00;left,down
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;0;down
+1;cheminclassique;a_la_croiser_des_culs_de_sacs;0;left
 
 EXTENSION
 2;PontChemin;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
