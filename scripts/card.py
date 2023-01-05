@@ -24,9 +24,9 @@ class Deck:
     def shuffle(self):
         return shuffle(self.list_card)   
     
-    def get_card(self):
-        if len(self.list_card)==0 : return False
-        return self.list_card.pop(0)
+    def draw_card(self):#sert pour la pioche d'une carte
+        if len(self.list_card)==0 : return False#return False si le deck est vide
+        return self.list_card.pop(0) #sinon envoie la première carte et la supprime
         
     def load_cards(self,nb_players):
         i = 1
@@ -68,11 +68,12 @@ class Deck:
                         print("Deck avec le nom de propriété indéfinis ! ERREUR")
                         exit()
                     i+=1
-#temp reward, fin de manche ajout def
+
  
     def __str__(self):
-        res = "o-----o "+ self.__class__.__name__ +" o-----o"
-        res += "\n"+"Ceci est un deck de cartes"
+        res = "o-----o "+ self.__class__.__name__ +":" +self.name + " o-----o"
+        res += "\nCeci est un deck de cartes"
+        res += "\nContient l'extension :"+self.extension
         return res
 
 ###############################################################################
@@ -272,15 +273,23 @@ def impact_tools(self):
 ###############################################################################
 
 def collapsing(self):
-    return True
+    pos = self.arg[0][0].ask_pos()
+    return self.arg[1].del_card(pos)
 
 def secret_plan(self):
-    Done = False
-    print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
-    selected = input_player(0, 3)
-    #flip card
-    print(selected)
-    Done = True
+    while True:
+        print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
+        selected = input_player(1, 3)
+        if selected == 1 and not(self.arg[1][8][2].reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
+            print(f"La carte du Haut(8,2) est un/une {self.arg[1][8][2].name}")
+            return True
+        elif selected == 2 and not(self.arg[1][8][0].reveal): 
+            print(f"La carte du Miieu(8,0) est un/une {self.arg[1][8][0].name}")
+            return True
+        elif selected == 3 and not(self.arg[1][8][-2].reveal): 
+            print(f"La carte en Bas(8,-2) est un/une {self.arg[1][8][-2].name}")
+            return True
+        print("\nCette carte est déja visible... En choisir une autre")
 
 ###############################################################################
 #                         Chargement d'une Extenion                           #
@@ -289,7 +298,7 @@ def secret_plan(self):
 def inspect(self):
     Done = False
     Target_P = self.target_player()
-    print(Target_P.name)
+    print(f"SPOILER ALERTE :\n{Target_P.name} est un {Target_P.role}.")
     Done = True
     return Done
 
@@ -297,7 +306,9 @@ def switch_role(self):
     Done = False
     print("Séléctionnez un joueur qui vera sont role changer ?")
     Target_P = self.target_player()
-    
+    temp = Target_P.role
+    Target_P.role =  self.arg[0][0].role
+    self.arg[0][0].role = temp
     Done = True
     return Done
 
@@ -305,9 +316,9 @@ def switch_hand(self):
     Done = False
     print("Avec quel joueur souhaitez-vous inverser votre deck de cartes ?")
     Target_P1 = self.target_player()
-    temp = Target_P1._Player__main
-    Target_P1._Player__main =  self.arg[0][0]._Player__main
-    self.arg[0][0]._Player__main = temp
+    temp = Target_P1.main
+    Target_P1.main =  self.arg[0][0].main
+    self.arg[0][0].main = temp
     Done = True
     return Done
 
@@ -341,9 +352,7 @@ def thief_handler(self):
 Vous pouvez ajouter vos effet personnels ici, puis crée la carte en l'ajoutant dans /ressource/card_ini.txt
 Il faudra, lors de l'initialisation, mettre dans effet le même nom que celle de la méthode'
 """
-"""
-methode pour definir la forme des cartes et les stockées dans les objets card chemins
-"""
+
 
 ###############################################################################
 #                          Affichage d'une Carte                              #
@@ -425,7 +434,6 @@ def aff_ch(card,special):
             C[13] = True
             
     center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
-    print(special)
     if special == 'blue_door':
         center = 'B'
     if special == 'green_door':
