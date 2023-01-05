@@ -1,9 +1,10 @@
 from abc import ABC
 from sys import exit
-from random import shuffle
 import types
 import os
 from scripts.detect_region import ConnectionEdge
+
+from random import shuffle
 
 
 path_init = os.path.join(os.path.dirname(__file__),'..\\ressources\\card_ini.txt')
@@ -20,9 +21,8 @@ class Deck:
         self.extension = extension
         self.list_card= []
         self.load_cards(len(nb_players))
-        
     def shuffle(self):
-        return shuffle(self.list_card)   
+        return shuffle(self.list_card)  
     
     def draw_card(self,i=0):#sert pour la pioche d'une carte
         if len(self.list_card)==0 : return False#return False si le deck est vide
@@ -131,11 +131,11 @@ class CardChemin(Card):
     @reveal.setter
     def reveal(self,reveal):
         #soit bool soit list
-        self.__reveal = False
+        self.__reveal = True
         try:
             if len(reveal)>=6:
-                 if reveal[5] == 'True': 
-                    self.__reveal = True            
+                 if reveal[5] == 'False': 
+                    self.__reveal = False            
         except TypeError:
                 self.__reveal = reveal
                   
