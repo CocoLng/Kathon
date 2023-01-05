@@ -9,6 +9,10 @@ from scripts.player import Human
 from scripts.card import input_player #nous réutilisons la fonction input player de card.py
 from scripts.game import init_round
 
+###############################################################################
+#                                Fonctions                                    #
+###############################################################################
+
 def readfile(path_join,part_explain = 0):
     with open(os.path.join(os.path.dirname(__file__),path_join),'r') as f: 
         f_split = f.read().split("SUB_PART")
@@ -43,6 +47,19 @@ def init_player(extension):
             break
         
     return list_players
+
+def recap(P_list,nb_manches):
+    readfile('ressources\\SaboteurTxtMenu.txt',2)
+    list_players.sort(key=lambda player: player.score, reverse=True)
+    [(print(i, ': ', player.name,'(',player.score,'pts)', sep='', end='\n')) for i, player in enumerate(list_players, 1)]
+    print(f"\n{list_players[0].name} à un avantage de {list_players[0].score-list_players[1].score}pts comparer à {list_players[1].name}")
+    
+    if nb_manches >3 :
+        readfile('ressources\\SaboteurTxtMenu.txt',3)
+        print(f"\nLe grand gagnant est \n")
+    print("\n[1] Continuez la partie\n[0] /!\ Quittez le programme (Ctrl + C)\n")
+    input_player(0, 1)
+    pass
    
 while True : 
     readfile('ressources\\SaboteurTxtMenu.txt')
@@ -59,13 +76,12 @@ while True :
         break
 
 list_players = init_player(extension)
+list_players[2].score = 5
+list_players[1].score = 2
 nb_manches = 1
 while True :
     readfile('ressources\\SaboteurTxtMenu.txt',1)
     round_done = init_round(extension,list_players)
-    
-    
     nb_manches +=1
-    if nb_manches > 3 : break
 
          
