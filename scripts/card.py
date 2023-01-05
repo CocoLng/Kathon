@@ -12,14 +12,14 @@ path_init = os.path.join(os.path.dirname(__file__),'..\\ressources\\card_ini.txt
 ###############################################################################
 """
 Name correspond au nom du deck que nous souhaitons crée, il doit s'appeler comme ceci :
-    ACTION / CHEMIN / ROLE / REWARD
+    ACTION_CHEMIN / ROLE / REWARD
 """
 class Deck:
     def __init__(self, name,extension=[False,False],nb_players = 3):  # chaque carte possède un nom et une description
         self.name=name    
         self.extension = extension
         self.list_card= []
-        self.load_cards(nb_players)
+        self.load_cards(len(nb_players))
         
     def shuffle(self):
         return shuffle(self.list_card)    
