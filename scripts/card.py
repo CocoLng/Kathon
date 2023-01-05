@@ -283,13 +283,13 @@ def secret_plan(self):
     while True:
         print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
         selected = input_player(1, 3)
-        if selected == 1 and not(self.arg[1][8][2].reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
+        if selected == 1 and not(self.arg[1]._BoardGame.__main[8][2].reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
             print(f"La carte du Haut(8,2) est un/une {self.arg[1][8][2].name}")
             return True
-        elif selected == 2 and not(self.arg[1][8][0].reveal): 
+        elif selected == 2 and not(self.arg[1]._BoardGame.__main[8][0].reveal): 
             print(f"La carte du Miieu(8,0) est un/une {self.arg[1][8][0].name}")
             return True
-        elif selected == 3 and not(self.arg[1][8][-2].reveal): 
+        elif selected == 3 and not(self.arg[1]._BoardGame.__main[8][-2].reveal): 
             print(f"La carte en Bas(8,-2) est un/une {self.arg[1][8][-2].name}")
             return True
         print("\nCette carte est déja visible... En choisir une autre")
