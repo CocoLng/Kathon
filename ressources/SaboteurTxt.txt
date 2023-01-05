@@ -16,7 +16,7 @@ Que souhaitez-vous faire ?
 SUB_PART
 
 ========================================================================
-                         Initialisation...
+                     Initialisation d une manche
 ========================================================================
 SUB_PART
 
