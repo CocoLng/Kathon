@@ -428,9 +428,11 @@ def aff_ch(card,special):
         C[0] = True
         NAME = [K.name for K in COM]
         if "up" in NAME and "left" in NAME:
-            C[12] = True                        
+            C[12] = True  
+            C[0] = False                      
         elif"up" in NAME and "Down" in NAME:
             C[13] = True
+            C[0] = False 
             
         
     if len(COM) == 0:
