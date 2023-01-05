@@ -46,23 +46,6 @@ class BordGame:
             aff += aff1 + "\n" + aff2 + "\n" + aff3 + "\n" + aff4 + "\n" + aff5 + "\n" 
         return aff_barre+"\n"+aff
 
-    
-    
-    
-    def ask_pos(self):
-        X = [] 
-        while True:
-            try:
-                X = input("a quelle pisiton voulez vous jouer votre carte x y\n")
-                x,y = X.split()
-                P = [int(x),int(y)]
-                break
-            except (KeyboardInterrupt,ValueError):
-                print("pas les bonnes valeurs")
-        return P
-    
-
-
     #permet de verifier si la carte poser est en accord avec les regles de conection de cartes
     #permet de verifier si la carte poser est en acord avec les regles de conection de cartes
 
@@ -133,9 +116,7 @@ class BordGame:
                 
     
         #permet de suprimer des cartes a une positon precise si il reussi renvoi True sinon False
-    def del_card(self):
-        
-        pos = self.ask_pos()
+    def del_card(self,pos):
         if self.__map_[pos[0]][pos[1]] != []:
             if self.__map_[pos[0]][pos[1]].special:
                 print("vous ne pouvez pas detruire une carte special")
@@ -151,9 +132,8 @@ class BordGame:
    #si la carte est en dehors de la __map deja cree 
    #des lignes/colonnes ou les deux seront ajouté pour pouvoir placer la carte
    
-    def add_card(self,card,admin):
+    def add_card(self,card,pos,admin):
         
-        pos = self.ask_pos()
         #on verifie si la carte est en dehors de la __map"
         #debut verification"
         pos[0] = pos[0]-self.__decalage[0]

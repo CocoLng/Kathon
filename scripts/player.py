@@ -33,7 +33,7 @@ class Player(ABC):
             self.__score = score
         else:
             print("impssible de retirer des point au joueur")
-        
+            
 
 class Human(Player):
     
@@ -101,3 +101,15 @@ class Human(Player):
         print('cous avez trop de cartes')
         return False
 
+
+def ask_pos(self):
+    X = [] 
+    while True:
+        try:
+            X = input("a quelle pisiton voulez vous jouer votre carte x y\n")
+            x,y = X.split()
+            P = [int(x),int(y)]
+            break
+        except (KeyboardInterrupt,ValueError):
+            print("pas les bonnes valeurs")
+    return P
