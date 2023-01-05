@@ -13,7 +13,7 @@ class Player(ABC):
     
     def __str__ (self):
         Aff = "-"*20 
-        return Aff+f"\n name = {self.name}"+f"\n score = {self.score}"+f"\n card = {self.main}"+'\n'+Aff
+        return Aff+f"\n name = {self.name}"+f"\n score = {self.score}"+f"\n card = {i.name for i in self.main}"+'\n'+Aff
        
     @property
     def score(self):
@@ -35,6 +35,34 @@ class Human(Player):
     def skip_turn(self):
         if self.card_number == 0: return True
         return False       
+
+
+
+    def del_card (self,quantite = 1):
+            if self.card_number < quantite:
+                print('vous n avez pas asser de cartes')
+                return False
+            for i in range(quantite):
+                ID = input("quelle carte voulez vous jouer ?")
+                card = self.main[ID-1] 
+                if card in self.main:
+                    self.main.remove(card)
+                else: 
+                    print("cette carte n est pas presente dans votre main")
+
+
+    def ask_pos(self):
+        pos = [] 
+        while True:
+            try:
+                pos = input("a quelle pisiton voulez vous jouer votre carte x y\n")
+                x,y = pos.split()
+                pos = [int(x),int(y)]
+                break
+            except (KeyboardInterrupt,ValueError):
+                print("pas les bonnes valeurs")
+        return pos
+
     
     def __flip_card_(self,ID):
         antipode_d_u = ['down','up']
@@ -46,7 +74,11 @@ class Human(Player):
             return False
         return True
         
-    def play_card(self,MAP,Pl_lt):
+    def play(self,P_list,MAP):
+        
+        if self.card_number == 0:
+            print('le joueur n a plus de cartes')
+            return True
         ID = input("quelle carte voulez vous jouer ?")
         try:
             
@@ -60,12 +92,11 @@ class Human(Player):
                         return True
                 
             if isinstance(card,'CardAction'):
-                card.P_list = Pl_lt
+                card.arg = [P_list,MAP]
                 if card.effect():
                     self.main.remove(card)
                     self.card_number = len(self.main)
                     return True
-                
             return False
         
         except IndexError:
@@ -73,34 +104,11 @@ class Human(Player):
             return False
 
 
-    def del_card (self,quantite = 1):
-            if self.card_number < quantite:
-                print('vous n avez pas asser de cartes')
-                return False
-            for i in range(quantite):
-                ID = input("quelle carte voulez vous jouer ?")
-                card = self.main[ID-1] 
-                if card in self.main:
-                    self.main.remove(card)
-                else: 
-                    return print("cette carte n est pas presente dans votre main")
-           
-    def get_card(self,card):
+    def get_card(self,Deck):
         if len(self.main) <= self.__carte_max:
-            self.main.append(card)
-            return True
+            card = Deck.get_card()
+            if card:
+                self.main.append(card)
+                return True
         print('cous avez trop de cartes')
         return False
-
-
-def ask_pos(self):
-    X = [] 
-    while True:
-        try:
-            X = input("a quelle pisiton voulez vous jouer votre carte x y\n")
-            x,y = X.split()
-            P = [int(x),int(y)]
-            break
-        except (KeyboardInterrupt,ValueError):
-            print("pas les bonnes valeurs")
-    return P
