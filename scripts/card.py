@@ -24,9 +24,9 @@ class Deck:
     def shuffle(self):
         return shuffle(self.list_card)   
     
-    def draw_card(self):#sert pour la pioche d'une carte
+    def draw_card(self,i=0):#sert pour la pioche d'une carte
         if len(self.list_card)==0 : return False#return False si le deck est vide
-        return self.list_card.pop(0) #sinon envoie la première carte et la supprime
+        return self.list_card.pop(i) #sinon envoie la première carte et la supprime
         
     def load_cards(self,nb_players):
         i = 1
@@ -180,9 +180,12 @@ class CardAction(Card):
 ###############################################################################
 #                             Méthodes Communes                               #
 ###############################################################################
-#Les fonctions si dessous peuvent êtres appelés dans tous type de cartes, en revanche elle ne nécissite pas de faire partie de chaque objet, mais juste 
-#d'etre accessible par ces dernières, sauf la méthode target_player qui est uniquement appelée dans CardAction et depend de ses arguments
-
+"""
+target_player est la seule méthode de base inclus dans notre classe, car toute carte action on a besoin
+Les fonctions ci dessous n'ont pas besoin d'accédé a un objet
+arg[0] contient la liste des Joueurs, le joueurs actuel est en position 0
+arg[1] contient la MAP
+"""
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
         [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(self.arg[0], 1)]#laisse le joueur pouvoir se cibler
