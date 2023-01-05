@@ -180,12 +180,12 @@ class CardAction(Card):
 ###############################################################################
 #                             Méthodes Communes                               #
 ###############################################################################
-"""
-target_player est la seule méthode de base inclus dans notre classe, car toute carte action on a besoin
-Les fonctions ci dessous n'ont pas besoin d'accédé a un objet
-arg[0] contient la liste des Joueurs, le joueurs actuel est en position 0
-arg[1] contient la MAP
-"""
+    """
+    target_player est la seule méthode de base inclus dans notre classe, car toute carte action on a besoin
+    Les fonctions ci dessous n'ont pas besoin d'accédé a un objet
+    arg[0] contient la liste des Joueurs, le joueurs actuel est en position 0
+    arg[1] contient la MAP
+    """
     def target_player(self):
         print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
         [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(self.arg[0], 1)]#laisse le joueur pouvoir se cibler
