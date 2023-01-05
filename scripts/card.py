@@ -101,7 +101,7 @@ class CardChemin(Card):
         self.config = list(arg[3].split(":"))
         self.port = list(arg[4].split(","))
         self.borders = self.port
-        self.__aff = aff_ch(self.borders,self.special)
+        self.aff = True
         
         
     @property
@@ -155,7 +155,10 @@ class CardChemin(Card):
         if self.reveal:
             return self.__aff
         return ["┏━━━┓","┃   ┃","┃   ┃","┃   ┃","┗━━━┛"] 
-
+    
+    @aff.setter
+    def aff(self,update):
+        self.__aff = aff_ch(self.borders,self.special)
 
 class CardRole(Card):
     def __init__(self, name, description,role):
@@ -419,22 +422,21 @@ def aff_ch(card,special):
     if not('right' in PATH):
         C = [not(c) if l == True else False for l,c in zip(lock,C)]
     
-    lock = [val for val in C]
-    
-    C[0],C[9],C[12],C[13] = False,False,False,False
     
     if len(COM) == 4:
+        C = [False for val in C]
         C[0] = True
-    if len(COM) == 0:
-        C = [False for val in C]
-        C[9] = True
-    if len(COM) == 2:
-        C = [False for val in C]
         NAME = [K.name for K in COM]
         if "up" in NAME and "left" in NAME:
             C[12] = True                        
         elif"up" in NAME and "Down" in NAME:
             C[13] = True
+            
+        
+    if len(COM) == 0:
+        C = [False for val in C]
+        C[9] = True
+
             
     center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
     if special == 'blue_door':

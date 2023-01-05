@@ -60,12 +60,13 @@ def run_round(extension,P_round,MAP,Decks_,WIN_CARD):
     tours = 0
     while WIN_CARD.borders[0].flag_loop == None and len(P_round) > 0:
         tours+=1
+        print(MAP)
         print(f'tours: {tours}') 
         while True:
             if P_round[0].play(P_round,MAP):
                 break
             
-        print(MAP)
+        
         if not(P_round[0].get_card(Decks_)):
             if P_round[0].card_number == 0:
                 P_round.pop(0)
