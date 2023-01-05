@@ -12,12 +12,15 @@ class BoardGame:
 
         if ma_lenx < 4:
             ma_lenx =3
-        aff_barre = " " *(ma_leny+2)
-
+        aff_barre ="|"+" "*(ma_leny)+"|"
+        aff_barreb = "+" + "-"*ma_leny+'+'
+        
         for j in range(len(self.__map_)):
             x = len(f"{j+self.__decalage[0]}")
-            aff_barre += "|"+" "*((ma_lenx-x)//2+(ma_lenx-x)%2) +f"{j+self.__decalage[0]}"+" "*((ma_lenx-x)//2)+"|"  
-
+            aff_barre += " " + " "*((ma_lenx-x)//2+(ma_lenx-x)%2) +f"{j+self.__decalage[0]}"+" "*((ma_lenx-x)//2)+" "  
+            aff_barreb += "-"*(ma_lenx-x+(ma_lenx-x)%2)*2 + '-'
+        aff_barre =aff_barreb+'\n'+aff_barre +"\n"+aff_barreb 
+        
         for i in range(len(self.__map_[0])):
             y = len(f"{i+self.__decalage[1]}")
             aff1 ="|" + " "*ma_leny+"|"
@@ -55,6 +58,8 @@ class BoardGame:
         
         antipode_d_u = ['down','up']
         antipode_l_r = ['right','left']
+        
+        flag = False
         
         for x_y in [-1,1]:          
           if  pos[0]+x_y >= 0 and pos[0]+x_y < len(self.__map_):
@@ -105,12 +110,12 @@ class BoardGame:
         self.__map_[pos[0]][pos[1]] = card
 
         for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
-            print(i)
+            ##print(i)
             i.reconstruc_path(i)
 
-        for i in card.borders:
-               if i != []:
-                   print(i.flag_loop)
+        #for i in card.borders:
+              # if i != []:
+                   #print(i.flag_loop)
 
         return True
                 
@@ -132,7 +137,7 @@ class BoardGame:
    #si la carte est en dehors de la __map deja cree 
    #des lignes/colonnes ou les deux seront ajouté pour pouvoir placer la carte
    
-    def add_card(self,card,pos,admin):
+    def add_card(self,card,pos,admin = False):
         
         #on verifie si la carte est en dehors de la __map"
         #debut verification"
@@ -193,9 +198,13 @@ class BoardGame:
         if not(admin):
             if not((pos[0] < -1 or pos[0] > len(self.__map_)+1) and ( pos[1] < -1 or pos[1] > len(self.__map_[0]+1))):
                 if self.card_set(card,[a,b]):
+                    print('pose de carte reussite!')
                     return True
+                
                 return False
             else:
+                print('vous etes a lexterieur de la map')
                 return False
         else:
             self.__map_[a][b] = card
+        return True

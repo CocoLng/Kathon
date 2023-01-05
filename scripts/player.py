@@ -8,8 +8,7 @@ class Player(ABC):
         self.role = None
         self.main = []
         self.status = []
-        self.__carte_max = 5
-        self.card_number = 0
+        self.carte_max = 5
     
     def __str__ (self):
         Aff = "-"*20 
@@ -33,13 +32,13 @@ class Human(Player):
         super().__init__(name)
     
     def skip_turn(self):
-        if self.card_number == 0: return True
+        if len(self.main) == 0: return True
         return False       
 
 
 
     def del_card (self,quantite = 1):
-            if self.card_number < quantite:
+            if len(self.main) < quantite:
                 print('vous n avez pas asser de cartes')
                 return False
             for i in range(quantite):
@@ -76,26 +75,37 @@ class Human(Player):
         
     def play(self,P_list,MAP):
         
-        if self.card_number == 0:
+        if len(self.main) == 0:
             print('le joueur n a plus de cartes')
             return True
-        ID = input("quelle carte voulez vous jouer ?")
+        
+        [print(i.name) for i in self.main]
+        
+
+        while True:
+            try: 
+                ID = input("quelle carte voulez vous jouer ?")
+                if 1 <= int(ID) <= 5:
+                    card = self.main[int(ID)-1]
+                    break
+            except ValueError:
+                print('veuiller choisir une valeure entre 0 et {len(self.main)}')
+            except IndexError:
+                print('la valeure choisi n est pas valide')
+
         try:
-            
-            card = self.main[ID-1]    
-            if isinstance(card,'CardChemin'):
-                if self.__status == []: 
-                    if MAP.card_setable():
-                        MAP.add_card(card,False)
+            if card.__class__.__name__ =='CardChemin':
+                if self.status == []: 
+                    ########################################
+                    pos = self.ask_pos()
+                    if MAP.add_card(card,pos):
                         self.main.remove(card)
-                        self.card_number = len(self.main)
                         return True
                 
-            if isinstance(card,'CardAction'):
+            if  card.__class__.__name__ == 'CardAction':
                 card.arg = [P_list,MAP]
                 if card.effect():
                     self.main.remove(card)
-                    self.card_number = len(self.main)
                     return True
             return False
         
@@ -104,9 +114,9 @@ class Human(Player):
             return False
 
 
-    def get_card(self,Deck):
-        if len(self.main) <= self.__carte_max:
-            card = Deck.get_card()
+    def get_card(self,Decks):
+        if len(self.main) <= self.carte_max:
+            card = Decks.draw_card()
             if card:
                 self.main.append(card)
                 return True
