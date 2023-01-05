@@ -4,8 +4,10 @@ Created on Sat Dec  3 12:27:55 2022
 
 @author: coren
 """
+import random
 from scripts.card import input_player,Deck
 from scripts.player import Human
+from scripts.board_game import BoardGame
 
 
 # P1=Human("1")
@@ -16,12 +18,20 @@ from scripts.player import Human
 # P3.status = ["baaaug"]
 
 def init_round(extension,P_list):
+    L = [0,1,2]
+    pos = [[8,-2],[8,0],[8,2]]
+    random.shuffle(L)
+    MAP = BoardGame()
     #Initialisation des decks
     Deck_ActionChemin = Deck("ACTION_CHEMIN",[extension,False],P_list)
+    print(Deck_ActionChemin.list_card[27].special)
+    MAP.add_card(Deck_ActionChemin.list_card[30],[0,0],True)
+    [MAP.add_card(Deck_ActionChemin.list_card[27+i],pos[i],True) for i in L]
+    
     Deck_Role = Deck("ROLE",[extension,extension],P_list)
     Deck_Reward = Deck("REWARD",[extension,extension],P_list)
     Decks = [Deck_ActionChemin,Deck_Role,Deck_Reward]
-    [x.shuffle() for x in Decks]
+    #[x.shuffle() for x in Decks]
     
     #Effacement des status, et supression des cartes restantes
     [(player.status.clear(),player.main.clear()) for player in P_list]
@@ -29,6 +39,7 @@ def init_round(extension,P_list):
     for i,player in enumerate(P_list,1) : player.role=Deck_Role.list_card[i]
     
     repartition_card(extension,Decks[0],P_list)
+    print(MAP)
     return Decks
 
 def repartition_card(extension,Deck,P_list):

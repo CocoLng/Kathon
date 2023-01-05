@@ -89,10 +89,10 @@ class Card(ABC):
 class CardChemin(Card):
     def __init__(self, arg):
         super().__init__(arg[1], arg[2])
-        
-        self.is_start = arg[5]
-        self.special = arg[5]
-        self.reveal = None
+
+        self.is_start = arg
+        self.special = arg
+        self.reveal = arg
         self.config = list(arg[3].split(":"))
         self.port = list(arg[4].split(","))
         self.borders = self.port
@@ -106,8 +106,8 @@ class CardChemin(Card):
     @special.setter
     def special(self,special):
         self.__special = None
-        if len(special)>=6:
-            self.__special = special[5]  # non destructible si special, spawn et gold
+        if len(special)>=7:
+            self.__special = special[6]  # non destructible si special, spawn et gold
             
     @property
     def is_start(self):
@@ -116,8 +116,8 @@ class CardChemin(Card):
     @is_start.setter
     def is_start(self,is_start):
         self.__is_start = False
-        if len(is_start)>=7 : 
-            self.__is_start = is_start[6]      
+        if len(is_start)>=8 : 
+            self.__is_start = bool(is_start[7])  
             
     @property
     def reveal(self):
@@ -128,8 +128,9 @@ class CardChemin(Card):
         #soit bool soit list
         self.__reveal = False
         try:
-            if len(reveal)>=8:
-                self.__reveal = reveal[7]
+            if len(reveal)>=6:
+                 if reveal[5] == 'True': 
+                    self.__reveal = True            
         except TypeError:
                 self.__reveal = reveal
                   
@@ -420,7 +421,7 @@ def aff_ch(card,special):
             C[13] = True
             
     center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
-    
+    print(special)
     if special == 'blue_door':
         center = 'B'
     if special == 'green_door':
@@ -429,6 +430,10 @@ def aff_ch(card,special):
         center = 'C'
     if special == 'START':
         center = 'S'
+    if special == 'PEPITE':
+        center = 'G'
+    if special == 'PIERRE':
+        center = 'P'
     
     aff1 = "┏━"+ ("║" if "up" in PATH else "━") + "━┓" 
     aff2 = "┃ "+ ("║" if "up" in PATH else " ") + " ┃" 
