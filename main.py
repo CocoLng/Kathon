@@ -57,9 +57,11 @@ def recap(P_list,nb_manches):
     if nb_manches >3 :
         readfile('ressources\\SaboteurTxtMenu.txt',3)
         print(f"\nLe grand gagnant est \n")
+        return True
     print("\n[1] Continuez la partie\n[0] /!\ Quittez le programme (Ctrl + C)\n")
     input_player(0, 1)
-    pass
+    return False
+
    
 while True : 
     readfile('ressources\\SaboteurTxtMenu.txt')
@@ -83,5 +85,7 @@ while True :
     readfile('ressources\\SaboteurTxtMenu.txt',1)
     round_done = init_round(extension,list_players)
     nb_manches +=1
+    end = recap(list_players,nb_manches)
+    if end : break
 
          
