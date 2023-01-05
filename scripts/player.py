@@ -6,23 +6,15 @@ class Player(ABC):
         self.score = 0
         self.name = name
         self.role = None
-        self.__main = []
+        self.main = []
         self.status = []
         self.__carte_max = 5
         self.card_number = 0
     
     def __str__ (self):
         Aff = "-"*20 
-        return Aff+f"\n name = {self.name}"+f"\n score = {self.score}"+f"\n card = {self.__main}"+'\n'+Aff
+        return Aff+f"\n name = {self.name}"+f"\n score = {self.score}"+f"\n card = {self.main}"+'\n'+Aff
        
-    @property    
-    def add_card(self):
-        return self.__main
-    
-    @add_card.setter
-    def add_card(self,carte):
-        self.__main.append(carte) if len(self.__main) < self.__carte_max else print("deffauser, car trop de cartes")        
-        
     @property
     def score(self):
         return self.__score
@@ -39,7 +31,6 @@ class Human(Player):
     
     def __init__(self,name):
         super().__init__(name)
-        self.__main = []
     
     def skip_turn(self):
         if self.card_number == 0: return True
@@ -49,8 +40,8 @@ class Human(Player):
         antipode_d_u = ['down','up']
         antipode_l_r = ['right','left']
         try:
-            [CARD.name(antipode_d_u.index(CARD.name)-1)for CARD in self.__main[ID-1] if CARD.name in antipode_d_u]
-            [CARD.name(antipode_l_r.index(CARD.name)-1)for CARD in self.__main[ID-1] if CARD.name in antipode_l_r]   
+            [CARD.name(antipode_d_u.index(CARD.name)-1)for CARD in self.main[ID-1] if CARD.name in antipode_d_u]
+            [CARD.name(antipode_l_r.index(CARD.name)-1)for CARD in self.main[ID-1] if CARD.name in antipode_l_r]   
         except (IndexError,ValueError):
             return False
         return True
@@ -59,20 +50,20 @@ class Human(Player):
         ID = input("quelle carte voulez vous jouer ?")
         try:
             
-            card = self.__main[ID-1]    
+            card = self.main[ID-1]    
             if isinstance(card,'CardChemin'):
                 if self.__status == []: 
                     if MAP.card_setable():
                         MAP.add_card(card,False)
-                        self.__main.remove(card)
-                        self.card_number = len(self.__main)
+                        self.main.remove(card)
+                        self.card_number = len(self.main)
                         return True
                 
             if isinstance(card,'CardAction'):
                 card.P_list = Pl_lt
                 if card.effect():
-                    self.__main.remove(card)
-                    self.card_number = len(self.__main)
+                    self.main.remove(card)
+                    self.card_number = len(self.main)
                     return True
                 
             return False
@@ -88,15 +79,15 @@ class Human(Player):
                 return False
             for i in range(quantite):
                 ID = input("quelle carte voulez vous jouer ?")
-                card = self.__main[ID-1] 
-                if card in self.__main:
-                    self.__main.remove(card)
+                card = self.main[ID-1] 
+                if card in self.main:
+                    self.main.remove(card)
                 else: 
                     return print("cette carte n est pas presente dans votre main")
            
     def get_card(self,card):
-        if len(self.__main) <= self.__carte_max:
-            self.__main.append(card)
+        if len(self.main) <= self.__carte_max:
+            self.main.append(card)
             return True
         print('cous avez trop de cartes')
         return False

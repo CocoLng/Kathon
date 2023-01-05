@@ -94,9 +94,9 @@ class CardChemin(Card):
         self.special = arg[5]
         self.reveal = None
         self.config = list(arg[3].split(":"))
-        self.port = list(arg[4].port.split(","))
+        self.port = list(arg[4].split(","))
         self.borders = self.port
-        self.aff = aff_ch(self.borders,self.special)
+        self.__aff = aff_ch(self.borders,self.special)
         
         
     @property
@@ -105,7 +105,7 @@ class CardChemin(Card):
     
     @special.setter
     def special(self,special):
-        self.special = None
+        self.__special = None
         if len(special)>=6:
             self.__special = special[5]  # non destructible si special, spawn et gold
             
@@ -130,7 +130,7 @@ class CardChemin(Card):
         try:
             if len(reveal)>=8:
                 self.__reveal = reveal[7]
-        except IndexError:
+        except TypeError:
                 self.__reveal = reveal
                   
     @property
@@ -139,7 +139,8 @@ class CardChemin(Card):
     
     @borders.setter
     def borders(self,port):
-        [self.borders.append(ConnectionEdge(i,self.special , self.special=='START')) for i in port]
+        self.__borders = []
+        [self.__borders.append(ConnectionEdge(i,self.special , self.special=='START')) for i in port]
         for chemins,portes in zip(self.config,self.borders):
             [portes.connect(portes_) for connections, portes_ in zip(chemins,self.borders) if int(connections) ==1]
 
