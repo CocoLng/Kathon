@@ -1,7 +1,7 @@
 
-========================================================================
-                            Explication
-========================================================================
++======================================================================+
+|                            Explication                               |
++======================================================================+
 
 Choisissez la categorie dont vous souhaitez avoir des renseignements :
 
@@ -11,9 +11,9 @@ Choisissez la categorie dont vous souhaitez avoir des renseignements :
 
 [0] Quittez le programme (Ctrl + C)
 SUB_PART
-========================================================================
-                       Principe du jeu de base
-========================================================================
++======================================================================+
+|                       Principe du jeu de base                        |
++======================================================================+
 
 Chacun joue soit le role d un Chercheur d or, soit le role d un Saboteur qui entrave la prospection. 
 Mais personne ne connait le role des autres joueurs !
@@ -39,9 +39,9 @@ LORS DE VOTRE TOUR, SELECTIONNEZ UNE CARTE ET VOUS POURREZ VOIR SON DESCRIPTIF P
 [0] Quittez le programme (Ctrl + C)
 [1] Retour au menu principal
 SUB_PART
-========================================================================
-                       Saboteur, l EXTENSION
-========================================================================
++======================================================================+
+|                       Saboteur, l EXTENSION                          |
++======================================================================+
 (Il est preferable de connaitre les regles du jeu de base avant de se lancer dans l extension.)
 
 Les chercheurs d or sont maintenant divises en 2 equipes, VERT et BLEU.
@@ -65,9 +65,9 @@ Partie en 3 manches.
 [0] Quittez le programme (Ctrl + C)
 [1] Retour au menu principal
 SUB_PART
-========================================================================
-                       Implementation du jeu
-========================================================================
++======================================================================+
+|                       Implementation du jeu                          |
++======================================================================+
 
 explique le code python et notre approche
 
