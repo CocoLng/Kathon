@@ -4,20 +4,15 @@ Created on Mon Nov 28 16:00:38 2022
 
 @author: coren
 """
-import os
 from sys import exit
 from scripts.player import Human
 from scripts.card import input_player #nous réutilisons la fonction input player de card.py
-from scripts.game import init_round
+from scripts.game import game_handler,readfile
 
 ###############################################################################
 #                                Fonctions                                    #
 ###############################################################################
 
-def readfile(path_join,part_explain = 0): #Permet de lire un fichier texte, ici principalement a but d'affichage
-    with open(os.path.join(os.path.dirname(__file__),path_join),'r') as f: 
-        f_split = f.read().split("SUB_PART")#Nous décomposons notre fichier tous les SUB_PART
-        print(f_split[part_explain])
         
 def init_player(extension): #Gere la creations des Joueurs via la saisie de leur nom, avec une résistance prévu a toute épreuve, normalement...
     list_players = []
@@ -51,13 +46,13 @@ def init_player(extension): #Gere la creations des Joueurs via la saisie de leur
     return list_players
 
 def recap(P_list,nb_manches):#Fait le recap en fin de manche et regarde si 3 rounds sont passer
-    readfile('ressources\\SaboteurTxt.txt',2)
+    readfile('..\\ressources\\SaboteurTxt.txt',2)
     list_players.sort(key=lambda player: player.score, reverse=True)
     [(print(i, ': ', player.name,'(',player.score,'pts)', sep='', end='\n')) for i, player in enumerate(list_players, 1)]
     print(f"\n{list_players[0].name} à un avantage de {list_players[0].score-list_players[1].score}pts comparer à {list_players[1].name}.")
     
     if nb_manches >3 :
-        readfile('ressources\\SaboteurTxt.txt',3)
+        readfile('..\\ressources\\SaboteurTxt.txt',3)
         print(f"\nLe grand gagnant est {list_players[0].name} !! \nFélicitation, en espérant être ré-exécuter prochainement.\n Et n'oubliez pas de rester zen, comme mon code source")
         return False
     print("\n[1] Continuez la partie\n[0] /!\ Quittez le programme (Ctrl + C)\n")
@@ -70,11 +65,11 @@ def recap(P_list,nb_manches):#Fait le recap en fin de manche et regarde si 3 rou
  ###############################################################################  
 
 while True : #Menu principal
-    readfile('ressources\\SaboteurTxt.txt')
+    readfile('..\\ressources\\SaboteurTxt.txt')
     res_input = input_player(0, 3)
     if res_input == 1 :
-         readfile('ressources\\PresentationSubMenu.txt')
-         readfile('ressources\\PresentationSubMenu.txt',input_player(0, 2))
+         readfile('..\\ressources\\PresentationSubMenu.txt')
+         readfile('..\\ressources\\PresentationSubMenu.txt',input_player(0, 2))
          input_player(0, 1)
     elif res_input == 2:
         extension = False
@@ -89,8 +84,8 @@ run_game = True
 
 #Boucle Game Running
 while run_game :
-    readfile('ressources\\SaboteurTxt.txt',1)
-    round_done = init_round(extension,list_players)
+    readfile('..\\ressources\\SaboteurTxt.txt',1)
+    round_done = game_handler(extension,list_players)
     if round_done : nb_manches +=1 
     else : break
     run_game = recap(list_players,nb_manches)

@@ -30,8 +30,8 @@ def readfile(path_join,part_explain = 0): #Permet de lire un fichier texte, ici 
         
 def next_player(P_round):
     readfile('..\\ressources\\SaboteurTxt.txt',4)
-    print(f"\nC'est au tour de {P_round[0].name} !\n")
-    input("Pressez une touche pour continuer, sinon on peut aussi attendre tranquillement")
+    print(f"C'est au tour de {P_round[0].name} !\n")
+    input("Pressez une touche pour continuer, sinon on peut aussi attendre tranquillement\n...")
 
     
 def init_round(extension,P_list):
@@ -71,10 +71,7 @@ def repartition_card(extension,P_list,Deck):
 
 
 def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
-    tours = 0
     while WIN_CARD.borders[0].flag_loop == None and len(P_round) > 0:
-        tours+=1
-        print(f'tours: {tours}') 
         print(P_round[0].name,P_round[0].status)    
         print(MAP)
         while True:
@@ -85,7 +82,9 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
                 P_round.pop(0)
         
         P_round = P_round[1:] + P_round[:1]
+        print("\nFin de votre Tour\nPassage au joueur suivant dans quelques secondes...")
+        sleep(5)
         cls_screen()
-        sleep(1)
+        sleep(1)#temps de nettoyer l'ecran
         next_player(P_round)
     return False

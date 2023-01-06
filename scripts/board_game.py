@@ -74,7 +74,7 @@ class BoardGame:
                     if self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)].flag_loop != None:
                         flag = True
                 else:
-                    print('probleme lors de la connection des cartes en X')
+                    print('Probleme lors de la connection des cartes en X')
                     return False  
             except(AttributeError,IndexError,ValueError):
                 pass
@@ -93,13 +93,13 @@ class BoardGame:
                         if self.__map_[pos[0]][pos[1]+x_y].borders[INTE1.index(True)].flag_loop != None:
                             flag = True
                 else:
-                    print('probleme lors de la connection des cartes en Y')
+                    print('Probleme lors de la connection des cartes en Y')
                     return False
             except(AttributeError,IndexError,ValueError):
                 pass
             
         if not(flag):
-            print('non connecté au start')
+            print('Non connecté au start')
             return False
 #        for i in card.borders:
 #            if i != []:
@@ -124,7 +124,7 @@ class BoardGame:
     def del_card(self,pos):
         if self.__map_[pos[0]][pos[1]] != []:
             if self.__map_[pos[0]][pos[1]].special:
-                print("vous ne pouvez pas detruire une carte special")
+                print("Vous ne pouvez pas detruire une carte special")
             else:
                 [i.delete_connection() for i in self.__map_[pos[0]][pos[1]].borders]
                 self.__map_[pos[0]][pos[1]] = []
@@ -157,7 +157,7 @@ class BoardGame:
         #si elle est a l interieur de la carte crée on peut la rajouter
         if not(Xa) and not(Ya): 
             if  not(self.__map_[pos[0]][pos[1]] == []):
-                print("carte deja presente")
+                print("Carte deja presente")
                 return False
         else:
         #Xa et Ya nous donne l information sur si on est a l'exteriur en x ou en y donc soit rajouter une/des ligne(s) ou une/des colonne(s)
@@ -198,12 +198,12 @@ class BoardGame:
         if not(admin):
             if not((pos[0] < -1 or pos[0] > len(self.__map_)+1) and ( pos[1] < -1 or pos[1] > len(self.__map_[0]+1))):
                 if self.card_set(card,[a,b]):
-                    print('pose de carte reussite!')
+                    print('La pose de carte est reussite!')
                     return True
                 
                 return False
             else:
-                print('vous etes a lexterieur de la map')
+                print('vous etes a l exterieur de la map')
                 return False
         else:
             self.__map_[a][b] = card

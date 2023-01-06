@@ -4,8 +4,6 @@ import types
 import os
 from scripts.detect_region import ConnectionEdge
 
-from random import shuffle
-
 
 path_init = os.path.join(os.path.dirname(__file__),'..\\ressources\\card_ini.txt')
 ###############################################################################
@@ -21,8 +19,6 @@ class Deck:
         self.extension = extension
         self.list_card= []
         self.load_cards(len(nb_players))
-    def shuffle(self):
-        return shuffle(self.list_card)  
     
     def draw_card(self,i=0):#sert pour la pioche d'une carte
         if len(self.list_card)==0 : return False#return False si le deck est vide
@@ -285,15 +281,15 @@ def collapsing(self):
 def secret_plan(self):
     while True:
         print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
-        selected = input_player(1, 3)
-        if selected == 1 and not(self.arg[1]._BoardGame.__main[8][2].reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
-            print(f"La carte du Haut(8,2) est un/une {self.arg[1][8][2].name}")
+        selected = input_player(1, 3) 
+        if selected == 1 and not(self.arg[1]._BoardGame__map_[8][2].reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
+            print(f"La carte du Haut(8,2) est un/une {self.arg[1]._BoardGame__map_[8][2].name}")
             return True
-        elif selected == 2 and not(self.arg[1]._BoardGame.__main[8][0].reveal): 
-            print(f"La carte du Miieu(8,0) est un/une {self.arg[1][8][0].name}")
+        elif selected == 2 and not(self.arg[1]._BoardGame__map_[8][0].reveal): 
+            print(f"La carte du Miieu(8,0) est un/une {self.arg[1]._BoardGame__map_[8][0].name}")
             return True
-        elif selected == 3 and not(self.arg[1]._BoardGame.__main[8][-2].reveal): 
-            print(f"La carte en Bas(8,-2) est un/une {self.arg[1][8][-2].name}")
+        elif selected == 3 and not(self.arg[1]._BoardGame__map_[8][-2].reveal): 
+            print(f"La carte en Bas(8,-2) est un/une {self.arg[1]._BoardGame__map_[8][-2].name}")
             return True
         print("\nCette carte est déja visible... En choisir une autre")
 

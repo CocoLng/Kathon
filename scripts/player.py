@@ -1,4 +1,5 @@
 from abc import ABC
+from scripts.card import input_player
 
 class Player(ABC):
     
@@ -54,12 +55,13 @@ class Human(Player):
         pos = [] 
         while True:
             try:
-                pos = input("a quelle pisiton voulez vous jouer votre carte x y\n")
+                pos = input("Taper la position(int) ou vous voulez jouer votre carte, forme :\nX Y\n")
                 x,y = pos.split()
                 pos = [int(x),int(y)]
                 break
-            except (KeyboardInterrupt,ValueError):
-                print("pas les bonnes valeurs")
+            except ValueError:
+                print("Valeur Incorrecte")
+                continue
         return pos
 
     
@@ -78,29 +80,27 @@ class Human(Player):
         if len(self.main) == 0:
             print('le joueur n a plus de cartes')
             return True
-        
-        [print(i.name) for i in self.main]
-        
+        print("Voici votre main :")
+        [print(f"[{i}] {card.name}") for i,card in enumerate(self.main,1)]
+        print("\n")
+        card = self.main[input_player(0,len(self.main))-1]
 
-        while True:
-            try: 
-                ID = input("quelle carte voulez vous jouer ?")
-                if 1 <= int(ID) <= 5:
-                    card = self.main[int(ID)-1]
-                    break
-            except ValueError:
-                print('veuiller choisir une valeure entre 0 et {len(self.main)}')
-            except IndexError:
-                print('la valeure choisi n est pas valide')
-
+        if len(self.status) != 0 or (len(self.status) ==1 and not(self.status[0]=="voleur")) :
+           print("Aie..\nVous êtes affecter par ceci :")
+           [print(f"- {status}") for status in self.status]
+           
         try:
             if card.__class__.__name__ =='CardChemin':
-                if self.status == []: 
+                if len(self.status)==0 or self.status[0]=='voleur': 
                     ########################################
-                    pos = self.ask_pos()
-                    if MAP.add_card(card,pos):
-                        self.main.remove(card)
-                        return True
+                    print(f"Vous allez jouer :{print(card)}") ######AFFICHER COMME SI C ETAIT SUR LA MAPPPPPPP
+                    print("[1] Continuer\n[2] Retour selection")
+                    rep = input_player(1,2)
+                    if rep == 1:
+                        pos = self.ask_pos()
+                        if MAP.add_card(card,pos):
+                            self.main.remove(card)
+                            return True
                 
             if  card.__class__.__name__ == 'CardAction':
                 card.arg = [P_list,MAP]
