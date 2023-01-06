@@ -75,7 +75,7 @@ def repartition_card(extension,P_list,Deck):
         #S il ny a pas l'extension alors:
         #Tous les 2 joueurs une carte en moins est donné initialement 
         nb_P_repart = 7 -len(P_list)//2
-        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=nb_P_repart]#nb_P_repart
+        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=1]#nb_P_repart
 
 #Gere la manche en cours 
 def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
@@ -110,11 +110,16 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
 
 def reward_time(extension,P_list,P_round,status_win,Deck_Reward):
     if not(extension):
-        if status_win : #les chercheurs ont gagnés
-            Deck_Reward = Deck_Reward[:min(len(P_list),9)]
-            Deck_Reward.sort(reverse=True)
-            Deck_Reward.append("0")#s'il y a 10 joueurs
-            print(Deck_Reward)
-            [(Deck_Reward.append(player),Deck_Reward.pop(0)) for player in P_list if player != P_round[0]]
+        for i,player in enumerate(P_list,0) :
+            if player.role != "chercheur" : del P_list[i]
+        print("P",P_list)
+        if status_win or not(status_win) : #les chercheurs ont gagnés
+            Deck_Reward.list_card = Deck_Reward.list_card[:min(len(P_list),9)]
+            Deck_Reward.list_card.sort(key=lambda x: x.pepite, reverse=True)
+            if len(P_list)>= 10 :
+                Deck_Reward.list_card.append(Deck_Reward.list_card[-1])#s'il y a 10 joueurs
+                Deck_Reward.list_card[-1].pepite = "0"
+            print(Deck_Reward.list_card)
+            [(Deck_Reward.list_card.append(player),Deck_Reward.pop(0)) for player in P_list if player != P_round[0]]
             print(Deck_Reward.list_card)
     pass
