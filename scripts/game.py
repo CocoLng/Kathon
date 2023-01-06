@@ -6,6 +6,7 @@ Created on Sat Dec  3 12:27:55 2022
 """
 from random import shuffle
 from scripts.board_game import BoardGame
+from scripts.card import Deck
 from os import path,system,name
 from time import sleep
 
