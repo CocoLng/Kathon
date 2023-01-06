@@ -1,6 +1,6 @@
 from abc import ABC
 from sys import exit
-import types
+from types import MethodType
 from os import path
 from scripts.detect_region import ConnectionEdge
 
@@ -187,8 +187,8 @@ class CardAction(Card):
     # les cartes action sont des cartes avec un effet
     def __init__(self, name, description, effect, arg=None):#les cartes actions ne nécéssitent pas tous la listes des joueurs
         super().__init__(name, description)
-        
-        self.effect = types.MethodType(globals()[effect], self) #on ajoute la méthode contenant le nom effect dans notre object, les autres ne sont pas chargés car inutiles
+    
+        self.effect = MethodType(globals()[effect], self) #on ajoute la méthode contenant le nom effect dans notre object, les autres ne sont pas chargés car inutiles
         if arg is None:
             arg = []
         self.arg = arg
