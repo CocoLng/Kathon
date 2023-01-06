@@ -5,10 +5,8 @@ Created on Sat Dec  3 12:27:55 2022
 @author: coren
 """
 from random import shuffle
-from scripts.card import input_player,Deck
-from scripts.player import Human
 from scripts.board_game import BoardGame
-import os
+from os import path,system,name
 from time import sleep
 
     
@@ -21,10 +19,10 @@ def game_handler(extension,P_list): #gere la réalisation d'une manche
     return True
     
 def cls_screen(): #Sert a effacer la console, utile pour masquer les informations dun joueur à an autre
-    os.system('cls' if os.name=='nt' else 'clear')
+    system('cls' if name=='nt' else 'clear')
     
 def readfile(path_join,part_explain = 0): #Permet de lire un fichier texte, ici principalement a but d'affichage
-    with open(os.path.join(os.path.dirname(__file__),path_join),'r') as f: 
+    with open(path.join(path.dirname(__file__),path_join),'r') as f: 
         f_split = f.read().split("SUB_PART")#Nous décomposons notre fichier tous les SUB_PART
         print(f_split[part_explain])
         

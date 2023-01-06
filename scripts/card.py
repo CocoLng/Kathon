@@ -1,11 +1,11 @@
 from abc import ABC
 from sys import exit
 import types
-import os
+from os import path
 from scripts.detect_region import ConnectionEdge
 
 
-path_init = os.path.join(os.path.dirname(__file__),'..\\ressources\\card_ini.txt')
+path_init = path.join(path.dirname(__file__),'..\\ressources\\card_ini.txt')
 ###############################################################################
 #                              Deck                                           #
 ###############################################################################
