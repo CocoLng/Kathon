@@ -62,6 +62,9 @@ class BoardGame:
         flag = False
         
         for x_y in [-1,1]:          
+          print(x_y)
+          print(self.__map_[pos[0]+x_y][pos[1]])
+          print(self.__map_[pos[0]][pos[1]+x_y])
           if  pos[0]+x_y >= 0 and pos[0]+x_y < len(self.__map_):
             try:
                 INTE1 = [True if I.name  == antipode_l_r[(x_y+1)//2] else False for I in self.__map_[pos[0]+x_y][pos[1]].borders]
@@ -108,12 +111,15 @@ class BoardGame:
             interieur.connect(exterieur)
  #       print(pos)
         self.__map_[pos[0]][pos[1]] = card
-
+        print(self.__map_[-self.__decalage[0]][-self.__decalage[1]].name)
         for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
             print('\n',i.name)
+            
             i.reconstruc_path(i)
+            
 
         if self.__map_[-self.__decalage[0]+0][-self.__decalage[1]+1] != [] and self.__map_[-self.__decalage[0]+1][-self.__decalage[1]]:
+            
             print(self.__map_[-self.__decalage[0]+0][-self.__decalage[1]+1].borders,self.__map_[-self.__decalage[0]+1][-self.__decalage[1]+0].borders)
         """      
         l =0

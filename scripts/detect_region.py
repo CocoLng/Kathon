@@ -128,13 +128,14 @@ class ConnectionEdge:
             self.is_check = True   
             
             for i in in_out:
+                print(i.WARNING)
                 if i.WARNING == 0:
                     if not(i.is_check): 
                         if not(i.source):
                             if i != source_flag:
-                                #print(self.name,self.flag_loop,i.name,'\n') 
+                                print(self.name,i.name)
                                 #on verifie si l'objet suivent a deja ete verifier par le programme  
-                                # on detruit les chemins existent avant de 
+                                # on detruit les chemins existent &aavant de 
                                 # les reconnecter a fin d'eviter une copie des input/output dans l'objet
                                 self.disconnect(i)
                                 i.connect(self)
@@ -165,56 +166,48 @@ class ConnectionEdge:
                             self.outputo = i
                             i.outputo = self
                         self.WARNING += 1
+
                 else:
                     i.WARNING -= 1  
         if self.WARNING > 0:
             self.WARNING -= 1
         # permet de gerer les fin de lignes conecter a des noeuds
-        self.is_check = not(self.is_check)
+        if self.WARNING == 0:
+            self.is_check = False
 
         
 # cette classe serat utilisé afin de gere entre sorti des 
 # cartes chemins ainssi que leurs connections intern
-"""
+
 A1  =  ConnectionEdge('A1','hello',True)
-A2  =  ConnectionEdge('A2')
-A3  =  ConnectionEdge('A3')
-A4  =  ConnectionEdge('A4')
-A5  =  ConnectionEdge('A5')
-A6  =  ConnectionEdge('A6')
-A7  =  ConnectionEdge('A7')
-A8  =  ConnectionEdge('A8')
-A9  =  ConnectionEdge('A9')
-A10 =  ConnectionEdge('A10')
-
-A10 =  ConnectionEdge('A10')
-A11 =  ConnectionEdge('A11')
-A12 =  ConnectionEdge('A12')
-A13 =  ConnectionEdge('A13')
+L1  =  ConnectionEdge('A2')
+U1  =  ConnectionEdge('A3')
+R1  =  ConnectionEdge('A4')
+D1  =  ConnectionEdge('A5')
+L2  =  ConnectionEdge('A6')
+U2  =  ConnectionEdge('A7')
+D2  =  ConnectionEdge('A8')
+R2  =  ConnectionEdge('A9')
 
 
-A13.connect(A10)
-A11.connect(A10)
-A10.connect(A9)
-A9.connect(A6)
+A_1  =  ConnectionEdge('A_1','hello',True)
 
 
 
-A2.connect(A1)
-A3.connect(A2)
-A4.connect(A2)
-A4.connect(A5)
-A6.connect(A5)
 
-A2.connect(A6)
+L1.connect(R1)
+U1.connect(R1)
+D1.connect(R1)
 
-A7.connect(A5)
-A8.connect(A7)
-A2.connect(A8)
+L1.connect(A1)
 
-
-
-A9.connect(A3)
-A10.connect(A5)
 A1.reconstruc_path(A1)
-"""
+
+R1.connect(L2)
+
+L2.connect(R2)
+U2.connect(R2)
+D2.connect(R2)
+
+A1.reconstruc_path(A1)
+

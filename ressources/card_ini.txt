@@ -22,7 +22,7 @@ ACTION_CHEMIN
 1;PIERRE;entre_de_la_mine;00:10;left,down;False;PIERRE;False
 1;PIERRE;entre_de_la_mine;00:10;down,right;False;PIERRE;False
 1;GOLD;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;False;PEPITE	
-1;ENTREE;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;True;START;True
+1;ENTREE;entre_de_la_mine;0000:0000:0000:0000;up,left,down,right;True;START;True
 
 5;Croisement;a la croiser des chemins;0000:0000:0000:1110;up,left,down,right
 5;Croisement T ulr;a la croiser des chemins;000:000:110;up,left,right
