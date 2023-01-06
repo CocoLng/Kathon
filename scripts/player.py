@@ -92,8 +92,7 @@ class Human(Player):
         [print(f"[{i}] {card.name}") for i,card in enumerate(self.main,1)]
         options()
         card = input_player(-2,len(self.main))
-        if card>0:
-            card = self.main[card-1]
+        
         
 
         if len(self.status) != 0 or (len(self.status) ==1 and not(self.status[0]=="voleur")) :
@@ -102,14 +101,16 @@ class Human(Player):
            
         try:
             
-            if card<0:
+            if card>0:
+                card = self.main[card-1]
+            else :
                 if card == -1 : 
                     print(f"\nRappel, vous êtes un :\n{self.role}\n")
                     return False
                 else : 
                     return self.del_card()
                 
-            elif card.__class__.__name__ =='CardChemin':
+            if card.__class__.__name__ =='CardChemin':
                 if len(self.status)==0 or self.status[0]=='voleur': 
                     ########################################
                     print(f"Vous allez jouer :{print(card)}") ######AFFICHER COMME SI C ETAIT SUR LA MAPPPPPPP

@@ -81,6 +81,7 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
         while True: #tant qu'un joueur n'as pas joué
             if P_round[0].play(P_round,MAP):
                 break
+        print(MAP)
         if not(P_round[0].get_card(Deck_)):
             if P_round[0].card_number == 0:
                 P_round.pop(0)
