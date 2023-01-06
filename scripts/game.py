@@ -75,7 +75,7 @@ def repartition_card(extension,P_list,Deck):
         #S il ny a pas l'extension alors:
         #Tous les 2 joueurs une carte en moins est donné initialement 
         nb_P_repart = 7 -len(P_list)//2
-        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=1]#nb_P_repart
+        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=nb_P_repart]#nb_P_repart
 
 #Gere la manche en cours 
 def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
