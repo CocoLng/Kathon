@@ -22,6 +22,9 @@ class ConnectionEdge:
     @property
     def source(self):
         return self.__source
+    @source.setter
+    def source(self,source):
+        self.__source = source
     @property
     def name(self):
         return self.__name
@@ -128,7 +131,6 @@ class ConnectionEdge:
             self.is_check = True   
             
             for i in in_out:
-                print(i.WARNING)
                 if i.WARNING == 0:
                     if not(i.is_check): 
                         if not(i.source):
@@ -178,36 +180,3 @@ class ConnectionEdge:
         
 # cette classe serat utilisé afin de gere entre sorti des 
 # cartes chemins ainssi que leurs connections intern
-
-A1  =  ConnectionEdge('A1','hello',True)
-L1  =  ConnectionEdge('A2')
-U1  =  ConnectionEdge('A3')
-R1  =  ConnectionEdge('A4')
-D1  =  ConnectionEdge('A5')
-L2  =  ConnectionEdge('A6')
-U2  =  ConnectionEdge('A7')
-D2  =  ConnectionEdge('A8')
-R2  =  ConnectionEdge('A9')
-
-
-A_1  =  ConnectionEdge('A_1','hello',True)
-
-
-
-
-L1.connect(R1)
-U1.connect(R1)
-D1.connect(R1)
-
-L1.connect(A1)
-
-A1.reconstruc_path(A1)
-
-R1.connect(L2)
-
-L2.connect(R2)
-U2.connect(R2)
-D2.connect(R2)
-
-A1.reconstruc_path(A1)
-

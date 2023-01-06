@@ -4,6 +4,7 @@ class BoardGame:
         #initialise une carte de X = 0 y = 0
         self.__map_ = [[[]]]
         self.__decalage = [0,0]
+        self.L = []
     
     def __str__(self):
         aff = ""
@@ -62,13 +63,12 @@ class BoardGame:
         flag = False
         
         for x_y in [-1,1]:          
-          print(x_y)
-          print(self.__map_[pos[0]+x_y][pos[1]])
-          print(self.__map_[pos[0]][pos[1]+x_y])
           if  pos[0]+x_y >= 0 and pos[0]+x_y < len(self.__map_):
             try:
+
                 INTE1 = [True if I.name  == antipode_l_r[(x_y+1)//2] else False for I in self.__map_[pos[0]+x_y][pos[1]].borders]
                 INTE = [True if I.name == antipode_l_r[(x_y-1)//2] else False for I in card.borders ] 
+                print(INTE1,INTE)
                 if (True in INTE) == (True in INTE1):
                     
                     card_p.append(self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)])
@@ -104,23 +104,29 @@ class BoardGame:
         if not(flag):
             print('Non connecté au start')
             return False
-#        for i in card.borders:
-#            if i != []:
-#                print(i.flag_loop)
+
+
         for exterieur,interieur in zip(card_p,borders_to_connect):
             interieur.connect(exterieur)
- #       print(pos)
+
         self.__map_[pos[0]][pos[1]] = card
-        print(self.__map_[-self.__decalage[0]][-self.__decalage[1]].name)
         for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
-            print('\n',i.name)
-            
             i.reconstruc_path(i)
+            
             
 
         if self.__map_[-self.__decalage[0]+0][-self.__decalage[1]+1] != [] and self.__map_[-self.__decalage[0]+1][-self.__decalage[1]]:
             
             print(self.__map_[-self.__decalage[0]+0][-self.__decalage[1]+1].borders,self.__map_[-self.__decalage[0]+1][-self.__decalage[1]+0].borders)
+        
+        if card.special == "START" or card.special == 'DOOR':
+            self.L.append([pos[0] + self.__decalage[0],pos[1] + self.__decalage[1]])
+            
+        for posl in self.L:
+            print(self.__map_[posl[0]-self.__decalage[0]][posl[1]-self.__decalage[1]],self.L,self.__decalage)
+            self.__map_[posl[0]-self.__decalage[0]][posl[1]-self.__decalage[1]].effect()
+            
+        
         """      
         l =0
         c = 0
