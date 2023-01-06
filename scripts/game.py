@@ -13,10 +13,13 @@ from time import sleep
     
 def game_handler(extension,P_list): #gere la réalisation d'une manche
     Decks,MAP,WIN_CARD = init_round(extension, P_list)
+    shuffle(P_list) #Melange l'ordre des joueurs 
     P_round = P_list.copy()
-    shuffle(P_round) #Melange l'ordre des joueurs 
     repartition_card(extension,P_round,Decks[0])
-    run_round(extension,P_round,MAP,Decks[0],WIN_CARD)
+    status_win,P_round = run_round(extension,P_round,MAP,Decks[0],WIN_CARD)
+    reward_time(extension,P_list,P_round,status_win,Decks[2])
+    #cls_screen()#Efface le terminal
+    sleep(1)#temps de nettoyer l'ecran
     return True
     
 def cls_screen(): #Sert a effacer la console, utile pour masquer les informations dun joueur à an autre
@@ -31,7 +34,7 @@ def readfile(path_join,part_explain = 0): #Permet de lire un fichier texte, ici 
 def next_player(P_round):#Gere le passage au joueur suivant 
     readfile('..\\ressources\\SaboteurTxt.txt',4)
     print(f"C'est au tour de {P_round[0].name} !\n")
-    input("Pressez une touche pour continuer, sinon on peut aussi attendre tranquillement\n...")
+    input("Pressez enter pour continuer, sinon on peut aussi attendre tranquillement\n...")
 
     
 def init_round(extension,P_list):
@@ -72,15 +75,15 @@ def repartition_card(extension,P_list,Deck):
         #S il ny a pas l'extension alors:
         #Tous les 2 joueurs une carte en moins est donné initialement 
         nb_P_repart = 7 -len(P_list)//2
-        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=nb_P_repart]
+        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=1]#nb_P_repart
 
 #Gere la manche en cours 
 def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
     #Verifie que la pépite n'est pas trouvé et qu'un joueur a toujours au moins une carte
     first_player = P_round[0].name
     first_turn = True
-    while WIN_CARD.borders[0].flag_loop == None and len(P_round) > 0:
-        print(P_round[0].name,P_round[0].status)    
+    Deck_.list_card = Deck_.list_card[:1]
+    while True:
         print(MAP)
         if first_turn: print(f"\n{P_round[0].name}, vous êtes :\n{P_round[0].role}\n")
         while True: #tant qu'un joueur n'as pas joué
@@ -91,14 +94,27 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
             if len(P_round[0].main) == 0:
                 P_round.pop(0)
             else : print("La pioche de carte est vide.")
-        
+        if WIN_CARD.borders[0].flag_loop != None : return True,P_round
         #Une fois que le joueur a joué nous passons au suivant,stocké en position 0
         #Le joueur qui vient de finir sont tour passe en dernière position
         P_round = P_round[1:] + P_round[:1]
-        if first_player == P_round[0].name : first_turn=False
+        try:
+            if first_player == P_round[0].name : first_turn=False
+        except IndexError:
+            return False,P_round
         print("\nFIN de votre tour, analyser la MAP et retennez vos cartes si vous le desirez.")
         input("Pressez enter quand vous avez fini pour confirmer la fin de votre tour\n...")
         cls_screen()#Efface le terminal
         sleep(1)#temps de nettoyer l'ecran
         next_player(P_round)
-    return False
+
+def reward_time(extension,P_list,P_round,status_win,Deck_Reward):
+    if not(extension):
+        if status_win : #les chercheurs ont gagnés
+            Deck_Reward = Deck_Reward[:min(len(P_list),9)]
+            Deck_Reward.sort(reverse=True)
+            Deck_Reward.append("0")#s'il y a 10 joueurs
+            print(Deck_Reward)
+            [(Deck_Reward.append(player),Deck_Reward.pop(0)) for player in P_list if player != P_round[0]]
+            print(Deck_Reward.list_card)
+    pass

@@ -41,11 +41,12 @@ class Human():
             if len(self.main) < quantite:
                 print("Vous n'avez pas asser de cartes")
                 return False
+            if len(Deck.list_card)==0 : 
+                print("\n❌ Le deck est vide. Vous ne récuperez pas de cartes.\n Continuez ?\n[1]Oui\n[2]Non")
+                res = input_player(1,2)
+                if res == 2 : return False
             elif extension and Deck and quantite == 1 :
                 volontaire = True
-                if len(Deck.list_card)==0 : 
-                    print("\n❌ Le deck est vide.\n")
-                    return False
                 print(f"Combien de cartes voulez-vous piochez ? (1-{min(len(Deck.list_card),3)})")
                 quantite = input_player(1,min(len(Deck.list_card),3))
                 
@@ -58,10 +59,10 @@ class Human():
                     card = self.main[card-1]
                 else : return False
                 if card in self.main:
-                    print(f"\nVous avez defausser {card.name}")
+                    print(f"\nVous avez défaussée {card.name}")
                     self.main.remove(card)
                 else: 
-                    print("Cette carte n est pas presente dans votre main")
+                    print("Cette carte n'est pas presente dans votre main")
                     return False
             if volontaire : self.get_card(Deck,quantite-1)#-1 car a la fin du tour il repioche
             return True
@@ -71,7 +72,7 @@ class Human():
         pos = [] 
         while True:
             try:
-                pos = input("Taper la position(int) ou vous voulez jouer votre carte, forme(taper stop pour annuler) :\nX Y\n")
+                pos = input("Taper la position(int) ou vous voulez jouer votre carte, (taper stop pour annuler), forme:\nX Y\n")
                 if pos.upper() == "STOP" : 
                     print("\n")
                     return False
@@ -160,12 +161,14 @@ class Human():
             return False
 
 
-    def get_card(self,Decks,i=1):
-        Done = True
-        for n in range(i):
-            card = Decks.draw_card()
-            if card:
-                self.main.append(card)
-            Done = card and Done
-            print(f"Vous avez pioché : {self.main[-1].name}")
+    def get_card(self,Deck,i=1):
+        Done = False
+        if len(Deck.list_card) !=0 :
+            Done = True
+            for n in range(i):
+                card = Deck.draw_card()
+                if card:
+                    self.main.append(card)
+                Done = card and Done
+                print(f"Vous avez pioché : {self.main[-1].name}")
         return Done

@@ -77,7 +77,6 @@ class Deck:
     def __str__(self):
         res = "o-----o "+ self.__class__.__name__ +":" +self.name + " o-----o"
         res += "\nCeci est un deck de cartes"
-        res += "\nContient l'extension :"+self.extension
         return res
 
 ###############################################################################
