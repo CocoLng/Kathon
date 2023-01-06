@@ -24,43 +24,51 @@ class Deck:
         if len(self.list_card)==0 : return False#return False si le deck est vide
         return self.list_card.pop(i) #sinon envoie la première carte et la supprime
         
-    def load_cards(self,nb_players):
+    def load_cards(self,nb_players):#Gere le chargement des cartes en le lisant dans un fichier txt
         i = 1
-        write = False
-        status = None
+        write = False #Sert a detecter si on est dans la partie des cartes ou on doit écrire 
+        status = None #Prend le nom de la catégorie qu'il lit, et regarde si cest celle desirée
         with open(path_init,'r') as f: #ferme automatiquement le fichier a la fin de la lecture
             for line in f:
                 line = line.strip()
-                if line == self.name:
+                if line.upper() == self.name.upper():#Regarde si le nom correspond a la partie que on veut écrire 
                     status = self.name.upper()
+                    """
+                    self.extension contient 2 argument 
+                    self.extension[0] dit si l'extension est activée ou non
+                    self.extension[1] dit si quand l'extension est activée il faut remplacer les cartes du jeu de base
+                    """
                     if self.extension[1]==True:
                         write = False
                     else :
                         write = True
                 elif line == "EXTENSION" and status == self.name and self.extension[0]==True :
                      write = True 
+                #Condition d'arrêt, le mot END est détecté est status est deja défini, ce qui veut dire que nous avons deja écrit 
+                #Ou nous détectons le mot EXTENSION est celle-ci est désactivée 
                 elif status == self.name and ((line =="END") or (line == "EXTENSION" and self.extension[0]==False)): 
                     break
+                #Si la ligne n'est pas vide alors nous écrivons 
                 elif line !="" and write:
                     line = line.split(';')
                     if status == "ACTION_CHEMIN" :
-                        if len(line)==4:
+                        if len(line)==4:#Si la longueur des arguments ==4 alors nous sommes forcément sur une carte action
                             self.list_card+=int(line[0])*[CardAction(line[1],line[2],line[3])]
-                        else:
+                        else:#La longeur d'une carte chemin est variable selon ses paramètres, mais toujours >4
                             [self.list_card.append(CardChemin(line)) for i in range(int(line[0]))]
                     elif status == "ROLE":
                         if self.extension[0]==False:
-                            nb = 3 #le nombre de chercheur de abse est définis a 3
+                            nb = 3 #le nombre de chercheur de base est définis à 3
                             if nb_players == 4 : nb +=1 #si il y a quatre joueur, nous passons a 4 chercheur
                             while  nb/nb_players < 0.7 : nb+=1 #la proportion de chercheur doit toujours est au moins de 70% dans la manche
                             if  line[2] == "saboteur" : nb = (nb_players-nb)+1 #formule pour obtenir le nombre de saboteur
                             self.list_card+=nb*[CardRole(line[0],line[1],line[2])]
-                        else :
+                        else :#Quand l'extension est activée nous chargeons toutes les cartes, peut importe le nb de joueurs 
                             self.list_card+=int(line[0])*[CardRole(line[0],line[1],line[2])]
                         
                     elif status == "REWARD":
                         self.list_card+=int(line[0])*[CardReward(line[1],line[2],line[3])]
-                    else :
+                    else : #Sert a savoir si le nom saisie est faux, utile pour debug
                         print("Deck avec le nom de propriété indéfinis ! ERREUR")
                         exit()
                     i+=1
@@ -91,6 +99,7 @@ class Card(ABC):
 
 class CardChemin(Card):
     def __init__(self, arg):
+        #arg contient toute la ligne lu dans cardinit.txt
         super().__init__(arg[1], arg[2])
 
         self.is_start = arg
@@ -101,7 +110,8 @@ class CardChemin(Card):
         self.borders = self.port
         self.aff = True
         
-        
+    #La carte chemin est lu par le boardgame, player
+    #Il y a des conditions sur comment ses valeurs sont attribuées, d'où l'usage de setter
     @property
     def special(self):
         return self.__special
@@ -281,7 +291,6 @@ def impact_tools(self):
 ###############################################################################
 
 def collapsing(self):
-    print('heele')
     pos = self.arg[0][0].ask_pos()
     return self.arg[1].del_card(pos)
 
@@ -304,7 +313,7 @@ def secret_plan(self):
 #                         Chargement d'une Extenion                           #
 ###############################################################################
 
-def inspect(self):
+def inspect(self): 
     Done = False
     Target_P = self.target_player()
     print(f"SPOILER ALERTE :\n{Target_P.name} est un {Target_P.role}.")
