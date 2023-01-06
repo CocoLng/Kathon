@@ -82,9 +82,11 @@ class Card(ABC):
         self.description = description
 
     def __str__(self):
+        A = len(self.description)//2
         res = "o-----o "+self.name+" o-----o"
-        res += "\n"+self.description
-
+        if '\n' in self.description:
+            A = len(self.description[:self.description.index('\n')])//2
+        res += "\n"+ ' '*(len(res)//2 - A)+self.description
         return res
 
 class CardChemin(Card):
@@ -155,7 +157,11 @@ class CardChemin(Card):
     @aff.setter
     def aff(self,update):
         self.__aff = aff_ch(self.borders,self.special)
+        if '\n' in self.description:
+            self.description = self.description[:self.description.index('\n')]
+        self.description = self.description + ''.join(['\n'+" "*(len(self.name)//2-len(i)//2+7) + i for i in self.aff])
 
+                                                 
 class CardRole(Card):
     def __init__(self, name, description,role):
         super().__init__(name, description)
@@ -275,6 +281,7 @@ def impact_tools(self):
 ###############################################################################
 
 def collapsing(self):
+    print('heele')
     pos = self.arg[0][0].ask_pos()
     return self.arg[1].del_card(pos)
 
@@ -282,14 +289,14 @@ def secret_plan(self):
     while True:
         print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
         selected = input_player(1, 3) 
-        if selected == 1 and not(self.arg[1]._BoardGame__map_[8][2].reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
-            print(f"La carte du Haut(8,2) est un/une {self.arg[1]._BoardGame__map_[8][2].name}")
+        if selected == 1 and not(self.arg[1].current([8,2]).reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
+            print(f"La carte du Haut(8,2) est un/une {self.arg[1].current([8,2]).name}")
             return True
-        elif selected == 2 and not(self.arg[1]._BoardGame__map_[8][0].reveal): 
-            print(f"La carte du Miieu(8,0) est un/une {self.arg[1]._BoardGame__map_[8][0].name}")
+        elif selected == 2 and not(self.arg[1].current([8,0]).reveal): 
+            print(f"La carte du Miieu(8,0) est un/une {self.arg[1].current([8,0]).name}")
             return True
-        elif selected == 3 and not(self.arg[1]._BoardGame__map_[8][-2].reveal): 
-            print(f"La carte en Bas(8,-2) est un/une {self.arg[1]._BoardGame__map_[8][-2].name}")
+        elif selected == 3 and not(self.arg[1].current([8,-2]).reveal): 
+            print(f"La carte en Bas(8,-2) est un/une {self.arg[1].current([8,-2]).name}")
             return True
         print("\nCette carte est déja visible... En choisir une autre")
 
@@ -421,15 +428,13 @@ def aff_ch(card,special):
     
     if len(COM) == 4:
         C = [False for val in C]
-        C[0] = True
         NAME = [K.name for K in COM]
-        if "up" in NAME and "left" in NAME:
+        if len(NAME)==4:
+            C[0]  = True    
+        elif "up" in NAME and "left" in NAME:
             C[12] = True  
-            C[0] = False                      
         elif"up" in NAME and "Down" in NAME:
             C[13] = True
-            C[0] = False 
-            
         
     if len(COM) == 0:
         C = [False for val in C]

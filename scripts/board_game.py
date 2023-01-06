@@ -110,7 +110,8 @@ class BoardGame:
         self.__map_[pos[0]][pos[1]] = card
 
         for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
-            ##print(i)
+            print(self.__decalage)
+            
             i.reconstruc_path(i)
 
         #for i in card.borders:
@@ -122,6 +123,7 @@ class BoardGame:
     
         #permet de suprimer des cartes a une positon precise si il reussi renvoi True sinon False
     def del_card(self,pos):
+        pos = [po-deca for deca,po in zip(self.__decalage,pos)]
         if self.__map_[pos[0]][pos[1]] != []:
             if self.__map_[pos[0]][pos[1]].special:
                 print("Vous ne pouvez pas detruire une carte special")
@@ -208,3 +210,8 @@ class BoardGame:
         else:
             self.__map_[a][b] = card
         return True
+    
+    def current(self,pos):
+        print(pos)
+        pos = [po-deca for deca,po in zip(self.__decalage,pos)]
+        return self.__map_[pos[0]][pos[1]]
