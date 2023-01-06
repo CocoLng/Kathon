@@ -12,6 +12,7 @@ class ConnectionEdge:
             self.__outputo = []
             self.is_check = False
             self.__name = name
+            self.WARNING = 0
     
     #def __str__(self):
      #   return self.name
@@ -103,6 +104,8 @@ class ConnectionEdge:
                 obj.inputo = self 
             except ValueError:
                 pass
+        self.delet = False
+        obj.delet = False
                 
  #permet dedetruire l'integraliter de l'objet et ses connections               
     def delete_connection(self):
@@ -112,6 +115,7 @@ class ConnectionEdge:
         
 # a utiliser lorsque l'on deconnecte deux objet si l'on veux recree correctement
 # les chemins j'usqua l'objet source
+    
     def reconstruc_path(self,source_flag):
         if not(self.is_check):
             in_out = [self.outputo[i] if i < len(self.outputo) else self.inputo[i-len(self.outputo)-1] for i in range(len(self.outputo)+len(self.inputo))]
@@ -124,37 +128,93 @@ class ConnectionEdge:
             self.is_check = True   
             
             for i in in_out:
-                i.disconnect(self)
-                if i != source_flag:
-                    #on verifie si l'objet suivent a deja ete verifier par le programme
-                    if not(i.is_check):   
-                        # on detruit les chemins existent avant de 
-                        # les reconnecter a fin d'eviter une copie des input/output dans l'objet
-                        i.connect(self)
-                        #si il ne la pas ete on continue la recontruction de chemin
-                        i.reconstruc_path(self)
-
-                    else:
-                        
-                        # si il a ete verifier on regarde si le prochain objet
-                        # est un noeud si l'objet est un noeud on indique que l'objet courant
-                        # correspond a une fin de ligne donc self.check doit rester a TRUE 
-                        # afin d'indiquer au noeud que la ligne a deja ete verifier
-                        # cela evite de reverifier la ligne quand on repartiras du noeud
-                        if (len(i.outputo)+len(i.inputo)) > 2:
-                            self.is_check = not(self.is_check)
+                if i.WARNING == 0:
+                    if not(i.is_check): 
+                        if not(i.source):
+                            if i != source_flag:
+                                #print(self.name,self.flag_loop,i.name,'\n') 
+                                #on verifie si l'objet suivent a deja ete verifier par le programme  
+                                # on detruit les chemins existent avant de 
+                                # les reconnecter a fin d'eviter une copie des input/output dans l'objet
+                                self.disconnect(i)
+                                i.connect(self)
+                                #si il ne la pas ete on continue la recontruction de chemin
+                                i.reconstruc_path(self)
+                                    
+                            else:
+                                # si on detect que 'i' correspond a la source on indique on programe
+                                # que l'on veut que 'i' soit l'input de notre objet
+                                self.disconnect(i)
+                                if not(self.source):
+                                    self.connect(i)
+                                else:
+                                    i.connect(self)
                         else:
-                            i.is_check = False
                             
+                            if i == source_flag:
+                                self.disconnect(i)
+                                self.connect(i)
+                            else:
+                                if self != i:    
+                                    self.disconnect(i)
+                                    self.outputo = i
+                                    i.outputo = self
+                    else:
+                        if self in i.inputo:
+                            self.disconnect(i)
+                            self.outputo = i
+                            i.outputo = self
+                        self.WARNING += 1
                 else:
-                    if i.is_check:
-                        if not(self.source):
-                            # si on detect que 'i' correspond a la source on indique on programe
-                            # que l'on veut que 'i' soit l'input de notre objet
-                            self.connect(i)   
+                    i.WARNING -= 1  
+        if self.WARNING > 0:
+            self.WARNING -= 1
         # permet de gerer les fin de lignes conecter a des noeuds
         self.is_check = not(self.is_check)
 
         
 # cette classe serat utilisé afin de gere entre sorti des 
 # cartes chemins ainssi que leurs connections intern
+"""
+A1  =  ConnectionEdge('A1','hello',True)
+A2  =  ConnectionEdge('A2')
+A3  =  ConnectionEdge('A3')
+A4  =  ConnectionEdge('A4')
+A5  =  ConnectionEdge('A5')
+A6  =  ConnectionEdge('A6')
+A7  =  ConnectionEdge('A7')
+A8  =  ConnectionEdge('A8')
+A9  =  ConnectionEdge('A9')
+A10 =  ConnectionEdge('A10')
+
+A10 =  ConnectionEdge('A10')
+A11 =  ConnectionEdge('A11')
+A12 =  ConnectionEdge('A12')
+A13 =  ConnectionEdge('A13')
+
+
+A13.connect(A10)
+A11.connect(A10)
+A10.connect(A9)
+A9.connect(A6)
+
+
+
+A2.connect(A1)
+A3.connect(A2)
+A4.connect(A2)
+A4.connect(A5)
+A6.connect(A5)
+
+A2.connect(A6)
+
+A7.connect(A5)
+A8.connect(A7)
+A2.connect(A8)
+
+
+
+A9.connect(A3)
+A10.connect(A5)
+A1.reconstruc_path(A1)
+"""

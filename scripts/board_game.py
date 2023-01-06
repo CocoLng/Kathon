@@ -110,14 +110,40 @@ class BoardGame:
         self.__map_[pos[0]][pos[1]] = card
 
         for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
-            print(self.__decalage)
-            
+            print('\n',i.name)
             i.reconstruc_path(i)
 
+        if self.__map_[-self.__decalage[0]+0][-self.__decalage[1]+1] != [] and self.__map_[-self.__decalage[0]+1][-self.__decalage[1]]:
+            print(self.__map_[-self.__decalage[0]+0][-self.__decalage[1]+1].borders,self.__map_[-self.__decalage[0]+1][-self.__decalage[1]+0].borders)
+        """      
+        l =0
+        c = 0
+        for i in self.__map_:
+            for j in i:
+                PATH = []
+                if j != []:
+                    for B in j.borders:
+                        for IN in B.inputo:
+                            if not(IN in j.borders):
+                                PATH.append(IN)
+                        for OUT in B.outputo:
+                            if not(OUT in j.borders):
+                                PATH.append(OUT)
+                
+                    if PATH != []:
+                        print(j.name,[i.name if i != [] else [] for i in PATH])
+                c +=1
+            l+=1
         #for i in card.borders:
               # if i != []:
                    #print(i.flag_loop)
-
+        for i in self.__map_[0][2].borders:
+            for K in i.inputo:
+                if not(K in self.__map_[0][2].borders):
+                    print(K.name)
+            for K in i.outputo:
+                if not(K in self.__map_[0][2].borders):
+                    print(K.name)"""
         return True
                 
     
@@ -212,6 +238,5 @@ class BoardGame:
         return True
     
     def current(self,pos):
-        print(pos)
         pos = [po-deca for deca,po in zip(self.__decalage,pos)]
         return self.__map_[pos[0]][pos[1]]
