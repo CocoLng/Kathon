@@ -15,7 +15,6 @@ def game_handler(extension,P_list): #gere la réalisation d'une manche
     Decks,MAP,WIN_CARD = init_round(extension, P_list)
     shuffle(P_list) #Melange l'ordre des joueurs 
     P_round = P_list.copy()
-    print(P_round,P_list)
     repartition_card(extension,P_round,Decks[0])
     status_win,P_round = run_round(extension,P_round,MAP,Decks[0],WIN_CARD)
     reward_time(extension,P_list,P_round,status_win,Decks[2])
@@ -33,6 +32,8 @@ def readfile(path_join,part_explain = 0): #Permet de lire un fichier texte, ici 
     
         
 def next_player(P_round):#Gere le passage au joueur suivant 
+    cls_screen()#Efface le terminal
+    sleep(1)#temps de nettoyer l'ecran
     readfile('..\\ressources\\SaboteurTxt.txt',4)
     print(f"C'est au tour de {P_round[0].name} !\n")
     input("Pressez enter pour continuer, sinon on peut aussi attendre tranquillement\n...")
@@ -76,7 +77,7 @@ def repartition_card(extension,P_list,Deck):
         #S il ny a pas l'extension alors:
         #Tous les 2 joueurs une carte en moins est donné initialement 
         nb_P_repart = 7 -len(P_list)//2
-        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=nb_P_repart]#nb_P_repart
+        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=1]#nb_P_repart
 
 #Gere la manche en cours 
 def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
@@ -85,6 +86,7 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
     first_turn = True
     Deck_.list_card = Deck_.list_card[:1]
     while True:
+        P_Alive = True
         print(MAP)
         if first_turn: print(f"\n{P_round[0].name}, vous êtes :\n{P_round[0].role}\n")
         while True: #tant qu'un joueur n'as pas joué
@@ -94,45 +96,51 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
         if not(P_round[0].get_card(Deck_)):
             if len(P_round[0].main) == 0:
                 P_round.pop(0)
+                P_Alive = False
             else : print("La pioche de carte est vide.")
         if WIN_CARD.borders[0].flag_loop != None : return True,P_round
         #Une fois que le joueur a joué nous passons au suivant,stocké en position 0
         #Le joueur qui vient de finir sont tour passe en dernière position
-        P_round = P_round[1:] + P_round[:1]
+        if P_Alive : P_round = P_round[1:] + P_round[:1]
         try:
             if first_player == P_round[0].name : first_turn=False
         except IndexError:
             return False,P_round
         print("\nFIN de votre tour, analyser la MAP et retennez vos cartes si vous le desirez.")
         input("Pressez enter quand vous avez fini pour confirmer la fin de votre tour\n...")
-        cls_screen()#Efface le terminal
-        sleep(1)#temps de nettoyer l'ecran
+    
         next_player(P_round)
 
 def reward_time(extension,P_list,P_round,status_win,Deck_Reward):
-    [print(card_reward.pepite) for card_reward in  Deck_Reward.list_card]
-    print("split")
-    P_round.append(P_list[1])
-    P_round.append(P_list[0])
+    
     if not(extension):
-        for i,player in enumerate(P_list,0) :
-            if player.role != "chercheur" : del P_list[i]
-        if status_win or not(status_win) : #les chercheurs ont gagnés
-            Deck_Reward.list_card = Deck_Reward.list_card[:min(len(P_list),9)]
-            print("sortage")
-            [print(card_reward.pepite) for card_reward in  Deck_Reward.list_card]
-            list_card.sort(key=lambda x: x.pepite)
-            Deck_Reward = sorted(Deck_Reward, key=lambda x: x.list_card.pepite)
-            #Deck_Reward.list_card.sort(key=lambda x: x.pepite, reverse=True)
-            print("olo")
-            [print(card_reward.pepite) for card_reward in  Deck_Reward.list_card]
+        nb_deleted = 0
+        
+        if status_win : #les chercheurs ont gagnés
+            for i,player in enumerate(P_list,0) :
+                if player.role != "Chercheur" : 
+                    del P_list[i-nb_deleted]
+                    nb_deleted +=1
+            Deck_Reward.list_card.sort(key=lambda card: card.pepite, reverse=True)
             if len(P_list)>= 10 :
                 Deck_Reward.list_card.append(Deck_Reward.list_card[-1])#s'il y a 10 joueurs
                 Deck_Reward.list_card[-1].pepite = "0"
             [P_list.append(P_list.pop(0)) for x in P_list if x != P_round[0]]
             P_list.insert(0, P_list.pop()) #Fait repasser le joueur qui a trouver la pépite, devant
-            [print(card_reward.pepite) for card_reward in  Deck_Reward.list_card]
             for i,card_reward in enumerate(Deck_Reward.list_card,0):
                 P_list[i].score += int(card_reward.pepite)
+                
+        else : #les Saboteurs ont gagnés
+            [print(player.name) for player in P_list]
+            print("splor")
+            for i in range(len(P_list)) :
+                if P_list[i-nb_deleted].role.name != "Saboteur" : 
+                    print("DELETE :",P_list[i-nb_deleted].role.name,P_list[i-nb_deleted].name,"nb;",nb_deleted)
+                    del P_list[i-nb_deleted]
+                    nb_deleted +=1
+            [print(player.name) for player in P_list]
+            nb_pepites = 4-len(P_list)//2
+            for player in P_list :
+                player.score += int(nb_pepites)
                 
     pass

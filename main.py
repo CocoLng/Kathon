@@ -48,7 +48,7 @@ def init_player(extension): #Gere la creations des Joueurs via la saisie de leur
 def recap(P_list,nb_manches):#Fait le recap en fin de manche et regarde si 3 rounds sont passer
     readfile('..\\ressources\\SaboteurTxt.txt',2)
     list_players.sort(key=lambda player: player.score, reverse=True)
-    [(print(i, ': ', player.name,'(',player.role.name,')','[',player.score,'pts]', sep='', end='\n')) for i, player in enumerate(list_players, 1)]
+    [(print(i, ': ', player.name,'[',player.score,'pts]','(',player.role.name,')', sep='', end='\n')) for i, player in enumerate(list_players, 1)]
     print(f"\n{list_players[0].name} à un avantage de {list_players[0].score-list_players[1].score}pts comparer à {list_players[1].name}.")
     
     if nb_manches >3 :
