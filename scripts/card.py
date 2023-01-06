@@ -64,7 +64,7 @@ class Deck:
                             if  line[2] == "saboteur" : nb = (nb_players-nb)+1 #formule pour obtenir le nombre de saboteur
                             self.list_card+=nb*[CardRole(line[0],line[1],line[2])]
                         else :#Quand l'extension est activée nous chargeons toutes les cartes, peut importe le nb de joueurs 
-                            self.list_card+=int(line[0])*[CardRole(line[0],line[1],line[2])]
+                            self.list_card+=int(line[0])*[CardRole(line[1],line[2],line[3])]
                         
                     elif status == "REWARD":
                         self.list_card+=int(line[0])*[CardReward(line[1],line[2],line[3])]
@@ -202,10 +202,10 @@ class CardAction(Card):
     arg[0] contient la liste des Joueurs, le joueurs actuel est en position 0
     arg[1] contient la MAP
     """
-    def target_player(self):
-        print(f'Sur quel joueur voulez vous appliquer {self.name} (taper le chiffre)')
-        [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(self.arg[0], 1)]#laisse le joueur pouvoir se cibler
-        return self.arg[0][input_player(1, len(self.arg[0]))-1]
+    def target_player(self,list_Player_targetable):
+        print(f'Sur quel joueur voulez vous appliquer {self.name}')
+        [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(list_Player_targetable, 1)]#laisse le joueur pouvoir se cibler
+        return list_Player_targetable[input_player(1, len(list_Player_targetable))-1]
 
 # les fonctions si desous sont appelable par tous type de cartes
 
@@ -220,13 +220,15 @@ def edit_status(ajout, effect_play, Target_P):
     if ajout and not(has_effect(effect_play, Target_P)):
         Target_P.status.append(effect_play)
         Done = True
+        print(f"Mouhaha, l'oprération sur {Target_P.name} c'est déroulé sans accroc.\n")
     # si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
     elif not(ajout) and has_effect(effect_play, Target_P):
         Target_P.status.remove(effect_play)
         Done = True
+        print(f"Mais c'était sur enfaite, sur que l'oprération sur {Target_P.name} n'allait pas rencontrer de difficulté majeures.\n")
     return Done
     
-def input_player(min, max):  # demande un input entre min et max et return le res #self remove pour test !!!
+def input_player(min, max):  # demande un input entre min et max et return le res
     while True:
         try:  # redemande jusqu'a validité
             selected = input('Taper le chiffre désiré : ')
@@ -239,8 +241,15 @@ def input_player(min, max):  # demande un input entre min et max et return le re
             print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {min} et {max}\n')
             continue
         except KeyboardInterrupt:
-            print("\nVous quittez le programme, aurevoir")
-            exit()
+            try :
+                confirm = input("\n/!\ Confirmer de quitter le programme y/n ? ")
+                if confirm[:1].upper() == "Y" : raise KeyboardInterrupt
+                else : 
+                    print("\nOk, on continue")
+                    continue    
+            except KeyboardInterrupt: 
+                print("\nVous quittez le programme, aurevoir")
+                exit()
         else:
             print('break, Erreur inconnue')
             exit()
@@ -271,24 +280,33 @@ Les cartes qui contiennent deux réparations :
 Les noms peuvent être inversées
 
 Lors de l'initialisation le nom[0] de la carte dit si on casse ou repare
-Le nom[3] nous dit quel est l'outil ciblé'
+Le nom[2] nous dit quel est l'outil ciblé'
 L'effet est lui stocker dans l'attribut "effet" qui pointe vers la méthode "impact_tools"
 Donc effect = impact_tools a l'initialisation pour appeler la fonction
 """
 
 def impact_tools(self):
     Done = False
-    Target_P = self.target_player()
     Name_list = self.name.split()
+    list_Player_targetable = []
     if Name_list[0] == "Cassage":  # Si nous ne cassons pas nous réparons
+        [list_Player_targetable.append(player) for player in self.arg[0] if not(Name_list[2]) in player.status]
+        if len(list_Player_targetable) == 0 :
+            print(f"\nTous le monde a déja son/sa {Name_list[2]} de cassé.... Veuillez faire une autre choix\n")
+            return False
+        Target_P = self.target_player(list_Player_targetable)
         return edit_status(True, Name_list[2], Target_P)
-    elif len(Name_list) == 5:  # Si nous avons deux effet pour la réparation
+    [list_Player_targetable.append(player) for player in self.arg[0] if Name_list[2] in player.status]
+    if len(list_Player_targetable) == 0 :
+        print("\nPersonne n'as besoin de la reparation que vous proposez.... Veuillez faire une autre choix\n")
+        return False
+    Target_P = self.target_player(list_Player_targetable)
+    if len(Name_list) == 5:  # Si nous avons deux effet pour la réparation    
         Done = edit_status(False, Name_list[4], Target_P)
-    Done = Done or edit_status(False, Name_list[2], Target_P)
-    if Done : 
-        print(f"L'opération sur {Target_P.name} c'est déroulé sans accroc.\n")
-    else :
-        print(f"AIE, l'opération sur {Target_P.name} est un échec, il n'as pas desoin de notre cadeau/l'as déja reçus.\n")
+        Done2 = edit_status(False, Name_list[2], Target_P)
+        Done = Done or Done2
+    else : Done = edit_status(False, Name_list[2], Target_P)
+    if not(Done) : print(f"\nAIE, l'opération sur {Target_P.name} est un échec, il n'as pas desoin de notre cadeau/l'as déja reçus.\n")
     return Done
 
 ###############################################################################
@@ -320,25 +338,26 @@ def secret_plan(self):
 
 def inspect(self): 
     Done = False
-    Target_P = self.target_player()
-    print(f"SPOILER ALERTE :\n{Target_P.name} est un {Target_P.role}.")
+    Target_P = self.target_player(self.arg[0])
+    print(f"SPOILER ALERTE :\n{Target_P.name} est en réalité un :\n{Target_P.role}.")
     Done = True
     return Done
 
 def switch_role(self):
     Done = False
     print("Séléctionnez un joueur qui vera sont role changer ?")
-    Target_P = self.target_player()
+    Target_P = self.target_player(self.arg[0])
     temp = Target_P.role
     Target_P.role =  self.arg[0][0].role
     self.arg[0][0].role = temp
+    print(f"Vous êtes désormais un {self.arg[0][0].role}")
     Done = True
     return Done
 
 def switch_hand(self):
     Done = False
     print("Avec quel joueur souhaitez-vous inverser votre deck de cartes ?")
-    Target_P1 = self.target_player()
+    Target_P1 = self.target_player(self.arg[0])
     temp = Target_P1.main
     Target_P1.main =  self.arg[0][0].main
     self.arg[0][0].main = temp
@@ -352,10 +371,14 @@ L'effet doit être "jail_handler"
 """
 
 def jail_handler(self):
-    Target_P = self.target_player()
+    list_Player_targetable = []
     if self.name == "Emprisonnement":  # Réutilisation de edit_effet
+        [list_Player_targetable.append(player) for player in self.arg[0] if not(self.name) in player.status]     
+        Target_P = self.target_player(list_Player_targetable)
         return edit_status(True, "Emprisonnement", Target_P)
     # si on emprisonne pas alors on libère
+    [list_Player_targetable.append(player) for player in self.arg[0] if self.name in player.status] 
+    Target_P = self.target_player(list_Player_targetable)
     return edit_status(False, "Emprisonnement", Target_P)
 
 """
@@ -367,7 +390,6 @@ L'effet doit être "thief_handler"
 def thief_handler(self):
     if self.name == "Voleur":  # Réutilisation de edit_effet
         return edit_status(True, "Voleur", self.arg[0][0]) #applique l'effet voleur au joueur actuel
-    Target_P = self.target_player()
     return edit_status(False, "Voleur", Target_P)
 
 

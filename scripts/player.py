@@ -1,14 +1,14 @@
-from abc import ABC
 from scripts.card import input_player
 
-
-
-def options():
-    print("\n[0] /!\ Quitte le programme")
+def options(extension):
+    print("\n[0] /!\ Quitter le programme")
     print("[-1] Rappel de votre role")
     print("[-2] Passer votre tour")
+    if extension :
+        print("[-3] DEFFAUSSER 2 CARTES, pour se retirer un malus")
 
-class Player(ABC):
+
+class Human():
     
     def __init__(self,name):
         self.score = 0
@@ -16,49 +16,55 @@ class Player(ABC):
         self.role = None
         self.main = []
         self.status = []
-        self.carte_max = 5
-    
+        
     def __str__ (self):
         Aff = "-"*20 
         return Aff+f"\n name = {self.name}"+f"\n score = {self.score}"+f"\n card = {i.name for i in self.main}"+'\n'+Aff
-       
+    
+    def skip_turn(self):
+        if len(self.main) == 0: return True
+        return False       
+    
     @property
     def score(self):
         return self.__score
-    
     @score.setter
     def score(self,score):
         if score >= 0:
             self.__score = score
         else:
             print("impssible de retirer des point au joueur")
-            
-
-class Human(Player):
-    
-    def __init__(self,name):
-        super().__init__(name)
-    
-    def skip_turn(self):
-        if len(self.main) == 0: return True
-        return False       
 
 
-
-    def del_card (self,quantite = 1):
+    def del_card (self,extension=False,Deck = False,quantite = 1):
+            volontaire = False
             if len(self.main) < quantite:
                 print("Vous n'avez pas asser de cartes")
                 return False
+            elif extension and Deck and quantite == 1 :
+                volontaire = True
+                if len(Deck.list_card)==0 : 
+                    print("\n❌ Le deck est vide.\n")
+                    return False
+                print(f"Combien de cartes voulez-vous piochez ? (1-{min(len(Deck.list_card),3)})")
+                quantite = input_player(1,min(len(Deck.list_card),3))
+                
             for i in range(quantite):
-                print("Quelle carte voulez vous défausser ?")
-                card = self.main[input_player(1,len(self.main))-1]
+                print("Voici votre main :")
+                [print(f"[{i}] {card.name}") for i,card in enumerate(self.main,1)]
+                print("Quelle carte voulez vous défausser, -1 pour annuler ?")
+                card = input_player(-1,len(self.main))
+                if card>0:
+                    card = self.main[card-1]
+                else : return False
                 if card in self.main:
                     print(f"\nVous avez defausser {card.name}")
                     self.main.remove(card)
-                    return True
                 else: 
                     print("Cette carte n est pas presente dans votre main")
                     return False
+            if volontaire : self.get_card(Deck,quantite-1)#-1 car a la fin du tour il repioche
+            return True
 
 
     def ask_pos(self):
@@ -88,17 +94,19 @@ class Human(Player):
             return False
         return True
         
-    def play(self,P_list,MAP):
+    def play(self,P_list,MAP,extension,Deck):
         
-        if len(self.status) != 0 or (len(self.status) ==1 and not(self.status[0]=="voleur")) :
-           print("Aie..\nVous êtes affecter par ceci :")
+        if len(self.status) != 0 or (len(self.status) ==1 and not(self.status[0]=="Voleur")) :
+           print("Aie..\nVous êtes affectés par ceci :")
            [print(f"- {status}") for status in self.status]
-           print("Ceci va vous empechez de posez des cartes chemins tant que vous ne vous en débarrasé pas\n")
+           print("Ceci va vous empechez de posez des cartes chemins tant que vous ne vous en débarrasez pas.\n")
         
         print("Voici votre main :")
         [print(f"[{i}] {card.name}") for i,card in enumerate(self.main,1)]
-        options()
-        card = input_player(-2,len(self.main))
+        options(extension)
+        if extension :v_min =-3 #valeur minimale de l'input
+        else : v_min = -2
+        card = input_player(v_min,len(self.main))
         
            
         try:
@@ -109,11 +117,22 @@ class Human(Player):
                 if card == -1 : 
                     print(f"\nRappel, vous êtes un :\n{self.role}\n")
                     return False
+                if card == -3 and ((not("Voleur") in self.status) and len(self.status) ==1) and len(self.status) !=0: 
+                    print("\nSéléctionnez deux cartes que vous defaussait, puis vous perdrez un malus :\n")
+                    if self.del_card(False,2):
+                        print("Quel malus souhaitez-vous supprimer ?")             
+                        [print(f"[{i}] {status}") for i,status in enumerate(self.status,1)]
+                        del self.status[input_player(1,len(self.status))-1]
+                        return True
+                    else : return False
+                elif card == -3 : 
+                    print("\n❌ Vous n'avez pas de malus a supprimé, veuillez choisir une autre option.\n\n")
+                    return False
                 else : 
-                    return self.del_card()
+                    return self.del_card(extension,Deck)
                 
             if card.__class__.__name__ =='CardChemin':
-                if len(self.status)==0 or self.status[0]=='voleur': 
+                if len(self.status)==0 or self.status[0]=='Voleur': 
                     ########################################
                     print(f"Vous allez jouer :{print(card)}")
                     print("[1] Continuer\n[2] Tourner la carte\n[3] Retour selection")
@@ -137,15 +156,16 @@ class Human(Player):
             return False
         
         except IndexError:
-            print("print vous n'avez pas asser de cartes")
+            print("Vous n'avez pas asser de cartes")
             return False
 
 
-    def get_card(self,Decks):
-        if len(self.main) <= self.carte_max:
+    def get_card(self,Decks,i=1):
+        Done = True
+        for n in range(i):
             card = Decks.draw_card()
             if card:
                 self.main.append(card)
-                return True
-        print('cous avez trop de cartes')
-        return False
+            Done = card and Done
+            print(f"Vous avez pioché : {self.main[-1].name}")
+        return Done

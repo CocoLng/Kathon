@@ -14,7 +14,7 @@ from time import sleep
 def game_handler(extension,P_list): #gere la réalisation d'une manche
     Decks,MAP,WIN_CARD = init_round(extension, P_list)
     P_round = P_list.copy()
-    #shuffle(P_round) #Melange l'ordre des joueurs 
+    shuffle(P_round) #Melange l'ordre des joueurs 
     repartition_card(extension,P_round,Decks[0])
     run_round(extension,P_round,MAP,Decks[0],WIN_CARD)
     return True
@@ -26,6 +26,7 @@ def readfile(path_join,part_explain = 0): #Permet de lire un fichier texte, ici 
     with open(path.join(path.dirname(__file__),path_join),'r') as f: 
         f_split = f.read().split("SUB_PART")#Nous décomposons notre fichier tous les SUB_PART
         print(f_split[part_explain])
+    
         
 def next_player(P_round):#Gere le passage au joueur suivant 
     readfile('..\\ressources\\SaboteurTxt.txt',4)
@@ -65,7 +66,7 @@ def init_round(extension,P_list):
 #Gere la répartition des cartes action/chemin entre les joueurs 
 def repartition_card(extension,P_list,Deck):
     if extension:
-        Deck.list_card = Deck.list_card[9:]#On retire les 1à premières cartes
+        Deck.list_card = Deck.list_card[9:]#On retire les 10 premières cartes
         [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=6]
     else :
         #S il ny a pas l'extension alors:
@@ -83,20 +84,20 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
         print(MAP)
         if first_turn: print(f"\n{P_round[0].name}, vous êtes :\n{P_round[0].role}\n")
         while True: #tant qu'un joueur n'as pas joué
-            if P_round[0].play(P_round,MAP):
+            if P_round[0].play(P_round,MAP,extension,Deck_):
                 break
         print(MAP)
         if not(P_round[0].get_card(Deck_)):
-            if P_round[0].card_number == 0:
+            if len(P_round[0].main) == 0:
                 P_round.pop(0)
-        else : print(f"Vous avez pioché : {P_round[0].main[-1].name}")
+            else : print("La pioche de carte est vide.")
         
         #Une fois que le joueur a joué nous passons au suivant,stocké en position 0
         #Le joueur qui vient de finir sont tour passe en dernière position
         P_round = P_round[1:] + P_round[:1]
         if first_player == P_round[0].name : first_turn=False
-        print("\nFIN de votre tour, analyser la MAP et retennez vos cartes si vous le desirez.\n")
-        input("Sinon, pressez une touche pour confirmer la fin de votre tour\n...")
+        print("\nFIN de votre tour, analyser la MAP et retennez vos cartes si vous le desirez.")
+        input("Pressez enter quand vous avez fini pour confirmer la fin de votre tour\n...")
         cls_screen()#Efface le terminal
         sleep(1)#temps de nettoyer l'ecran
         next_player(P_round)

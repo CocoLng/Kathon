@@ -16,7 +16,7 @@ from scripts.game import game_handler,readfile
         
 def init_player(extension): #Gere la creations des Joueurs via la saisie de leur nom, avec une résistance prévu a toute épreuve, normalement...
     list_players = []
-    print("\nSaisir 'STOP' pour forcer l'arret\nNe rien taper (ou Ctrl+C), si le nombre de joueur minimum est atteint, pour poursuivre vers l'initialisation.")
+    print("\nSaisir 'STOP' pour forcer l'arret.\nNe rien taper (ou Ctrl+C), si le nombre de joueur minimum est atteint, pour poursuivre vers l'initialisation.")
     while True :
         try:  # redemande jusqu'a validité
             New_input = input("Taper le nom d'un joueur : ")

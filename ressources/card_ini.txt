@@ -2,21 +2,20 @@ ACTION_CHEMIN
 
 3;Eboulement;Cette carte detruit un chemin, pouvant empecher la progression des joueurs. Si le chemin n est plus relie au depart alors il faut imperativement reparer le chemin avant de pouvoir continuer;collapsing
 
-1;Reparation : Pioche & Lanterne;Cette carte repare la pioche et la lanterne de la cible;impact_tools
-1;Reparation : Lanterne & Wagon;Cette carte repare la lanterne et le wagon/chariot de la cible;impact_tools
-1;Reparation : Pioche & Wagon;Cette carte repare la pioche et le wagon/chariot de la cible;impact_tools
+1;Reparation : Pioche & Lanterne;Cette carte repare la pioche et la lanterne de la cible.;impact_tools
+1;Reparation : Lanterne & Wagon;Cette carte repare la lanterne et le wagon/chariot de la cible.;impact_tools
+1;Reparation : Pioche & Wagon;Cette carte repare la pioche et le wagon/chariot de la cible.;impact_tools
 
-2;Reparation de Wagon;Cette carte repare le wagon/chariot de la cible;impact_tools
-3;Cassage de Wagon;Cette carte casse le wagon/chariot de la cible;impact_tools
+2;Reparation de Wagon;Cette carte repare le wagon/chariot de la cible.;impact_tools
+3;Cassage de Wagon;Cette carte casse le wagon/chariot de la cible.;impact_tools
 
-2;Reparation de Pioche;Cette carte repare la pioche de la cible;impact_tools
-3;Cassage de Pioche;Cette carte casse la pioche de la cible;impact_tools
+2;Reparation de Pioche;Cette carte repare la pioche de la cible.;impact_tools
+3;Cassage de Pioche;Cette carte casse la pioche de la cible.;impact_tools
 
-2;Reparation de Lanterne;Cette carte repare la lanterne de la cible;impact_tools
-3;Cassage de Lanterne;Cette carte casse la lanterne de la cible;impact_tools
+2;Reparation de Lanterne;Cette carte repare la lanterne de la cible.;impact_tools
+3;Cassage de Lanterne;Cette carte casse la lanterne de la cible.;impact_tools
 
-6;Plan Secret;Cette carte permet de prendre connaissance d'une des cartes Arivee;secret_plan
-
+6;Plan Secret;Cette carte permet de prendre connaissance d'une des cartes Arivee.;secret_plan
 
 
 
@@ -24,6 +23,7 @@ ACTION_CHEMIN
 1;PIERRE;entre_de_la_mine;00:10;down,right;False;PIERRE;False
 1;GOLD;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;False;PEPITE	
 1;ENTREE;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;True;START;True
+
 5;Croisement;a la croiser des chemins;0000:0000:0000:1110;up,left,down,right
 5;Croisement T ulr;a la croiser des chemins;000:000:110;up,left,right
 5;Croisement T uld;a la croiser des chemins;000:000:110;up,left,down
@@ -54,43 +54,41 @@ EXTENSION
 
 
 
-2;Inspection de Role;Permet de regarder secretement le role d un joueur;inspect
+2;Inspection de Role;Permet de regarder secretement le role d un joueur.;inspect
 
-2;Changement de Role;Permet de changer de role d une cible en le fesant piocher une nouvelle carte role;switch_role
-2;Changement de Main;Permet de changer la main entre deux joueurs choisies;switch_hand
+2;Changement de Role;Permet de changer de role d une cible en le fesant piocher une nouvelle carte role.;switch_role
+2;Changement de Main;Permet de changer la main entre deux joueurs choisis.;switch_hand
 
-3;Emprisonnement;Permet d emprisonner une cible;jail_handler
-4;Enfin Libre;Permet de liberer une cible;jail_handler
+3;Emprisonnement;Permet d emprisonner une cible.;jail_handler
+4;Enfin Libre;Permet de liberer une cible.;jail_handler
 
 END
 
 
 REWARD
-5; 3 Pépites d or; Cette carte vaut 3 pépites d or;3
-10; 2 Pépites d or; Cette carte vaut 2 pépites d or;2
-13; 1 Pépite d or; Cette carte vaut 1 seul pépite d or;1
+5; 3 Pépites d or; Cette carte vaut 3 pépites d or.;3
+10; 2 Pépites d or; Cette carte vaut 2 pépites d or.;2
+13; 1 Pépite d or; Cette carte vaut 1 seul pépite d or.;1
 
 END
 
 
 ROLE
-Chercheurs d or;Vous devez parvenir a trouver la pepite d or;chercheur
-Saboteur;Empechez les chercheur de trouver l or;saboteur
+Chercheurs d or;Vous devez parvenir a trouver la pepite d or, cependant si vous n avez plus de carte alors les Saboteurs remportent la partie si la pepite n est pas trouve;chercheur
+Saboteur;Empechez les chercheur de trouver l or, fonder vous dans la masse des chercheurs pour les ralentirs;saboteur
 
 EXTENSION
-4;Chercheurs d or Team Vert;Vous devez parvenir a trouver la pepite d or avec votre equipe VERTE;chercheurVert
-4;Chercheurs d or Team Bleu;Vous devez parvenir a trouver la pepite d or avec votre equipe BLEU;chercheurBleu
+4;Chercheurs d or Team Vert;Vous devez parvenir a trouver la pepite d or avec votre equipe VERTE.;chercheurVert
+4;Chercheurs d or Team Bleu;Vous devez parvenir a trouver la pepite d or avec votre equipe BLEU.;chercheurBleu
 1;Boss;Membre des deux equipes, vous gagnez s il l une d elle gagne,mais toujours une pepite de moins que les Chercheurs.;boss
-1;Profiteur;Vous etes toujours gagnant, peut importe qui remporte, cependant vous recevez 2 pepites de moins si vous ne posez pas la derniere connexion;profiteur
-2;Géologue;Vous jouez en solo, votre recompense n est pas de l or mais des cristaux visibles sur la map. A la fin de la manche vous recevez les cristaux visibles;geologue
-3;Saboteur;Empechez les chercheur de trouver l or;saboteur
+1;Profiteur;Vous etes toujours gagnant, peut importe qui remporte, cependant vous recevez toujours 2 pepites de moins que les gagnant.;profiteur
+2;Geologue;Vous jouez en solo, votre recompense n est pas de l or mais des cristaux visibles sur la map. A la fin de la manche vous recevez les cristaux visibles.;geologue
+3;Saboteur;Empechez les chercheur de trouver l or, fonder vous dans la masse des chercheurs pour les ralentirs;saboteur
 
 END
 
 
 INIT_MAP
-
-
 
 ENTREE;
 PIERRE;
