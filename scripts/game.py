@@ -66,7 +66,9 @@ def init_round(extension,P_list):
 #Gere la répartition des cartes action/chemin entre les joueurs 
 def repartition_card(extension,P_list,Deck):
     if extension:
-        pass
+        Deck.list_card = Deck.list_card[9:]#On retire les 1à premières cartes
+        [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=6]
+        
     #S il ny a pas l'extension alors:
     #Tous les 2 joueurs une carte en moins est donné initialement 
     nb_P_repart = 7 -len(P_list)//2
