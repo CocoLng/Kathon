@@ -75,9 +75,12 @@ def repartition_card(extension,P_list,Deck):
 #Gere la manche en cours 
 def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
     #Verifie que la pépite n'est pas trouvé et qu'un joueur a toujours au moins une carte
+    first_player = P_round[0].name
+    first_turn = True
     while WIN_CARD.borders[0].flag_loop == None and len(P_round) > 0:
         print(P_round[0].name,P_round[0].status)    
         print(MAP)
+        if first_turn: print(f"\n{P_round[0].name}, vous êtes :\n{P_round[0].role}\n")
         while True: #tant qu'un joueur n'as pas joué
             if P_round[0].play(P_round,MAP):
                 break
@@ -90,7 +93,8 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
         #Une fois que le joueur a joué nous passons au suivant,stocké en position 0
         #Le joueur qui vient de finir sont tour passe en dernière position
         P_round = P_round[1:] + P_round[:1]
-        print("\nFin de votre Tour\nAnalyser la MAP et retennez vos cartes si vous le desirez.\n")
+        if first_player == P_round[0].name : first_turn=False
+        print("\nFIN de votre tour, analyser la MAP et retennez vos cartes si vous le desirez.\n")
         input("Sinon, pressez une touche pour confirmer la fin de votre tour\n...")
         cls_screen()#Efface le terminal
         sleep(1)#temps de nettoyer l'ecran

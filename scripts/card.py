@@ -95,7 +95,7 @@ class Card(ABC):
         if '\n' in self.description:
             A = len(self.description[:self.description.index('\n')])//2
         res += "\n"+ ' '*(len(res)//2 - A)+self.description
-        res += "\no-------------------o"
+        res += "\no----------------------o"
         return res
 
 class CardChemin(Card):
@@ -285,6 +285,10 @@ def impact_tools(self):
     elif len(Name_list) == 5:  # Si nous avons deux effet pour la réparation
         Done = edit_status(False, Name_list[4], Target_P)
     Done = Done or edit_status(False, Name_list[2], Target_P)
+    if Done : 
+        print(f"L'opération sur {Target_P.name} c'est déroulé sans accroc.\n")
+    else :
+        print(f"AIE, l'opération sur {Target_P.name} est un échec, il n'as pas desoin de notre cadeau/l'as déja reçus.\n")
     return Done
 
 ###############################################################################
@@ -300,15 +304,15 @@ def secret_plan(self):
         print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
         selected = input_player(1, 3) 
         if selected == 1 and not(self.arg[1].current([8,2]).reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
-            print(f"La carte du Haut(8,2) est un/une {self.arg[1].current([8,2]).name}")
+            print(f"\nLa carte du Haut est un/une {self.arg[1].current([8,2]).name}\n")
             return True
         elif selected == 2 and not(self.arg[1].current([8,0]).reveal): 
-            print(f"La carte du Miieu(8,0) est un/une {self.arg[1].current([8,0]).name}")
+            print(f"\nLa carte du Miieu est un/une {self.arg[1].current([8,0]).name}\n")
             return True
         elif selected == 3 and not(self.arg[1].current([8,-2]).reveal): 
-            print(f"La carte en Bas(8,-2) est un/une {self.arg[1].current([8,-2]).name}")
+            print(f"\nLa carte en Bas est un/une {self.arg[1].current([8,-2]).name}\n")
             return True
-        print("\nCette carte est déja visible... En choisir une autre")
+        print("\nCette carte est déja visible... Veuillez en choisir une autre")
 
 ###############################################################################
 #                         Chargement d'une Extenion                           #
