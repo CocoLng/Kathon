@@ -1,6 +1,13 @@
 from abc import ABC
 from scripts.card import input_player
 
+
+
+def options():
+    print("\n\n[0] /!\ Quitte le programme")
+    print("[-1] Rappel de votre role")
+    print("[-2] Passer votre tour")
+
 class Player(ABC):
     
     def __init__(self,name):
@@ -40,15 +47,18 @@ class Human(Player):
 
     def del_card (self,quantite = 1):
             if len(self.main) < quantite:
-                print('vous n avez pas asser de cartes')
+                print("Vous n'avez pas asser de cartes")
                 return False
             for i in range(quantite):
-                ID = input("quelle carte voulez vous jouer ?")
-                card = self.main[ID-1] 
+                print("Quelle carte voulez vous défausser ?")
+                card = self.main[input_player(1,len(self.main))-1]
                 if card in self.main:
+                    print(f"\nVous avez defausser {card.name}")
                     self.main.remove(card)
+                    return True
                 else: 
-                    print("cette carte n est pas presente dans votre main")
+                    print("Cette carte n est pas presente dans votre main")
+                    return False
 
 
     def ask_pos(self):
@@ -77,20 +87,29 @@ class Human(Player):
         
     def play(self,P_list,MAP):
         
-        if len(self.main) == 0:
-            print('le joueur n a plus de cartes')
-            return True
+        
         print("Voici votre main :")
         [print(f"[{i}] {card.name}") for i,card in enumerate(self.main,1)]
-        print("\n")
-        card = self.main[input_player(0,len(self.main))-1]
+        options()
+        card = input_player(-2,len(self.main))
+        if card>0:
+            card = self.main[card-1]
+        
 
         if len(self.status) != 0 or (len(self.status) ==1 and not(self.status[0]=="voleur")) :
            print("Aie..\nVous êtes affecter par ceci :")
            [print(f"- {status}") for status in self.status]
            
         try:
-            if card.__class__.__name__ =='CardChemin':
+            
+            if card<0:
+                if card == -1 : 
+                    print(f"\nRappel, vous êtes un :\n{self.role}\n")
+                    return False
+                else : 
+                    return self.del_card()
+                
+            elif card.__class__.__name__ =='CardChemin':
                 if len(self.status)==0 or self.status[0]=='voleur': 
                     ########################################
                     print(f"Vous allez jouer :{print(card)}") ######AFFICHER COMME SI C ETAIT SUR LA MAPPPPPPP

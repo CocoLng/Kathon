@@ -95,6 +95,7 @@ class Card(ABC):
         if '\n' in self.description:
             A = len(self.description[:self.description.index('\n')])//2
         res += "\n"+ ' '*(len(res)//2 - A)+self.description
+        res += "\no-------------------o"
         return res
 
 class CardChemin(Card):

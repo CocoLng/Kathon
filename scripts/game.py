@@ -84,12 +84,13 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
         if not(P_round[0].get_card(Deck_)):
             if P_round[0].card_number == 0:
                 P_round.pop(0)
+        else : print(f"Vous avez pioché : {P_round[0].main[-1].name}")
         
         #Une fois que le joueur a joué nous passons au suivant,stocké en position 0
         #Le joueur qui vient de finir sont tour passe en dernière position
         P_round = P_round[1:] + P_round[:1]
-        print("\nFin de votre Tour\nPassage au joueur suivant dans quelques secondes...")
-        sleep(5)
+        print("\nFin de votre Tour\nAnalyser la MAP et retennez vos cartes si vous le desirez.\n")
+        input("Sinon, pressez une touche pour confirmer la fin de votre tour\n...")
         cls_screen()#Efface le terminal
         sleep(1)#temps de nettoyer l'ecran
         next_player(P_round)
