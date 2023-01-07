@@ -101,7 +101,7 @@ class CardChemin(Card):
     def __init__(self, arg):
         #arg contient toute la ligne lu dans cardinit.txt
         super().__init__(arg[1], arg[2])
-
+        
         self.is_start = arg
         self.special = arg
         self.reveal = arg
@@ -110,8 +110,14 @@ class CardChemin(Card):
         self.borders = self.port
         self.aff = True
         
+        if  len (arg) >= 9:
+            if arg[8]:
+                self.effect = MethodType(globals()[self.special], self)
+            
     #La carte chemin est lu par le boardgame, player
     #Il y a des conditions sur comment ses valeurs sont attribuées, d'où l'usage de setter
+    
+    
     @property
     def special(self):
         return self.__special
@@ -397,7 +403,36 @@ Vous pouvez ajouter vos effet personnels ici, puis crée la carte en l'ajoutant 
 Il faudra, lors de l'initialisation, mettre dans effet le même nom que celle de la méthode'
 """
 
+def DOOR(self):
+    IO = 0
+    for i in self.borders:
+        for I in i.inputo:
+            if I.flag_loop == 'START':
+                IO +=1
+        for O in i.outputo:
+            if O.flag_loop == 'START':
+                IO +=1
+                
+    if IO < len(self.borders) and IO != 0:
+        for i in self.borders:
+            activate = True
+            for I in i.inputo:
+                if bool(I.flag_loop) and I.flag_loop == 'START'  :
+                    activate = False
+            for O in i.outputo:
+                if bool(O.flag_loop) and O.flag_loop == 'START':
+                    activate = False
 
+            if activate:
+                i.source = True
+                i.reconstruc_path(i)
+    else:   
+        for i in self.borders: 
+            i.source = False
+            
+def START(self):
+    for i in self.borders:
+        i.reconstruc_path(i)
 ###############################################################################
 #                          Affichage d'une Carte                              #
 ###############################################################################
@@ -460,7 +495,6 @@ def aff_ch(card,special):
     if not('right' in PATH):
         C = [not(c) if l == True else False for l,c in zip(lock,C)]
     
-    
     if len(COM) == 4:
         C = [False for val in C]
         NAME = [K.name for K in COM]
@@ -477,10 +511,8 @@ def aff_ch(card,special):
 
             
     center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
-    if special == 'blue_door':
-        center = 'B'
-    if special == 'green_door':
-        center = 'G'
+    if special == 'DOOR':
+            center = 'B'
     if special == 'cristaux':
         center = 'C'
     if special == 'START':
