@@ -12,7 +12,7 @@ class Main:  # Classe principale
         self.extension = Menu()  # Menu de lancement
         self.nb_manches = 0  # Nombre de manches jouées
         self.list_players = self.init_player()  # Liste des joueurs
-        return self.run_game() # Lance le jeu, retourne True si le jeu s'est bien déroulé, False sinon
+        self.run_game() # Lance le jeu, retourne True si le jeu s'est bien déroulé, False sinon
 
     def recap(self) -> bool:
         print("Enter", self.nb_manches)
