@@ -56,7 +56,7 @@ def init_round(extension,P_list):
     shuffle(L)# Permet de mélanger les 3 cartes cachées 
     [MAP.add_card(CARD,POS,True) for CARD,POS in zip(L,pos)]
     
-    Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[80:105]
+  #  Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[80:105]
     
     #Initialise les autres deck et les mélanges 
     Deck_Role = Deck("ROLE",[extension,extension],P_list)

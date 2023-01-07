@@ -172,7 +172,7 @@ class CardChemin(Card):
     
     @aff.setter
     def aff(self,update):
-        self.__aff = aff_ch(self.borders,self.special)
+        self.__aff = aff_ch(self.borders,self.special,self.name)
         if '\n' in self.description:
             self.description = self.description[:self.description.index('\n')]
         self.description = self.description + ''.join(['\n'+" "*(len(self.name)//2-len(i)//2+7) + i for i in self.aff])
@@ -320,6 +320,7 @@ def impact_tools(self):
 
 def collapsing(self):
     pos = self.arg[0][0].ask_pos()
+    if not(pos) : return False
     return self.arg[1].del_card(pos)
 
 def secret_plan(self):
@@ -362,10 +363,13 @@ def switch_role(self):
 def switch_hand(self):
     Done = False
     print("Avec quel joueur souhaitez-vous inverser votre deck de cartes ?")
-    Target_P1 = self.target_player(self.arg[0])
-    temp = Target_P1.main
-    Target_P1.main =  self.arg[0][0].main
+    Target_P = self.target_player(self.arg[0])
+    self.arg[0][0].main.remove(self)
+    self.arg[0][0].main.append(self.arg[0][0].main[0])
+    temp = Target_P.main
+    Target_P.main =  self.arg[0][0].main
     self.arg[0][0].main = temp
+    self.arg[0][0].main.remove(self.arg[0][0].main[-1])
     Done = True
     return Done
 
@@ -416,27 +420,40 @@ Il faudra, lors de l'initialisation, mettre dans effet le même nom que celle de
 """
 
 def DOOR(self):
-    IO = 0
+    
+    IO = []
+    IND = []
+      
     for i in self.borders:
-        for I in i.inputo:
-            if I.flag_loop == 'START':
-                IO +=1
-        for O in i.outputo:
-            if O.flag_loop == 'START':
-                IO +=1
-                
-    if IO < len(self.borders) and IO != 0:
-        for i in self.borders:
-            activate = True
-            for I in i.inputo:
-                if bool(I.flag_loop) and I.flag_loop == 'START'  :
-                    activate = False
-            for O in i.outputo:
-                if bool(O.flag_loop) and O.flag_loop == 'START':
-                    activate = False
+        if i.flag_loop != None:
+            IND.append(i.flag_loop)
+            IO.append(i)
+        else:
+            IND.append(i.flag_loop)
+            IO.append(i)
 
-            if activate:
-                i.source = True
+    if IND[0] != IND[1]:
+    
+        if 'START' in IND:
+            
+            for co in self.borders:
+                if co != self.name and co != 'START':
+                    co.flag = self.name             
+            IO[IND.index('START')-1].source = True
+                    
+        elif (self.name in IND) and(None in IND):
+            
+            IO[IND.index(self.name)].source = True
+        else:
+            for co in self.borders:
+                if co != 'D':
+                    co.flag = 'D'
+            if (None in IND) :
+                IO[IND.index(None)].source = True
+            else:
+                IO[IND.index('D')].source = True
+        for i in self.borders:
+            if i.source == True:
                 i.reconstruc_path(i)
     else:   
         for i in self.borders: 
@@ -449,7 +466,7 @@ def START(self):
 ###############################################################################
 #                          Affichage d'une Carte                              #
 ###############################################################################
-def aff_ch(card,special):
+def aff_ch(card,special,name):
     C = [True for creat in range(14)]
     
     HELLO_I = [K.inputo for K in card]
@@ -531,7 +548,11 @@ def aff_ch(card,special):
             
     center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
     if special == 'DOOR':
+        center = 'G'
+        if name == 'DOOR_B':
             center = 'B'
+
+            
     if special == 'cristaux':
         center = 'C'
     if special == 'START':

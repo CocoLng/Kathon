@@ -52,7 +52,21 @@ class BoardGame:
 
     #permet de verifier si la carte poser est en accord avec les regles de conection de cartes
     #permet de verifier si la carte poser est en acord avec les regles de conection de cartes
-
+    def detect(self,card):
+        flag = []
+        for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
+             i.reconstruc_path(i)
+             if not card.borders[0].flag_loop in flag:
+                 flag.append(card.borders[0].flag_loop)
+                 
+        for posl in self.L:
+            self.__map_[posl[0]-self.__decalage[0]][posl[1]-self.__decalage[1]].effect()
+            if not(card.borders[0].flag_loop in flag):
+                flag.append(card.borders[0].flag_loop)
+        
+        return flag
+        
+        
     def card_set(self,card,pos):
         card_p = []
         borders_to_connect = []
@@ -68,17 +82,12 @@ class BoardGame:
 
                 INTE1 = [True if I.name  == antipode_l_r[(x_y+1)//2] else False for I in self.__map_[pos[0]+x_y][pos[1]].borders]
                 INTE = [True if I.name == antipode_l_r[(x_y-1)//2] else False for I in card.borders ] 
-                print(INTE1,INTE)
+
                 if (True in INTE) == (True in INTE1):
                     
                     card_p.append(self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)])
                     borders_to_connect.append(card.borders[INTE.index(True)])
-                    #
-                    for SSS in self.__map_[pos[0]+x_y][pos[1]].borders:
-                        if SSS.flag_loop != None:
-                            print('True',SSS.name)
-                        else:
-                            print('False',SSS.name)   
+  
                     if self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)].flag_loop != None:
                         flag = True
                 else:                         
@@ -92,16 +101,11 @@ class BoardGame:
 
                 INTE1 = [True if I.name  == antipode_d_u[(x_y+1)//2] else False for I in self.__map_[pos[0]][pos[1]+x_y].borders]
                 INTE = [True if I.name == antipode_d_u[(x_y-1)//2] else False for I in card.borders ] 
-
                 if (True in INTE) == (True in INTE1):
                         
                         card_p.append(self.__map_[pos[0]][pos[1]+x_y].borders[INTE1.index(True)])
                         borders_to_connect.append(card.borders[INTE.index(True)])
-                        for SSS in self.__map_[pos[0]+x_y][pos[1]].borders:
-                            if SSS.flag_loop != None:
-                                print('True',SSS.name)
-                            else:
-                                print('False',SSS.name)   
+  
                         if self.__map_[pos[0]][pos[1]+x_y].borders[INTE1.index(True)].flag_loop != None:
                             flag = True
                 else:
@@ -120,7 +124,9 @@ class BoardGame:
         self.__map_[pos[0]][pos[1]] = card
         
         for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
+            print("--------" +i.name)
             i.reconstruc_path(i)
+
             
         if card.special == "START" or card.special == 'DOOR':
             self.L.append([pos[0] + self.__decalage[0],pos[1] + self.__decalage[1]])
@@ -135,7 +141,7 @@ class BoardGame:
     def del_card(self,pos):
         pos = [po-deca for deca,po in zip(self.__decalage,pos)]
         if self.__map_[pos[0]][pos[1]] != []:
-            if self.__map_[pos[0]][pos[1]].special:
+            if self.__map_[pos[0]][pos[1]].special == 'ENTREE' or self.__map_[pos[0]][pos[1]].special == 'PIERRE' or self.__map_[pos[0]][pos[1]].special == 'GOLD':
                 print("Vous ne pouvez pas detruire une carte special")
             else:
                 [i.delete_connection() for i in self.__map_[pos[0]][pos[1]].borders]

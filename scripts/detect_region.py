@@ -6,7 +6,7 @@ class ConnectionEdge:
     
     def __init__(self,name,flag=None,source=False):
             self.delet = False
-            self.__flag = flag
+            self.flag = flag
             self.__source = source 
             self.__inputo = []
             self.__outputo = []
@@ -40,7 +40,7 @@ class ConnectionEdge:
         
     def __flag_(self,start):
         if self.__source:
-            return self.__flag
+            return self.flag
         else:
             if self.__inputo != []:
                 if len(self.__inputo) == 1 :
@@ -112,8 +112,8 @@ class ConnectionEdge:
                 
  #permet dedetruire l'integraliter de l'objet et ses connections               
     def delete_connection(self):
-        in_out = [self.outputo[i] if i < len(self.outputo) else self.inputo[i-len(self.outputo)] for i in range(len(self.outputo)+len(self.inputo))]
-        [self.disconnect(i) for i in in_out]
+        [self.disconnect(i) for i in self.inputo]
+        [self.disconnect(i) for i in self.outputo]
 
         
 # a utiliser lorsque l'on deconnecte deux objet si l'on veux recree correctement
@@ -128,12 +128,12 @@ class ConnectionEdge:
             # la recontstruction de chemin ce base sur le fait que si le prochaine
             # segment de chemin est deja connecté a la source recheché on ce permet de 
             # l'ignorer et de continuer a parcourir les ports de no blocs
-
-            
             for i in in_out:
+                
                 if i != source_flag:
                     i.disconnect(self)
-                    if i.flag_loop == None:               
+                    if i.flag_loop == None or i.flag_loop != self.flag_loop :  
+                        
                         i.connect(self)
                         i.reconstruc_path(self)
                     else:
@@ -142,5 +142,4 @@ class ConnectionEdge:
                 else:
                     i.disconnect(self)
                     self.connect(i)
-
-# cartes chemins ainssi que leurs connections intern
+            print(self.name,self.flag_loop)
