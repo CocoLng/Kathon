@@ -7,7 +7,7 @@ from scripts.detect_region import ConnectionEdge
 
 path_init = path.join(path.dirname(__file__), '..\\ressources\\card_ini.txt')
 ###############################################################################
-#                              Deck                                           #
+#                              deck                                           #
 ###############################################################################
 """
 Name correspond au nom du deck que nous souhaitons crée, il doit s'appeler comme ceci :
@@ -84,7 +84,7 @@ class Deck:
                     elif status == "REWARD":
                         self.list_card += int(line[0]) * [CardReward(line[1], line[2], line[3])]
                     else:  # Sert à savoir si le nom saisi est faux, utile pour debug
-                        print("Deck avec le nom de propriété indéfinis ! ERREUR")
+                        print("deck avec le nom de propriété indéfinis ! ERREUR")
                         exit()
                     i += 1
 
@@ -228,7 +228,7 @@ class CardAction(Card):
     target_player est la seule méthode de base inclus dans notre classe, car toute carte action on a besoin
     Les fonctions ci dessous n'ont pas besoin d'accédé a un objet
     arg[0] contient la liste des Joueurs, le joueurs actuel est en position 0
-    arg[1] contient la MAP
+    arg[1] contient la map_game
     """
 
     def target_player(self, list_player_targetable):
@@ -240,41 +240,41 @@ class CardAction(Card):
 
 # les fonctions si dessous sont appelables par tous types de cartes
 
-def has_effect(effect, Target_P):
-    if effect in Target_P.status:  # regarde si le Target Player possède deja l'effet
+def has_effect(effect, target_p):
+    if effect in target_p.status:  # regarde si le Target Player possède deja l'effet
         return True
     return False
 
 
-def edit_status(ajout, effect_play, Target_P):
+def edit_status(ajout, effect_play, target_p):
     Done = False
     # si le joueur n'as pas déja l'effet alors on peut lui mettre
-    if ajout and not (has_effect(effect_play, Target_P)):
-        Target_P.status.append(effect_play)
+    if ajout and not (has_effect(effect_play, target_p)):
+        target_p.status.append(effect_play)
         Done = True
-        print(f"Mouhaha, l'opération sur {Target_P.name} c'est déroulé sans accroc.\n")
+        print(f"Mouhaha, l'opération sur {target_p.name} c'est déroulé sans accroc.\n")
     # si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
-    elif not ajout and has_effect(effect_play, Target_P):
-        Target_P.status.remove(effect_play)
+    elif not ajout and has_effect(effect_play, target_p):
+        target_p.status.remove(effect_play)
         Done = True
         print(
-            f"Mais c'était sur enfaite, sur que l'oprération sur {Target_P.name} n'allait pas rencontrer de "
+            f"Mais c'était sur enfaite, sur que l'oprération sur {target_p.name} n'allait pas rencontrer de "
             f"difficulté majeures.\n")
     return Done
 
 
-def input_player(min, max):  # demande un input entre min et max et return le res
+def input_player(mini, maxi):  # demande un input entre mini et maxi et return le res
     selected = None
     while True:
         try:  # redemande jusqu'a validité
             selected = input('Taper le chiffre désiré : ')
             selected = int(selected)
-            if selected < min or selected > max:
+            if selected < mini or selected > maxi:
                 raise ValueError
             if selected == 0: raise KeyboardInterrupt  # permet de quittez si 0 est entrer et que nous sommes dans le menu
             break
         except ValueError:
-            print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {min} et {max}\n')
+            print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {mini} et {maxi}\n')
             continue
         except KeyboardInterrupt:
             try:

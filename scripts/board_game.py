@@ -1,6 +1,6 @@
 class BoardGame:
     
-    def __init__(self):
+    def __init__(self) :
         #initialise une carte de X = 0 y = 0
         self.__map_ = [[[]]]
         self.__decalage = [0,0]
@@ -232,7 +232,7 @@ class BoardGame:
                 
                 return False
             else:
-                print('vous etes a l exterieur de la map')
+                print('vous etes a l exterieur de la map_game')
                 return False
         else:
             self.__map_[a][b] = card

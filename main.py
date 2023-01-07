@@ -1,27 +1,23 @@
 from sys import exit
 
-import scripts.game as game
 from scripts.card import input_player  # nous réutilisons la fonction input player de card.py
-# from scripts.game import game_handler, readfile
+from scripts.game import Game, readfile
 from scripts.player import Human
 
 
 ###############################################################################
 class Main:  # Classe principale
+
     def __init__(self):
-        self.extension = Menu()
-        # on lance le menu
-        self.nb_manches = 0
-        self.list_players = self.init_player()
-        while self.recap:
-            p_list = self.list_players.copy()
-            game.game_handler(p_list, self.extension)
-            self.nb_manches += 1
-        exit()
+        self.extension = Menu()  # Menu de lancement
+        self.nb_manches = 0  # Nombre de manches jouées
+        self.list_players = self.init_player()  # Liste des joueurs
+        return self.run_game() # Lance le jeu, retourne True si le jeu s'est bien déroulé, False sinon
 
     def recap(self) -> bool:
-        if self.nb_manches == 0: pass
-        game.readfile('..\\ressources\\SaboteurTxt.txt', 2)
+        print("Enter", self.nb_manches)
+        if self.nb_manches == 0: return True  # Si c'est la première manche, on n'affiche rien
+        readfile('..\\ressources\\SaboteurTxt.txt', 2)
         self.list_players.sort(key=lambda player: player.score, reverse=True)
         [(print(i, ': ', player.name, '[', player.score, 'pts]', '(', player.role.name, ')', sep='', end='\n')) for
          i, player in enumerate(self.list_players, 1)]
@@ -29,7 +25,7 @@ class Main:  # Classe principale
             f"\n{self.list_players[0].name} à un avantage de {self.list_players[0].score - self.list_players[1].score}pts comparer à {self.list_players[1].name}.")
 
         if self.nb_manches == 3:
-            game.readfile('..\\ressources\\SaboteurTxt.txt', 3)
+            readfile('..\\ressources\\SaboteurTxt.txt', 3)
             print(
                 f"\nLe grand gagnant est {self.list_players[0].name} !! \nFélicitation, en espérant être ré-exécuter "
                 f"prochainement.\nEt n'oubliez pas de rester zen, comme mon code source")
@@ -41,7 +37,7 @@ class Main:  # Classe principale
     def init_player(self) -> list:
         # Gere la creations des Joueurs via la saisie de leur nom, avec une résistance prévu a toute épreuve,
         # normalement...
-        self.list_players = []
+        self.list_players = []  # Liste des joueurs
         print(
             "\nSaisir 'STOP' pour forcer l'arret.\nNe rien taper (ou Ctrl+C), si le nombre de joueur minimum est "
             "atteint, pour poursuivre vers l'initialisation.")
@@ -62,42 +58,51 @@ class Main:  # Classe principale
                 if (len(self.list_players) == 10 and not self.extension) or (
                         len(self.list_players) == 12 and self.extension): raise KeyboardInterrupt
 
-            except ValueError:
+            except ValueError: # Si le nom est déjà utilisé ou trop long
                 print(
                     f'❌ Erreur, le nom "{New_input}" est deja utilisé ou trop long (20 charactères max), veuillez en '
                     f'sélectionner un autre.')
                 continue
-            except KeyboardInterrupt:
+            except KeyboardInterrupt: # Si l'arret de la saisie est demandé
                 if (len(self.list_players) < 3 and not self.extension) or (
                         len(self.list_players) < 2 and self.extension):
-                    if self.extension:
+                    if self.extension: # Si le mode extension est activé, il faut au moins 2 joueurs
                         New_input = 2 - len(self.list_players)
-                    else:
+                    else: # Sinon, il faut au moins 3 joueurs
                         New_input = 3 - len(self.list_players)
                     print(
                         f"\n❌ Le nombre de joueurs minimum n'est pas atteint, veuillez rajouter encore {New_input} joueurs.")
                     continue
                 print("\n\nFin de la saisie des Joueurs, voici la liste :")
-                [(print('P', i, ': ', x.name, sep='', end='  ')) for i, x in enumerate(self.list_players, 1)]
+                [(print('P', i, ': ', x.name, sep='', end='  ')) for i, x in enumerate(self.list_players, 1)] #
                 break
 
         return self.list_players
+
+    def run_game(self): # Gere le déroulement du jeu
+        while self.recap(): # Comptes les nombres de manches jouées, sort quand 3 manches sont jouées
+            if Game(self): # Si le jeu retourne True, c'est que la manche est finie
+                self.nb_manches += 1
+            else: # Principalement pour le debug
+                print("Erreur, le jeu n'a pas pu être lancé, veuillez réessayer.")
+                return False  # Le jeu s'est mal déroulé
+        return True  # Le jeu s'est bien déroulé
 
 
 ###############################################################################
 #                                Fonctions                                    #
 ###############################################################################
-def Menu() -> bool:
+def Menu() -> bool: # Menu de lancement, retourne True si l'extension est activée
     while True:  # Menu principal
-        game.readfile('..\\ressources\\SaboteurTxt.txt')
+        readfile('..\\ressources\\SaboteurTxt.txt') # Affiche le menu
         res_input = input_player(0, 3)
-        if res_input == 1:
-            game.readfile('..\\ressources\\PresentationSubMenu.txt')
-            game.readfile('..\\ressources\\PresentationSubMenu.txt', input_player(0, 2))
+        if res_input == 1: # Partie texte explicative
+            readfile('..\\ressources\\PresentationSubMenu.txt')
+            readfile('..\\ressources\\PresentationSubMenu.txt', input_player(0, 2))
             input_player(0, 1)
-        elif res_input == 2:
+        elif res_input == 2: # Sans extension
             return False
-        elif res_input == 3:
+        elif res_input == 3: # Avec extension
             return True
 
 
