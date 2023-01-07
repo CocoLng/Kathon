@@ -498,14 +498,20 @@ def aff_ch(card,special):
     
     if len(COM) == 4:
         C = [False for val in C]
-        NAME = [K.name for K in COM]
-        if len(NAME)==4:
-            C[0]  = True    
-        elif "up" in NAME and "left" in NAME:
-            C[12] = True  
-        elif"up" in NAME and "Down" in NAME:
-            C[13] = True
+        C[0]  = True 
         
+
+    if len(COM)== 2 and C[12]:
+        C = [False for val in C] 
+        NAME = [K.name for K in COM]
+
+        if "up" in NAME and "left" in NAME or "down" in NAME and "right" in NAME:
+            C[12] = True  
+        elif "up" in NAME and "right" in NAME or "down" in NAME and "left" in NAME:
+            C[13] = True
+        elif "up" in NAME and "down" in NAME or "right" in NAME and "left" in NAME:
+            C[11]= True
+            
     if len(COM) == 0:
         C = [False for val in C]
         C[9] = True
@@ -528,6 +534,6 @@ def aff_ch(card,special):
     aff3 = ("══" if "left" in PATH else "┃ ")+ center + ("══" if "right" in PATH else " ┃") 
     aff4 = "┃ "+("║" if "down" in PATH else " ")+ " ┃" 
     aff5 = "┗━"+("║" if "down" in PATH else "━")+ "━┛" 
-    
+
     return [aff1,aff2,aff3,aff4,aff5] 
  
