@@ -140,20 +140,21 @@ class Human():
             if card.__class__.__name__ =='CardChemin':
                 if len(self.status)==0 or self.status[0]=='Voleur': 
                     ########################################
-                    print(f"Vous allez jouer :{print(card)}")
-                    print("[1] Continuer\n[2] Tourner la carte\n[3] Retour selection")
-                    rep = input_player(1,3)
                     while True:
+                        print(f"Vous allez jouer :{print(card)}")
+                        print("[1] Continuer\n[2] Tourner la carte\n[3] Retour selection")
+                        rep = input_player(1,3)
                         if rep == 1:
                             pos = self.ask_pos()
                             if pos and MAP.add_card(card,pos):
                                 self.main.remove(card)
                                 return True
+                            else : return False
                         elif rep == 2:
                             if self.__flip_card_(card): 
-                                
-                                rep=1    
-                        return False
+                                rep=1
+                        else :
+                            return False
                                 
             if card.__class__.__name__ == 'CardAction':
                 card.arg = [P_list,MAP]
