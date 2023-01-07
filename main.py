@@ -53,7 +53,7 @@ def recap(P_list,nb_manches):#Fait le recap en fin de manche et regarde si 3 rou
     
     if nb_manches >3 :
         readfile('..\\ressources\\SaboteurTxt.txt',3)
-        print(f"\nLe grand gagnant est {list_players[0].name} !! \nFélicitation, en espérant être ré-exécuter prochainement.\n Et n'oubliez pas de rester zen, comme mon code source")
+        print(f"\nLe grand gagnant est {list_players[0].name} !! \nFélicitation, en espérant être ré-exécuter prochainement.\nEt n'oubliez pas de rester zen, comme mon code source")
         return False
     print("\n[1] Continuez la partie\n[0] /!\ Quittez le programme (Ctrl + C)\n")
     input_player(0, 1)
@@ -81,9 +81,10 @@ while True : #Menu principal
 list_players = init_player(extension)
 nb_manches = 1 #On fera forcement une manche
 run_game = True
-P_list = list_players.copy()
 #Boucle Game Running
 while run_game :
+    #On regenere notre liste des joueurs, car en fin de round P_list possède que les gagnant
+    P_list = list_players.copy() 
     readfile('..\\ressources\\SaboteurTxt.txt',1)
     round_done = game_handler(extension,P_list)
     if round_done : nb_manches +=1 

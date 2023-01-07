@@ -18,12 +18,13 @@ def game_handler(extension,P_list): #gere la réalisation d'une manche
     repartition_card(extension,P_round,Decks[0])
     status_win,P_round = run_round(extension,P_round,MAP,Decks[0],WIN_CARD)
     reward_time(extension,P_list,P_round,status_win,Decks[2],MAP)
-    #cls_screen()#Efface le terminal
+    cls_screen()#Efface le terminal
     sleep(1)#temps de nettoyer l'ecran
     return True
     
 def cls_screen(): #Sert a effacer la console, utile pour masquer les informations dun joueur à an autre
-    system('cls' if name=='nt' else 'clear')
+    #system('cls' if name=='nt' else 'clear')
+    pass
     
 def readfile(path_join,part_explain = 0): #Permet de lire un fichier texte, ici principalement a but d'affichage
     with open(path.join(path.dirname(__file__),path_join),'r') as f: 
@@ -55,7 +56,7 @@ def init_round(extension,P_list):
     shuffle(L)# Permet de mélanger les 3 cartes cachées 
     [MAP.add_card(CARD,POS,True) for CARD,POS in zip(L,pos)]
     
-    #Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[:13]
+    Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[80:105]
     
     #Initialise les autres deck et les mélanges 
     Deck_Role = Deck("ROLE",[extension,extension],P_list)
@@ -114,6 +115,10 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
         next_player(P_round)
 
 def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP):
+    """
+    P_list va se faire filtrer de manière a conserver uniquement les gagnant du round
+    nb_deleted est présent pour eviter de provoquer un décalage d'indice dans la list des joueurs
+    """
     nb_deleted = 0
     if not(extension):
         if status_win : #les chercheurs ont gagnés
@@ -151,23 +156,46 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP):
             for card in map_c:
                 if card !=[] and card.special=="cristaux" : nb_cristaux +=1
             print(card,nb_cristaux)
+            
         if status_win : #les Chercheurs gagnent
             if P_round[0].role.name[0] != "C": #C'est un role spécial qui a fait la connection
                 pass
+            
+            
         else : #les saboteurs gagnent
-            for i in range(len(P_list)) :
-                if P_list[i-nb_deleted].role.name[0] != ("S")or("P") : #Saboteur or Profiteur
+            print('sabo win')
+            for n,player in enumerate(P_list,0) :
+                if player.role.name[0] != (("S") or ("P")) : #Saboteur or Profiteur
+                    print(n)
+                    print("enterr",player.role.name[0],player.name)
                     del P_list[i-nb_deleted]
                     nb_deleted +=1
-                nb_pepites = max(6-len(P_list),1)
-                for player in P_list :
-                    player.score += int(nb_pepites)
+                else : print("SURVIVE",player.name)
+            print("OUT")  
+            nb_pepites = max(6-len(P_list),1)#Nombre de pépites en fonction du nombre de gagnant
+            print("len",len(P_list),"\n")
+            [print(player,player.role.name) for player in P_list]
+            for n in range(len(P_list)):
+                if P_list[n].role.name[0] ==("S"):
+                    print("Ajout S",P_list[n].role.name,P_list[n].name)
+                    P_list[n].score += int(nb_pepites)
+                else : 
+                    print("Ajout P",P_list[n].role.name,P_list[n].name)
+                    P_list[n].score += int(nb_pepites)-1 #les sabouteurs gagne 1 de moins
+                    
+                  #p.append(plaer) for list geo list gagnt si score !=0      
+        #if player.score == 0 : P_list.remove(player) #Si le score est nul, c'est que le gagnant a rien gagné
+        #On va le retirer de la list des gagnant de manière a éviter qu'il puisse se faire voler
+        #Tour des voleurs
+        print("Voleur",P_voleur)
         if len(P_voleur) != 0 and len(P_list)!=0:
+            print("vole")
             for player in P_voleur :
-                next_player(player) #ne peut voler que les joueurs qui viennent de gagner
+                next_player(P_voleur) #ne peut voler que les joueurs qui viennent de gagner
                 print("THIEF TIME hehe\nChoissiez à quel gagnant vous souhaitez voler une pépite :\n")
-                [(print('P',i, ': ', x.name, sep='', end='  ')) for i, x in enumerate(P_list, 1)]
+                [(print('[',i, ']', x.name,"(",x.role.name,')', sep='', end='  ')) for i, x in enumerate(P_list, 1)]
                 selected = input_player(1,len(P_list))
                 P_list[selected-1].score -= 1 
                 player.score +=1
+                del P_voleur[0]
                 

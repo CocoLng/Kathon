@@ -102,9 +102,9 @@ class Human():
         
     def play(self,P_list,MAP,extension,Deck):
         
-        if len(self.status) != 0 or (len(self.status) ==1 and not(self.status[0]=="Voleur")) :
+        if len(self.status) != 0 and not((len(self.status) ==1) and self.status[0]=="Voleur") :
            print("Aie..\nVous êtes affectés par ceci :")
-           [print(f"- {status}") for status in self.status]
+           [print(f"- {status}") for status in self.status if status !="Voleur"]
            print("Ceci va vous empechez de posez des cartes chemins tant que vous ne vous en débarrasez pas.\n")
         
         print("Voici votre main :")
@@ -159,7 +159,9 @@ class Human():
             if card.__class__.__name__ == 'CardAction':
                 card.arg = [P_list,MAP]
                 if card.effect():
-                    self.main.remove(card)
+                    try :
+                        self.main.remove(card)
+                    except ValueError : pass #la carte se détruit parfois d'elle meme, comme switch_hand par exemple
                     return True
             return False
         
