@@ -140,7 +140,7 @@ class Human():
             if card.__class__.__name__ =='CardChemin':
                 if len(self.status)==0 or self.status[0]=='Voleur': 
                     ########################################
-                    print(f"Vous allez jouer :{print(card)}")
+                    print(f"Vous allez jouer :")
                     print("[1] Continuer\n[2] Tourner la carte\n[3] Retour selection")
                     rep = input_player(1,3)
                     while True:
