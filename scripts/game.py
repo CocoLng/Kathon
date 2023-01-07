@@ -6,7 +6,7 @@ Created on Sat Dec  3 12:27:55 2022
 """
 from random import shuffle
 from scripts.board_game import BoardGame
-from scripts.card import Deck
+from scripts.card import Deck,input_player
 from os import path,system,name
 from time import sleep
 
@@ -17,7 +17,7 @@ def game_handler(extension,P_list): #gere la réalisation d'une manche
     P_round = P_list.copy()
     repartition_card(extension,P_round,Decks[0])
     status_win,P_round = run_round(extension,P_round,MAP,Decks[0],WIN_CARD)
-    reward_time(extension,P_list,P_round,status_win,Decks[2])
+    reward_time(extension,P_list,P_round,status_win,Decks[2],MAP)
     #cls_screen()#Efface le terminal
     sleep(1)#temps de nettoyer l'ecran
     return True
@@ -55,6 +55,8 @@ def init_round(extension,P_list):
     shuffle(L)# Permet de mélanger les 3 cartes cachées 
     [MAP.add_card(CARD,POS,True) for CARD,POS in zip(L,pos)]
     
+    #Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[:13]
+    
     #Initialise les autres deck et les mélanges 
     Deck_Role = Deck("ROLE",[extension,extension],P_list)
     Deck_Reward = Deck("REWARD",[extension,extension],P_list)
@@ -75,7 +77,7 @@ def repartition_card(extension,P_list,Deck):
         [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=6]
     else :
         #S il ny a pas l'extension alors:
-        #Tous les 2 joueurs une carte en moins est donné initialement 
+        #Tous les 2 joueurs, une carte en moins est donnée initialement 
         nb_P_repart = 7 -len(P_list)//2
         [(player.main.append(card) , Deck.list_card.pop(0)) for player in P_list for i,card in enumerate(Deck.list_card,1) if i<=nb_P_repart]
 
@@ -110,11 +112,9 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
     
         next_player(P_round)
 
-def reward_time(extension,P_list,P_round,status_win,Deck_Reward):
-    
+def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP):
+    nb_deleted = 0
     if not(extension):
-        nb_deleted = 0
-        
         if status_win : #les chercheurs ont gagnés
             Deck_Reward.list_card.sort(key=lambda card: card.pepite, reverse=True)
             if len(P_list)>= 10 :
@@ -139,4 +139,34 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward):
             for player in P_list :
                 player.score += int(nb_pepites)
                 
-    pass
+    else :
+        #Check pour des potentiels voleur
+        P_list[0].status.append("Voleur")
+        P_voleur = []
+        [P_voleur.append(player) for player in P_list if ("Voleur" in player.status)and not("Emprisonnement" in player.status)]
+        #DETECTION DES GEMMES GEOLOGUES
+        nb_cristaux = 0
+        for map_c in MAP._BoardGame__map_ :
+            for card in map_c:
+                if card !=[] and card.special=="cristaux" : nb_cristaux +=1
+            print(card,nb_cristaux)
+        if status_win : #les Chercheurs gagnent
+            if P_round[0].role.name[0] != "C": #C'est un role spécial qui a fait la connection
+                pass
+        else : #les saboteurs gagnent
+            for i in range(len(P_list)) :
+                if P_list[i-nb_deleted].role.name[0] != ("S")or("P") : #Saboteur or Profiteur
+                    del P_list[i-nb_deleted]
+                    nb_deleted +=1
+                nb_pepites = max(6-len(P_list),1)
+                for player in P_list :
+                    player.score += int(nb_pepites)
+        if len(P_voleur) != 0 and len(P_list)!=0:
+            for player in P_voleur :
+                next_player(player) #ne peut voler que les joueurs qui viennent de gagner
+                print("THIEF TIME hehe\nChoissiez à quel gagnant vous souhaitez voler une pépite :\n")
+                [(print('P',i, ': ', x.name, sep='', end='  ')) for i, x in enumerate(P_list, 1)]
+                selected = input_player(1,len(P_list))
+                P_list[selected-1].score -= 1 
+                player.score +=1
+                

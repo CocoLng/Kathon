@@ -125,7 +125,7 @@ class Human():
                     return False
                 if card == -3 and ((not("Voleur") in self.status) and len(self.status) ==1) and len(self.status) !=0: 
                     print("\nSéléctionnez deux cartes que vous defaussait, puis vous perdrez un malus :\n")
-                    if self.del_card(False,2):
+                    if self.del_card(False,Deck,2):
                         print("Quel malus souhaitez-vous supprimer ?")             
                         [print(f"[{i}] {status}") for i,status in enumerate(self.status,1)]
                         del self.status[input_player(1,len(self.status))-1]

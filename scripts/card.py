@@ -379,10 +379,16 @@ def jail_handler(self):
     list_Player_targetable = []
     if self.name == "Emprisonnement":  # Réutilisation de edit_effet
         [list_Player_targetable.append(player) for player in self.arg[0] if not(self.name) in player.status]     
+        if len(list_Player_targetable) == 0 :
+            print("\nTous le monde est en prison.... Veuillez faire une autre choix\n")
+            return False
         Target_P = self.target_player(list_Player_targetable)
         return edit_status(True, "Emprisonnement", Target_P)
     # si on emprisonne pas alors on libère
-    [list_Player_targetable.append(player) for player in self.arg[0] if self.name in player.status] 
+    [list_Player_targetable.append(player) for player in self.arg[0] if "Emprisonnement" in player.status] 
+    if len(list_Player_targetable) == 0 :
+        print("\nPersonne n'est en prison.... Veuillez faire une autre choix\n")
+        return False
     Target_P = self.target_player(list_Player_targetable)
     return edit_status(False, "Emprisonnement", Target_P)
 
@@ -395,6 +401,12 @@ L'effet doit être "thief_handler"
 def thief_handler(self):
     if self.name == "Voleur":  # Réutilisation de edit_effet
         return edit_status(True, "Voleur", self.arg[0][0]) #applique l'effet voleur au joueur actuel
+    list_Player_targetable = []
+    [list_Player_targetable.append(player) for player in self.arg[0] if "Voleur" in player.status] 
+    if len(list_Player_targetable) == 0 :
+        print("\nPersonne n'as le statut de voleur.... Veuillez faire une autre choix\n")
+        return False
+    Target_P = self.target_player(list_Player_targetable)    
     return edit_status(False, "Voleur", Target_P)
 
 
