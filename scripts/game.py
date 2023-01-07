@@ -11,8 +11,10 @@ from os import path,system,name
 from time import sleep
 
     
-def game_handler(extension,P_list): #gere la réalisation d'une manche
+def game_handler(P_list,extension): #gere la réalisation d'une manche
+    print("Initialisation de la manche",P_list)
     Decks,MAP,WIN_CARD = init_round(extension, P_list)
+    print("InitialisationFFFF de la manche", P_list)
     shuffle(P_list) #Melange l'ordre des joueurs 
     P_round = P_list.copy()
     repartition_card(extension,P_round,Decks[0])
@@ -44,9 +46,10 @@ def init_round(extension,P_list):
     #Initialise la map est la position des cartes cachées 
     pos = [[8,-2],[8,0],[8,2]]
     MAP = BoardGame()
-    
+    print("Initialisation de la mancheINIIIT", P_list)
     #Initialisation des decks
-    Deck_ActionChemin = Deck("ACTION_CHEMIN",[extension,False],P_list)
+    Deck_ActionChemin = Deck("ACTION_CHEMIN",extension,False,len(P_list))
+    print("Initialisation de la mancheFINNNNNN", P_list)
     #connect la carte PEPITE a WIN
     WIN_CARD = Deck_ActionChemin.list_card[29]
     
@@ -56,11 +59,11 @@ def init_round(extension,P_list):
     shuffle(L)# Permet de mélanger les 3 cartes cachées 
     [MAP.add_card(CARD,POS,True) for CARD,POS in zip(L,pos)]
     
-    Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[30:70]
+    #Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[30:70]
     
     #Initialise les autres deck et les mélanges 
-    Deck_Role = Deck("ROLE",[extension,extension],P_list)
-    Deck_Reward = Deck("REWARD",[extension,extension],P_list)
+    Deck_Role = Deck("ROLE",extension,extension,len(P_list))
+    Deck_Reward = Deck("REWARD",extension,extension,len(P_list))
     Decks = [Deck_ActionChemin,Deck_Role,Deck_Reward]
     [shuffle(x.list_card) for x in Decks]
     
@@ -185,7 +188,7 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP,WIN_CARD):
                
                     elif 'GREEN' in list_flag or 'BLUE' in list_flag:
                         et = "et"
-                        print(f'l equipe {et*(i-1)+val for val,i in enumerate(list_flag)} on gagné')
+                        print(f"l equipe {[et*(i-1)+val for i,val in enumerate(list_flag)]} on gagné")
                         nb_pepites = max(6-len(P_list),1)
                         P_list = [joueures for flag in list_flag for joueures in P_list if joueures.role.name in flag or 'boss' in joueures.role.name] 
                         for n in P_list:

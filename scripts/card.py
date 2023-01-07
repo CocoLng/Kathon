@@ -16,17 +16,18 @@ Name correspond au nom du deck que nous souhaitons crée, il doit s'appeler comm
 
 
 class Deck:
-    # Permet de génére un deck de carte
-    def __init__(self, name, extension=[False, False], nb_players=3):  # chaque carte possède un nom et une description
+    # Permet de générer un deck de carte
+    def __init__(self, name, extension, replace, nb_players):  # chaque carte possède un nom et une description
         self.name = name
         self.extension = extension
+        self.replace = replace
         self.list_card = []
         # Appel de la fonction qui charge les cartes
-        self.load_cards(len(nb_players))
+        self.load_cards(nb_players)
 
     # Permet de piocher une carte
     def draw_card(self, i=0):  # sert pour la pioche d'une carte
-        # i est le nombre de carte que l'on souhaite piocher
+        # i est le nombre de cartes que l'on souhaite piocher
         if len(self.list_card) == 0: return False
         return self.list_card.pop(i)  # sinon envoie la première carte et la supprime
 
@@ -42,21 +43,21 @@ class Deck:
                     status = self.name.upper()
                     """
                     self.extension contient 2 argument 
-                    self.extension[0] dit si l'extension est activée ou non
-                    self.extension[1] dit si quand l'extension est activée il faut remplacer les cartes du jeu de base
+                    self.extension dit si l'extension est activée ou non
+                    self.replace dit si quand l'extension est activée il faut remplacer les cartes du jeu de base
                     """
                     # Si l'extension est activée, nous devons prendre en compte les cartes de l'extension via un
                     # systeme de write
-                    if self.extension[1]:
+                    if self.replace:
                         write = False
                     else:
                         write = True
-                elif line == "EXTENSION" and status == self.name and self.extension[0] == True:
+                elif line == "EXTENSION" and status == self.name and self.extension:
                     write = True
                     # Condition d'arrêt, le mot END est détecté est status est deja défini, ce qui veut dire que nous
                     # avons deja écrit
                 # Ou nous détectons le mot EXTENSION est celle-ci est désactivée
-                elif status == self.name and ((line == "END") or (line == "EXTENSION" and self.extension[0] == False)):
+                elif status == self.name and ((line == "END") or (line == "EXTENSION" and not self.extension)):
                     break
                 # Si la ligne n'est pas vide alors nous écrivons
                 elif line != "" and write:
@@ -68,7 +69,7 @@ class Deck:
                         else:  # La longeur d'une carte chemin est variable selon ses paramètres, mais toujours >4
                             [self.list_card.append(CardChemin(line)) for i in range(int(line[0]))]
                     elif status == "ROLE":
-                        if not self.extension[0]:
+                        if not self.extension:
                             nb = 3  # le nombre de chercheurs de base est défini à 3
                             if nb_players == 4: nb += 1  # s'il y a quatre joueurs, nous passons à 4 chercheurs
                             while nb / nb_players < 0.7: nb += 1  # la proportion de chercheur doit toujours est au
@@ -76,7 +77,7 @@ class Deck:
                             if line[2] == "saboteur": nb = (nb_players - nb) + 1  # formule pour obtenir le nombre de
                             # saboteur
                             self.list_card += nb * [CardRole(line[0], line[1], line[2])]
-                        else:  # Quand l'extension est activée nous chargeons toutes les cartes, peut importe le nb
+                        else:  # Quand l'extension est activée nous chargeons toutes les cartes, peu importe le nb
                             # de joueurs
                             self.list_card += int(line[0]) * [CardRole(line[1], line[2], line[3])]
 
@@ -158,7 +159,7 @@ class CardChemin(Card):
 
     @reveal.setter
     def reveal(self, reveal):
-        # soit bool soit list
+        # soit bool, soit list
         self.__reveal = True
         try:
             if len(reveal) >= 6:
@@ -263,6 +264,7 @@ def edit_status(ajout, effect_play, Target_P):
 
 
 def input_player(min, max):  # demande un input entre min et max et return le res
+    selected = None
     while True:
         try:  # redemande jusqu'a validité
             selected = input('Taper le chiffre désiré : ')

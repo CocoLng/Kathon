@@ -32,15 +32,16 @@ ACTION_CHEMIN
 4;Coin right,down;a la croiser des chemins;00:10;right,down
 5;Coin left,down;a la croiser des chemins;00:10;left,down
 
-1;Croisement, culs de sacs  ;a la croiser des culs de sacs;0000:0000:0000:0000;up,left,down,right
+1;Croisement, culs de sacs;a la croiser des culs de sacs;0000:0000:0000:0000;up,left,down,right
 1;Croisement T up,left,right;a la croiser des culs de sacs;000:000:000;up,left,right
-1;Croisement T up,left,down ;a la croiser des culs de sacs;000:000:000;up,left,down
-1;Ligne up,down             ;a la croiser des culs de sacs;00:00;up,down
-1;Ligne left,right          ;a la croiser des culs de sacs;00:00;left,right
-1;Ligne right,down          ;a la croiser des culs de sacs;00:00;right,down
-1;Ligne left,down           ;a la croiser des culs de sacs;00:00;left,down
-1;Cul de sac                ;a la croiser des culs de sacs;0;down
-1;Cul de sac                ;a la croiser des culs de sacs;0;left
+1;Croisement T up,left,down;a la croiser des culs de sacs;000:000:000;up,left,down
+
+1;Ligne up,down;a la croiser des culs de sacs;00:00;up,down
+1;Ligne left,right;a la croiser des culs de sacs;00:00;left,right
+1;Ligne right,down;a la croiser des culs de sacs;00:00;right,down
+1;Ligne left,down;a la croiser des culs de sacs;00:00;left,down
+1;Cul de sac;a la croiser des culs de sacs;0;down
+1;Cul de sac;a la croiser des culs de sacs;0;left
 
 EXTENSION
 2;PontChemin;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
@@ -60,10 +61,10 @@ EXTENSION
 2;Changement de Main;Permet de changer la main entre deux joueurs choisis.;switch_hand
 
 3;Emprisonnement;Permet d emprisonner une cible.;jail_handler
-4;Enfin Libre;Permet de liberer une cible.;jail_handler
+4;Enfin Libre;Permet de liberer une cible de prison.;jail_handler
 
 4;Voleur;Permet de voler une pepite a la fin de la manche.;thief_handler
-3;Enfin Libre;Permet de retirer la possibiliter a un voleur d agir.;thief_handler
+3;Pas Touche;Permet de retirer la possibiliter a un voleur d agir.;thief_handler
 
 END
 
