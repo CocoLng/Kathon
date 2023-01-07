@@ -75,13 +75,13 @@ def repartition_card(extension,P_list,Deck):
     if extension:
         Deck.list_card = Deck.list_card[9:]#On retire les 10 premières cartes
         [player.main.append(Deck.draw_card()) for player in P_list for i in range(6)]
-        [print(i.main) for i in P_list]
+
     else :
         #S il ny a pas l'extension alors:
         #Tous les 2 joueurs, une carte en moins est donnée initialement 
         nb_P_repart = 7 -len(P_list)//2
         [player.main.append(Deck.draw_card()) for player in P_list for i in range(nb_P_repart)]
-        [print(i.main) for i in P_list]
+
 #Gere la manche en cours 
 def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
     #Verifie que la pépite n'est pas trouvé et qu'un joueur a toujours au moins une carte
