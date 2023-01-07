@@ -24,7 +24,7 @@ ACTION_CHEMIN
 1;GOLD;entre_de_la_mine;0000:0000:0000:1110;up,left,down,right;False;PEPITE	
 1;ENTREE;entre_de_la_mine;0000:0000:0000:0000;up,left,down,right;True;START;True
 
-20;Croisement;A la croiser des chemins;0000:0000:0000:1110;up,left,down,right
+5;Croisement;A la croiser des chemins;0000:0000:0000:1110;up,left,down,right
 5;Croisement T up,left,right;A la croiser des chemins;000:000:110;up,left,right
 5;Croisement T up,left,down;A la croiser des chemins;000:000:110;up,left,down
 4;Ligne up,down;a la croiser des chemins;00:10;up,down
@@ -45,11 +45,11 @@ ACTION_CHEMIN
 EXTENSION
 2;PontChemin;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
 2;Echelle;a_la_croiser_des_chemins;0;down;True;START;False;True
-30;Echelle;a_la_croiser_des_chemins;0;left;True;START;False;True
+2;Echelle;a_la_croiser_des_chemins;0;left;True;START;False;True
 2;DoubleCourbe;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
-30;GREEN;a_la_croiser_des_chemins;00:00;left,down;True;DOOR;False;True
+3;GREEN;a_la_croiser_des_chemins;00:00;left,down;True;DOOR;False;True
 3;BLUE;a_la_croiser_des_chemins;00:00;left,down;True;DOOR;False;True
-10;PontChemin avec un CRISTAL;a_la_croiser_des_chemins;000:000:000:110;up,left,down,right;cristaux;False
+10;PontChemin avec un CRISTAL;a_la_croiser_des_chemins;000:000:000:110;up,left,down,right;True;cristaux;False
 
 
 
