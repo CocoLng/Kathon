@@ -17,7 +17,7 @@ def game_handler(extension,P_list): #gere la réalisation d'une manche
     P_round = P_list.copy()
     repartition_card(extension,P_round,Decks[0])
     status_win,P_round = run_round(extension,P_round,MAP,Decks[0],WIN_CARD)
-    reward_time(extension,P_list,P_round,status_win,Decks[2],MAP)
+    reward_time(extension,P_list,P_round,status_win,Decks[2],MAP,WIN_CARD)
     cls_screen()#Efface le terminal
     sleep(1)#temps de nettoyer l'ecran
     return True
@@ -56,7 +56,7 @@ def init_round(extension,P_list):
     shuffle(L)# Permet de mélanger les 3 cartes cachées 
     [MAP.add_card(CARD,POS,True) for CARD,POS in zip(L,pos)]
     
-  #  Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[80:105]
+    Deck_ActionChemin.list_card=Deck_ActionChemin.list_card[30:70]
     
     #Initialise les autres deck et les mélanges 
     Deck_Role = Deck("ROLE",[extension,extension],P_list)
@@ -114,11 +114,12 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
     
         next_player(P_round)
 
-def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP):
+def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP,WIN_CARD):
     """
     P_list va se faire filtrer de manière a conserver uniquement les gagnant du round
     nb_deleted est présent pour eviter de provoquer un décalage d'indice dans la list des joueurs
     """
+    print(status_win)
     nb_deleted = 0
     if not(extension):
         if status_win : #les chercheurs ont gagnés
@@ -158,8 +159,46 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP):
             print(card,nb_cristaux)
             
         if status_win : #les Chercheurs gagnent
+            for i in P_round:
+                print(i.role.name)
             if P_round[0].role.name[0] != "C": #C'est un role spécial qui a fait la connection
-                pass
+                list_flag =  MAP.detect(WIN_CARD)
+                if 'START' in list_flag:
+                    print('les',P_round[0].role.name,'on gagné')
+                    P_list = [joueures for joueures in P_list if P_round[0].role.name == joueures.role.name]        
+                    nb_pepites = max(6-len(P_list),1)
+                    for n in P_list:
+                        if  n.role.name != 'boss':
+                            n.score += int(nb_pepites)
+                        else:
+                            n.score += int(nb_pepites)-1
+                        print(f'le joueur {n.name} est victoireux et a {n.score} il etait {n.role.name}')         
+                else:    
+                    if 'D' in list_flag:
+                        P_list = [joueures for joueures in P_list if 'boss' in joueures.role.name]
+                        if P_list == []:
+                            P_list = [joueures for joueures in P_list if 'sabo' in joueures.role.name]
+                        nb_pepites = max(6-len(P_list),1)
+                        for n in P_list:
+                           n.score += int(nb_pepites)-1
+                           print(f'le joueur {n.name} est victoireux et a {n.score} il etait {n.role.name}')         
+               
+                    elif 'GREEN' in list_flag or 'BLUE' in list_flag:
+                        et = "et"
+                        print(f'l equipe {et*(i-1)+val for val,i in enumerate(list_flag)} on gagné')
+                        nb_pepites = max(6-len(P_list),1)
+                        P_list = [joueures for flag in list_flag for joueures in P_list if joueures.role.name in flag or 'boss' in joueures.role.name] 
+                        for n in P_list:
+                            if  n.role.name != 'boss':
+                                n.score += int(nb_pepites)
+                            else:
+                                n.score += int(nb_pepites)-1
+                            print(f'le joueur {n.name} est victoireux et a {n.score} il etait {n.role.name}')         
+                
+            
+            
+            
+            
             
             
         else : #les saboteurs gagnent
@@ -168,7 +207,7 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP):
                 if player.role.name[0] != (("S") or ("P")) : #Saboteur or Profiteur
                     print(n)
                     print("enterr",player.role.name[0],player.name)
-                    del P_list[i-nb_deleted]
+                    del P_list[n-nb_deleted]
                     nb_deleted +=1
                 else : print("SURVIVE",player.name)
             print("OUT")  
@@ -199,3 +238,7 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward,MAP):
                 player.score +=1
                 del P_voleur[0]
                 
+        
+        
+        
+        
