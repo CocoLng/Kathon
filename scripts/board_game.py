@@ -104,58 +104,21 @@ class BoardGame:
         if not(flag):
             print('Non connecté au start')
             return False
-
-
+        
         for exterieur,interieur in zip(card_p,borders_to_connect):
             interieur.connect(exterieur)
 
         self.__map_[pos[0]][pos[1]] = card
+        
         for i in self.__map_[-self.__decalage[0]][-self.__decalage[1]].borders:
             i.reconstruc_path(i)
             
-            
-
-        if self.__map_[-self.__decalage[0]+0][-self.__decalage[1]+1] != [] and self.__map_[-self.__decalage[0]+1][-self.__decalage[1]]:
-            
-            print(self.__map_[-self.__decalage[0]+0][-self.__decalage[1]+1].borders,self.__map_[-self.__decalage[0]+1][-self.__decalage[1]+0].borders)
-        
         if card.special == "START" or card.special == 'DOOR':
             self.L.append([pos[0] + self.__decalage[0],pos[1] + self.__decalage[1]])
             
         for posl in self.L:
-            print(self.__map_[posl[0]-self.__decalage[0]][posl[1]-self.__decalage[1]],self.L,self.__decalage)
             self.__map_[posl[0]-self.__decalage[0]][posl[1]-self.__decalage[1]].effect()
             
-        
-        """      
-        l =0
-        c = 0
-        for i in self.__map_:
-            for j in i:
-                PATH = []
-                if j != []:
-                    for B in j.borders:
-                        for IN in B.inputo:
-                            if not(IN in j.borders):
-                                PATH.append(IN)
-                        for OUT in B.outputo:
-                            if not(OUT in j.borders):
-                                PATH.append(OUT)
-                
-                    if PATH != []:
-                        print(j.name,[i.name if i != [] else [] for i in PATH])
-                c +=1
-            l+=1
-        #for i in card.borders:
-              # if i != []:
-                   #print(i.flag_loop)
-        for i in self.__map_[0][2].borders:
-            for K in i.inputo:
-                if not(K in self.__map_[0][2].borders):
-                    print(K.name)
-            for K in i.outputo:
-                if not(K in self.__map_[0][2].borders):
-                    print(K.name)"""
         return True
                 
     

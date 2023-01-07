@@ -45,7 +45,7 @@ ACTION_CHEMIN
 EXTENSION
 2;PontChemin;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
 2;Echelle;a_la_croiser_des_chemins;0;down;True;START;False;True
-2;Echelle;a_la_croiser_des_chemins;0;left;True;START;False;True
+30;Echelle;a_la_croiser_des_chemins;0;left;True;START;False;True
 2;DoubleCourbe;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
 30;GREEN;a_la_croiser_des_chemins;00:00;left,down;True;DOOR;False;True
 3;BLUE;a_la_croiser_des_chemins;00:00;left,down;True;DOOR;False;True

@@ -430,6 +430,7 @@ def DOOR(self):
         for i in self.borders: 
             i.source = False
             
+            
 def START(self):
     for i in self.borders:
         i.reconstruc_path(i)
