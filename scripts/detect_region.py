@@ -171,11 +171,14 @@ class ConnectionEdge:
 
                 else:
                     i.WARNING -= 1  
+                    print(i,i.WARNING)
+                    
         if self.WARNING > 0:
             self.WARNING -= 1
         # permet de gerer les fin de lignes conecter a des noeuds
         if self.WARNING == 0:
             self.is_check = False
+        print(self,self.WARNING)
 
         
 # cette classe serat utilisé afin de gere entre sorti des 
