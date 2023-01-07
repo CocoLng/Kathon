@@ -84,7 +84,6 @@ def run_round(extension,P_round,MAP,Deck_,WIN_CARD):
     #Verifie que la pépite n'est pas trouvé et qu'un joueur a toujours au moins une carte
     first_player = P_round[0].name
     first_turn = True
-    Deck_.list_card = Deck_.list_card[:1]
     while True:
         P_Alive = True
         print(MAP)
