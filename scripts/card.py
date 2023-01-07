@@ -1,11 +1,11 @@
 from abc import ABC
+from os import path
 from sys import exit
 from types import MethodType
-from os import path
+
 from scripts.detect_region import ConnectionEdge
 
-
-path_init = path.join(path.dirname(__file__),'..\\ressources\\card_ini.txt')
+path_init = path.join(path.dirname(__file__), '..\\ressources\\card_ini.txt')
 ###############################################################################
 #                              Deck                                           #
 ###############################################################################
@@ -13,226 +13,255 @@ path_init = path.join(path.dirname(__file__),'..\\ressources\\card_ini.txt')
 Name correspond au nom du deck que nous souhaitons crée, il doit s'appeler comme ceci :
     ACTION_CHEMIN / ROLE / REWARD
 """
+
+
 class Deck:
-    def __init__(self, name,extension=[False,False],nb_players = 3):  # chaque carte possède un nom et une description
-        self.name=name    
+    # Permet de génére un deck de carte
+    def __init__(self, name, extension=[False, False], nb_players=3):  # chaque carte possède un nom et une description
+        self.name = name
         self.extension = extension
-        self.list_card= []
+        self.list_card = []
+        # Appel de la fonction qui charge les cartes
         self.load_cards(len(nb_players))
-    
-    def draw_card(self,i=0):#sert pour la pioche d'une carte
-        if len(self.list_card)==0 : return False#return False si le deck est vide
-        return self.list_card.pop(i) #sinon envoie la première carte et la supprime
-        
-    def load_cards(self,nb_players):#Gere le chargement des cartes en le lisant dans un fichier txt
+
+    # Permet de piocher une carte
+    def draw_card(self, i=0):  # sert pour la pioche d'une carte
+        # i est le nombre de carte que l'on souhaite piocher
+        if len(self.list_card) == 0: return False
+        return self.list_card.pop(i)  # sinon envoie la première carte et la supprime
+
+    # Permet de charger les cartes
+    def load_cards(self, nb_players):  # Gere le chargement des cartes en le lisant dans un fichier txt
         i = 1
-        write = False #Sert a detecter si on est dans la partie des cartes ou on doit écrire 
-        status = None #Prend le nom de la catégorie qu'il lit, et regarde si cest celle desirée
-        with open(path_init,'r') as f: #ferme automatiquement le fichier a la fin de la lecture
+        write = False  # Sert à détecter si on est dans la partie des cartes ou on doit écrire
+        status = None  # Prend le nom de la catégorie qu'il lit et regarde si c'est celle desirée
+        with open(path_init, 'r') as f:  # ferme automatiquement le fichier a la fin de la lecture
             for line in f:
                 line = line.strip()
-                if line.upper() == self.name.upper():#Regarde si le nom correspond a la partie que on veut écrire 
+                if line.upper() == self.name.upper():  # Regarde si le nom correspond a la partie qu'on veut écrire
                     status = self.name.upper()
                     """
                     self.extension contient 2 argument 
                     self.extension[0] dit si l'extension est activée ou non
                     self.extension[1] dit si quand l'extension est activée il faut remplacer les cartes du jeu de base
                     """
-                    if self.extension[1]==True:
+                    # Si l'extension est activée, nous devons prendre en compte les cartes de l'extension via un
+                    # systeme de write
+                    if self.extension[1]:
                         write = False
-                    else :
+                    else:
                         write = True
-                elif line == "EXTENSION" and status == self.name and self.extension[0]==True :
-                     write = True 
-                #Condition d'arrêt, le mot END est détecté est status est deja défini, ce qui veut dire que nous avons deja écrit 
-                #Ou nous détectons le mot EXTENSION est celle-ci est désactivée 
-                elif status == self.name and ((line =="END") or (line == "EXTENSION" and self.extension[0]==False)): 
+                elif line == "EXTENSION" and status == self.name and self.extension[0] == True:
+                    write = True
+                    # Condition d'arrêt, le mot END est détecté est status est deja défini, ce qui veut dire que nous
+                    # avons deja écrit
+                # Ou nous détectons le mot EXTENSION est celle-ci est désactivée
+                elif status == self.name and ((line == "END") or (line == "EXTENSION" and self.extension[0] == False)):
                     break
-                #Si la ligne n'est pas vide alors nous écrivons 
-                elif line !="" and write:
+                # Si la ligne n'est pas vide alors nous écrivons
+                elif line != "" and write:
                     line = line.split(';')
-                    if status == "ACTION_CHEMIN" :
-                        if len(line)==4:#Si la longueur des arguments ==4 alors nous sommes forcément sur une carte action
-                            self.list_card+=int(line[0])*[CardAction(line[1],line[2],line[3])]
-                        else:#La longeur d'une carte chemin est variable selon ses paramètres, mais toujours >4
+                    if status == "ACTION_CHEMIN":
+                        if len(line) == 4:  # Si la longueur des arguments ==4 alors nous sommes forcément sur une
+                            # carte action
+                            self.list_card += int(line[0]) * [CardAction(line[1], line[2], line[3])]
+                        else:  # La longeur d'une carte chemin est variable selon ses paramètres, mais toujours >4
                             [self.list_card.append(CardChemin(line)) for i in range(int(line[0]))]
                     elif status == "ROLE":
-                        if self.extension[0]==False:
-                            nb = 3 #le nombre de chercheur de base est définis à 3
-                            if nb_players == 4 : nb +=1 #si il y a quatre joueur, nous passons a 4 chercheur
-                            while  nb/nb_players < 0.7 : nb+=1 #la proportion de chercheur doit toujours est au moins de 70% dans la manche
-                            if  line[2] == "saboteur" : nb = (nb_players-nb)+1 #formule pour obtenir le nombre de saboteur
-                            self.list_card+=nb*[CardRole(line[0],line[1],line[2])]
-                        else :#Quand l'extension est activée nous chargeons toutes les cartes, peut importe le nb de joueurs 
-                            self.list_card+=int(line[0])*[CardRole(line[1],line[2],line[3])]
-                        
+                        if not self.extension[0]:
+                            nb = 3  # le nombre de chercheurs de base est défini à 3
+                            if nb_players == 4: nb += 1  # s'il y a quatre joueurs, nous passons à 4 chercheurs
+                            while nb / nb_players < 0.7: nb += 1  # la proportion de chercheur doit toujours est au
+                            # moins de 70% dans la manche
+                            if line[2] == "saboteur": nb = (nb_players - nb) + 1  # formule pour obtenir le nombre de
+                            # saboteur
+                            self.list_card += nb * [CardRole(line[0], line[1], line[2])]
+                        else:  # Quand l'extension est activée nous chargeons toutes les cartes, peut importe le nb
+                            # de joueurs
+                            self.list_card += int(line[0]) * [CardRole(line[1], line[2], line[3])]
+
                     elif status == "REWARD":
-                        self.list_card+=int(line[0])*[CardReward(line[1],line[2],line[3])]
-                    else : #Sert a savoir si le nom saisie est faux, utile pour debug
+                        self.list_card += int(line[0]) * [CardReward(line[1], line[2], line[3])]
+                    else:  # Sert à savoir si le nom saisi est faux, utile pour debug
                         print("Deck avec le nom de propriété indéfinis ! ERREUR")
                         exit()
-                    i+=1
+                    i += 1
 
- 
     def __str__(self):
-        res = "o-----o "+ self.__class__.__name__ +":" +self.name + " o-----o"
+        res = "o-----o " + self.__class__.__name__ + ":" + self.name + " o-----o"
         res += "\nCeci est un deck de cartes"
         return res
+
 
 ###############################################################################
 #                             Structures Cartes                               #
 ###############################################################################
 
-class Card(ABC):
+class Card(ABC):  # Classe abstraite qui sert de base pour les cartes
     def __init__(self, name, description):  # chaque carte possède un nom et une description
         self.name = name
         self.description = description
 
     def __str__(self):
-        A = len(self.description)//2
-        res = "o-----o "+self.name+" o-----o"
+        A = len(self.description) // 2
+        res = "o-----o " + self.name + " o-----o"
         if '\n' in self.description:
-            A = len(self.description[:self.description.index('\n')])//2
-        res += "\n"+ ' '*(len(res)//2 - A)+self.description
+            A = len(self.description[:self.description.index('\n')]) // 2
+        res += "\n" + ' ' * (len(res) // 2 - A) + self.description
         res += "\no----------------------o"
         return res
 
+
 class CardChemin(Card):
+    # Permet de créer une carte chemin avec la gestion des bordures
     def __init__(self, arg):
-        #arg contient toute la ligne lu dans cardinit.txt
+        # arg contient toute la ligne lu dans cardinit.txt
         super().__init__(arg[1], arg[2])
-        
-        self.is_start = arg
-        self.special = arg
-        self.reveal = arg
-        self.config = list(arg[3].split(":"))
-        self.port = list(arg[4].split(","))
-        self.borders = self.port
+
+        self.is_start = arg  # Si la carte est une carte de spawn
+        self.special = arg  # Si la carte possède un effet spécial
+        self.reveal = arg  # Si la carte est révélée
+        self.config = list(arg[3].split(":"))  # Contient les informations de la carte
+        self.port = list(arg[4].split(","))  # Contient les portes d'accès de la carte pour les futures connexions
+        self.borders = self.port  # Sert a définir les connexions de la carte avec ses voisines
         self.aff = True
-        
-        if  len (arg) >= 9:
+        if len(arg) >= 9:
             if arg[8]:
                 self.effect = MethodType(globals()[self.special], self)
-            
-    #La carte chemin est lu par le boardgame, player
-    #Il y a des conditions sur comment ses valeurs sont attribuées, d'où l'usage de setter
-    
-    
+
+    # La carte chemin est lu par le boardgame, player
+    # Il y a des conditions sur comment ses valeurs sont attribuées, d'où l'usage de setter
+
     @property
     def special(self):
         return self.__special
-    
+
     @special.setter
-    def special(self,special):
+    def special(self, special):
         self.__special = None
-        if len(special)>=7:
+        if len(special) >= 7:
             self.__special = special[6]  # non destructible si special, spawn et gold
-            
+
     @property
     def is_start(self):
         return self.__is_start
-    
+
     @is_start.setter
-    def is_start(self,is_start):
+    def is_start(self, is_start):
         self.__is_start = False
-        if len(is_start)>=8 : 
-            self.__is_start = bool(is_start[7])  
-            
+        if len(is_start) >= 8:
+            self.__is_start = bool(is_start[7])
+
     @property
     def reveal(self):
         return self.__reveal
-    
+
     @reveal.setter
-    def reveal(self,reveal):
-        #soit bool soit list
+    def reveal(self, reveal):
+        # soit bool soit list
         self.__reveal = True
         try:
-            if len(reveal)>=6:
-                 if reveal[5] == 'False': 
-                    self.__reveal = False            
+            if len(reveal) >= 6:
+                if reveal[5] == 'False':
+                    self.__reveal = False
         except TypeError:
-                self.__reveal = reveal
-                  
+            self.__reveal = reveal
+
     @property
     def borders(self):
         return self.__borders
-    
+
     @borders.setter
-    def borders(self,port):
+    def borders(self, port):
         self.__borders = []
-        [self.__borders.append(ConnectionEdge(i,self.special , self.special=='START')) for i in port]
-        for chemins,portes in zip(self.config,self.borders):
-            [portes.connect(portes_) for connections, portes_ in zip(chemins,self.borders) if int(connections) ==1]
+        [self.__borders.append(ConnectionEdge(i, self.special, self.special == 'START')) for i in port]
+        for chemins, portes in zip(self.config, self.borders):
+            [portes.connect(portes_) for connections, portes_ in zip(chemins, self.borders) if int(connections) == 1]
 
     @property
     def aff(self):
         if self.reveal:
             return self.__aff
-        return ["┏━━━┓","┃   ┃","┃   ┃","┃   ┃","┗━━━┛"] 
-    
+        return ["┏━━━┓", "┃   ┃", "┃   ┃", "┃   ┃", "┗━━━┛"]
+
     @aff.setter
-    def aff(self,update):
-        self.__aff = aff_ch(self.borders,self.special,self.name)
+    def aff(self, update):
+        self.__aff = aff_ch(self.borders, self.special, self.name)
         if '\n' in self.description:
             self.description = self.description[:self.description.index('\n')]
-        self.description = self.description + ''.join(['\n'+" "*(len(self.name)//2-len(i)//2+7) + i for i in self.aff])
+        self.description = self.description + ''.join(
+            ['\n' + " " * (len(self.name) // 2 - len(i) // 2 + 7) + i for i in self.aff])
 
-                                                 
+
 class CardRole(Card):
-    def __init__(self, name, description,role):
+    # Permet de créer une carte rôle
+    def __init__(self, name, description, role):
         super().__init__(name, description)
         self.role = role
 
+
 class CardReward(Card):
+    # Permet de créer une carte récompense, quand l'extension est désactivée
     def __init__(self, name, description, pepite):
         super().__init__(name, description)
         self.pepite = pepite
-        
+
+
 class CardAction(Card):
     # les cartes action sont des cartes avec un effet
-    def __init__(self, name, description, effect, arg=None):#les cartes actions ne nécéssitent pas tous la listes des joueurs
+    def __init__(self, name, description, effect,
+                 arg=None):  # les cartes actions ne nécessitent pas tous la liste des joueurs
         super().__init__(name, description)
-    
-        self.effect = MethodType(globals()[effect], self) #on ajoute la méthode contenant le nom effect dans notre object, les autres ne sont pas chargés car inutiles
+
+        self.effect = MethodType(globals()[effect], self)
+        # on ajoute la méthode contenant le nom effect dans notre object, les autres
+        # ne sont pas chargés car inutiles
         if arg is None:
             arg = []
         self.arg = arg
 
-###############################################################################
-#                             Méthodes Communes                               #
-###############################################################################
+    ###############################################################################
+    #                             Méthodes Communes                               #
+    ###############################################################################
     """
     target_player est la seule méthode de base inclus dans notre classe, car toute carte action on a besoin
     Les fonctions ci dessous n'ont pas besoin d'accédé a un objet
     arg[0] contient la liste des Joueurs, le joueurs actuel est en position 0
     arg[1] contient la MAP
     """
-    def target_player(self,list_Player_targetable):
-        print(f'Sur quel joueur voulez vous appliquer {self.name}')
-        [print(i, ': ', x.name, sep='', end='  ') for i, x in enumerate(list_Player_targetable, 1)]#laisse le joueur pouvoir se cibler
-        return list_Player_targetable[input_player(1, len(list_Player_targetable))-1]
 
-# les fonctions si desous sont appelable par tous type de cartes
+    def target_player(self, list_player_targetable):
+        print(f'Sur quel joueur voulez vous appliquer {self.name}')
+        [print(i, ': ', x.name, sep='', end='  ') for i, x in
+         enumerate(list_player_targetable, 1)]  # laisse le joueur pouvoir se cibler
+        return list_player_targetable[input_player(1, len(list_player_targetable)) - 1]
+
+
+# les fonctions si dessous sont appelables par tous types de cartes
 
 def has_effect(effect, Target_P):
     if effect in Target_P.status:  # regarde si le Target Player possède deja l'effet
         return True
     return False
 
+
 def edit_status(ajout, effect_play, Target_P):
     Done = False
     # si le joueur n'as pas déja l'effet alors on peut lui mettre
-    if ajout and not(has_effect(effect_play, Target_P)):
+    if ajout and not (has_effect(effect_play, Target_P)):
         Target_P.status.append(effect_play)
         Done = True
-        print(f"Mouhaha, l'oprération sur {Target_P.name} c'est déroulé sans accroc.\n")
+        print(f"Mouhaha, l'opération sur {Target_P.name} c'est déroulé sans accroc.\n")
     # si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
-    elif not(ajout) and has_effect(effect_play, Target_P):
+    elif not ajout and has_effect(effect_play, Target_P):
         Target_P.status.remove(effect_play)
         Done = True
-        print(f"Mais c'était sur enfaite, sur que l'oprération sur {Target_P.name} n'allait pas rencontrer de difficulté majeures.\n")
+        print(
+            f"Mais c'était sur enfaite, sur que l'oprération sur {Target_P.name} n'allait pas rencontrer de "
+            f"difficulté majeures.\n")
     return Done
-    
+
+
 def input_player(min, max):  # demande un input entre min et max et return le res
     while True:
         try:  # redemande jusqu'a validité
@@ -240,25 +269,25 @@ def input_player(min, max):  # demande un input entre min et max et return le re
             selected = int(selected)
             if selected < min or selected > max:
                 raise ValueError
-            if selected == 0 : raise KeyboardInterrupt #permet de quittez si 0 est entrer et que nous sommes dans le menu
+            if selected == 0: raise KeyboardInterrupt  # permet de quittez si 0 est entrer et que nous sommes dans le menu
             break
         except ValueError:
             print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {min} et {max}\n')
             continue
         except KeyboardInterrupt:
-            try :
+            try:
                 confirm = input("\n/!\ Confirmer de quitter le programme y/n ? ")
-                if confirm[:1].upper() == "Y" : raise KeyboardInterrupt
-                else : 
+                if confirm[:1].upper() == "Y":
+                    raise KeyboardInterrupt
+                else:
                     print("\nOk, on continue")
-                    continue    
-            except KeyboardInterrupt: 
-                print("\nVous quittez le programme, aurevoir")
+                    continue
+            except KeyboardInterrupt:
+                print("\nVous quittez le programme, au revoir")
                 exit()
-        else:
-            print('break, Erreur inconnue')
-            exit()
     return selected
+
+
 ###############################################################################
 #                      Listes des Effets Disponibles                          #
 ###############################################################################
@@ -290,19 +319,20 @@ L'effet est lui stocker dans l'attribut "effet" qui pointe vers la méthode "imp
 Donc effect = impact_tools a l'initialisation pour appeler la fonction
 """
 
+
 def impact_tools(self):
     Done = False
     Name_list = self.name.split()
     list_Player_targetable = []
     if Name_list[0] == "Cassage":  # Si nous ne cassons pas nous réparons
-        [list_Player_targetable.append(player) for player in self.arg[0] if not(Name_list[2]) in player.status]
-        if len(list_Player_targetable) == 0 :
+        [list_Player_targetable.append(player) for player in self.arg[0] if not (Name_list[2]) in player.status]
+        if len(list_Player_targetable) == 0:
             print(f"\nTous le monde a déja son/sa {Name_list[2]} de cassé.... Veuillez faire une autre choix\n")
             return False
         Target_P = self.target_player(list_Player_targetable)
         return edit_status(True, Name_list[2], Target_P)
     [list_Player_targetable.append(player) for player in self.arg[0] if Name_list[2] in player.status]
-    if len(list_Player_targetable) == 0 :
+    if len(list_Player_targetable) == 0:
         print("\nPersonne n'as besoin de la reparation que vous proposez.... Veuillez faire une autre choix\n")
         return False
     Target_P = self.target_player(list_Player_targetable)
@@ -310,68 +340,77 @@ def impact_tools(self):
         Done = edit_status(False, Name_list[4], Target_P)
         Done2 = edit_status(False, Name_list[2], Target_P)
         Done = Done or Done2
-    else : Done = edit_status(False, Name_list[2], Target_P)
-    if not(Done) : print(f"\nAIE, l'opération sur {Target_P.name} est un échec, il n'as pas desoin de notre cadeau/l'as déja reçus.\n")
+    else:
+        Done = edit_status(False, Name_list[2], Target_P)
+    if not (Done): print(
+        f"\nAIE, l'opération sur {Target_P.name} est un échec, il n'as pas besoin de notre cadeau/l'as deja reçus.\n")
     return Done
+
 
 ###############################################################################
 #                         Avalanche & Plan Secret                             #
 ###############################################################################
 
-def collapsing(self):
+def collapsing(self):  # Avalanche/Éboulement
     pos = self.arg[0][0].ask_pos()
-    if not(pos) : return False
+    if not pos: return False
     return self.arg[1].del_card(pos)
 
-def secret_plan(self):
+
+def secret_plan(self):  # Plan Secret, permet de visualiser une des 3 cartes d'arrivée
     while True:
         print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
-        selected = input_player(1, 3) 
-        if selected == 1 and not(self.arg[1].current([8,2]).reveal): #on vérifie que la carte n'est pas déja visible, on sait jamais..
-            print(f"\nLa carte du Haut est un/une {self.arg[1].current([8,2]).name}\n")
+        selected = input_player(1, 3)
+        if selected == 1 and not (
+                self.arg[1].current([8, 2]).reveal):  # on vérifie que la carte n'est pas déja visible, on sait jamais..
+            print(f"\nLa carte du Haut est un/une {self.arg[1].current([8, 2]).name}\n")
             return True
-        elif selected == 2 and not(self.arg[1].current([8,0]).reveal): 
-            print(f"\nLa carte du Miieu est un/une {self.arg[1].current([8,0]).name}\n")
+        elif selected == 2 and not self.arg[1].current([8, 0]).reveal:
+            print(f"\nLa carte du Miieu est un/une {self.arg[1].current([8, 0]).name}\n")
             return True
-        elif selected == 3 and not(self.arg[1].current([8,-2]).reveal): 
-            print(f"\nLa carte en Bas est un/une {self.arg[1].current([8,-2]).name}\n")
+        elif selected == 3 and not self.arg[1].current([8, -2]).reveal:
+            print(f"\nLa carte en Bas est un/une {self.arg[1].current([8, -2]).name}\n")
             return True
         print("\nCette carte est déja visible... Veuillez en choisir une autre")
 
+
 ###############################################################################
-#                         Chargement d'une Extenion                           #
+#                        Chargement d'une Extension                           #
 ###############################################################################
 
-def inspect(self): 
+def inspect(self):  # Inspection, permet de voir le role d'un joueur
     Done = False
     Target_P = self.target_player(self.arg[0])
     print(f"SPOILER ALERTE :\n{Target_P.name} est en réalité un :\n{Target_P.role}.")
     Done = True
     return Done
 
-def switch_role(self):
+
+def switch_role(self):  # Changement de Role, permet de changer le role d'un joueur
     Done = False
-    print("Séléctionnez un joueur qui vera sont role changer ?")
+    print("Sélectionnez un joueur avec qui changer de role :")
     Target_P = self.target_player(self.arg[0])
     temp = Target_P.role
-    Target_P.role =  self.arg[0][0].role
+    Target_P.role = self.arg[0][0].role
     self.arg[0][0].role = temp
     print(f"Vous êtes désormais un {self.arg[0][0].role}")
     Done = True
     return Done
 
-def switch_hand(self):
+
+def switch_hand(self):  # Changement de Main, permet de changer la main d'un joueur avec la sienne
     Done = False
     print("Avec quel joueur souhaitez-vous inverser votre deck de cartes ?")
     Target_P = self.target_player(self.arg[0])
     self.arg[0][0].main.remove(self)
     self.arg[0][0].main.append(self.arg[0][0].main[0])
     temp = Target_P.main
-    Target_P.main =  self.arg[0][0].main
+    Target_P.main = self.arg[0][0].main
     self.arg[0][0].main = temp
     self.arg[0][0].main.remove(self.arg[0][0].main[-1])
     Done = True
     return Done
+
 
 """
 Gère l'effet d'emprisonnement et de libération en réutilisant edit_effet
@@ -379,22 +418,24 @@ A l'initialisation, le nom doit être "Emprisonnement" pour mettre en prison, ch
 L'effet doit être "jail_handler"
 """
 
+
 def jail_handler(self):
     list_Player_targetable = []
     if self.name == "Emprisonnement":  # Réutilisation de edit_effet
-        [list_Player_targetable.append(player) for player in self.arg[0] if not(self.name) in player.status]     
-        if len(list_Player_targetable) == 0 :
+        [list_Player_targetable.append(player) for player in self.arg[0] if not (self.name) in player.status]
+        if len(list_Player_targetable) == 0:
             print("\nTous le monde est en prison.... Veuillez faire une autre choix\n")
             return False
         Target_P = self.target_player(list_Player_targetable)
         return edit_status(True, "Emprisonnement", Target_P)
-    # si on emprisonne pas alors on libère
-    [list_Player_targetable.append(player) for player in self.arg[0] if "Emprisonnement" in player.status] 
-    if len(list_Player_targetable) == 0 :
+    # si on n'emprisonne pas alors on libère
+    [list_Player_targetable.append(player) for player in self.arg[0] if "Emprisonnement" in player.status]
+    if len(list_Player_targetable) == 0:
         print("\nPersonne n'est en prison.... Veuillez faire une autre choix\n")
         return False
     Target_P = self.target_player(list_Player_targetable)
     return edit_status(False, "Emprisonnement", Target_P)
+
 
 """
 Gère l'effet de vol et de retrait via la carte pas touche
@@ -402,15 +443,16 @@ A l'initialisation, le nom doit être "Voleur" pour activer le vol en fin de man
 L'effet doit être "thief_handler"
 """
 
+
 def thief_handler(self):
     if self.name == "Voleur":  # Réutilisation de edit_effet
-        return edit_status(True, "Voleur", self.arg[0][0]) #applique l'effet voleur au joueur actuel
+        return edit_status(True, "Voleur", self.arg[0][0])  # applique l'effet voleur au joueur actuel
     list_Player_targetable = []
-    [list_Player_targetable.append(player) for player in self.arg[0] if "Voleur" in player.status] 
-    if len(list_Player_targetable) == 0 :
+    [list_Player_targetable.append(player) for player in self.arg[0] if "Voleur" in player.status]
+    if len(list_Player_targetable) == 0:
         print("\nPersonne n'as le statut de voleur.... Veuillez faire une autre choix\n")
         return False
-    Target_P = self.target_player(list_Player_targetable)    
+    Target_P = self.target_player(list_Player_targetable)
     return edit_status(False, "Voleur", Target_P)
 
 
@@ -419,135 +461,135 @@ Vous pouvez ajouter vos effet personnels ici, puis crée la carte en l'ajoutant 
 Il faudra, lors de l'initialisation, mettre dans effet le même nom que celle de la méthode'
 """
 
-def DOOR(self):
-    
+
+def DOOR(self):  # Effet Porte, utilise pour l'exetension, permet de mettre un flag sur une zone
     IO = []
     IND = []
-    for i in self.borders: 
-        i.source = False
-        
     for i in self.borders:
-        if i.flag_loop != None:
+        i.source = False
+
+    for i in self.borders:
+        if i.flag_loop is not None:
             IND.append(i.flag_loop)
             IO.append(i)
         else:
             IND.append(i.flag_loop)
             IO.append(i)
     if IND[0] != IND[1]:
-    
+
         if 'START' in IND:
-            
+
             for co in self.borders:
                 if co != self.name and co != 'START':
-                    co.flag = self.name             
-            IO[IND.index('START')-1].source = True
-        elif (self.name in IND) and(None in IND):    
-            IO[IND.index(self.name)].source = True
+                    co.flag = self.name
+            IO[IND.index('START') - 1].source = True
+        elif (self.name in IND) and (None in IND):
+            IO[IND.index(self.name) - 1].source = True
         else:
             for co in self.borders:
                 if co != 'D':
                     co.flag = 'D'
-            if (None in IND) :
+            if None in IND:
                 IO[IND.index(None)].source = True
             else:
                 IO[IND.index('D')].source = True
         for i in self.borders:
-            if i.source == True:
-                i.reconstruc_path(i)   
-            
-def START(self):
+            if i.source:
+                i.reconstruc_path(i)
+
+
+def START(self):  # Initialise les bordures de la carte
     for i in self.borders:
         i.reconstruc_path(i)
+
+
 ###############################################################################
 #                          Affichage d'une Carte                              #
 ###############################################################################
-def aff_ch(card,special,name):
+def aff_ch(card, special, name):
     C = [True for creat in range(14)]
-    
+
     HELLO_I = [K.inputo for K in card]
     HELLO_O = [K.outputo for K in card]
-                    
-    PATH = []
-    COM = [] 
 
-    for K,connect_I,connect_O in zip(card,HELLO_I,HELLO_O):
-        if not(K.name in PATH):
+    PATH = []
+    COM = []
+
+    for K, connect_I, connect_O in zip(card, HELLO_I, HELLO_O):
+        if not (K.name in PATH):
             PATH.append(K.name)
-            
+
             for CI in connect_I:
 
                 if CI in card:
                     if COM == [] and CI != []:
                         COM.append(K)
-           
+
                     if COM != [] and (K in COM):
                         for CI_ in connect_I:
                             if CI_ in card:
-                                if not(CI_ in COM):
+                                if not (CI_ in COM):
                                     COM.append(CI_)
             for CO in connect_O:
-                        
+
                 if CO in card:
                     if COM == [] and CO != []:
                         COM.append(K)
-                        
+
                     if COM != [] and (K in COM):
                         for CO_ in connect_O:
                             if CO_ in card:
-                                if not(CO_ in COM):
+                                if not (CO_ in COM):
                                     COM.append(CO_)
-                                    
-                                      
-    C[4],C[5],C[6],C[9],C[10] = False,False,False,False,False
-    if not('up' in PATH):
-        C = [not(val) for val in C]
-    
+
+    C[4], C[5], C[6], C[9], C[10] = False, False, False, False, False
+    if not ('up' in PATH):
+        C = [not val for val in C]
+
     lock = [val for val in C]
-        
-    C[3],C[7],C[8],C[9],C[10] = False,False,False,False,False
-    if not('down'in PATH):
-        C = [not(c) if l == True else False for l,c in zip(lock,C)]
-    
+
+    C[3], C[7], C[8], C[9], C[10] = False, False, False, False, False
+    if not ('down' in PATH):
+        C = [not c if l == True else False for l, c in zip(lock, C)]
+
     lock = [val for val in C]
-        
-    C[1],C[5],C[7],C[9],C[11] = False,False,False,False,False
-    if not('left' in PATH):
-        C = [not(c) if l == True else False for l,c in zip(lock,C)]
-    
+
+    C[1], C[5], C[7], C[9], C[11] = False, False, False, False, False
+    if not ('left' in PATH):
+        C = [not c if l == True else False for l, c in zip(lock, C)]
+
     lock = [val for val in C]
-        
-    C[2],C[6],C[8],C[9],C[11] = False,False,False,False,False
-    if not('right' in PATH):
-        C = [not(c) if l == True else False for l,c in zip(lock,C)]
-    
+
+    C[2], C[6], C[8], C[9], C[11] = False, False, False, False, False
+    if not ('right' in PATH):
+        C = [not (c) if l == True else False for l, c in zip(lock, C)]
+
     if len(COM) == 4:
         C = [False for val in C]
-        C[0]  = True 
-        
+        C[0] = True
 
-    if len(COM)== 2 and C[12]:
-        C = [False for val in C] 
+    if len(COM) == 2 and C[12]:
+        C = [False for val in C]
         NAME = [K.name for K in COM]
 
         if "up" in NAME and "left" in NAME or "down" in NAME and "right" in NAME:
-            C[12] = True  
+            C[12] = True
         elif "up" in NAME and "right" in NAME or "down" in NAME and "left" in NAME:
             C[13] = True
         elif "up" in NAME and "down" in NAME or "right" in NAME and "left" in NAME:
-            C[11]= True
-            
+            C[11] = True
+
     if len(COM) == 0:
         C = [False for val in C]
         C[9] = True
 
-            
-    center = "╬"*C[0] + "╠"*C[1] + "╣"*C[2] + "╩"*C[3] + "╦"*C[4] + "╔"*C[5] + "╗"*C[6] + "╚"*C[7] + "╝"*C[8] + "░"*C[9] + "═"*C[10]+"║"*C[11] + '▚'*C[12] + '▞'*C[13]
+    center = "╬" * C[0] + "╠" * C[1] + "╣" * C[2] + "╩" * C[3] + "╦" * C[4] + "╔" * C[5] + "╗" * C[6] + "╚" * C[
+        7] + "╝" * C[8] + "░" * C[9] + "═" * C[10] + "║" * C[11] + '▚' * C[12] + '▞' * C[13]
     if special == 'DOOR':
         center = 'G'
         if name == 'DOOR_B':
             center = 'B'
 
-            
     if special == 'cristaux':
         center = 'C'
     if special == 'START':
@@ -556,12 +598,11 @@ def aff_ch(card,special,name):
         center = 'G'
     if special == 'PIERRE':
         center = 'P'
-    
-    aff1 = "┏━"+ ("║" if "up" in PATH else "━") + "━┓" 
-    aff2 = "┃ "+ ("║" if "up" in PATH else " ") + " ┃" 
-    aff3 = ("══" if "left" in PATH else "┃ ")+ center + ("══" if "right" in PATH else " ┃") 
-    aff4 = "┃ "+("║" if "down" in PATH else " ")+ " ┃" 
-    aff5 = "┗━"+("║" if "down" in PATH else "━")+ "━┛" 
 
-    return [aff1,aff2,aff3,aff4,aff5] 
- 
+    aff1 = "┏━" + ("║" if "up" in PATH else "━") + "━┓"
+    aff2 = "┃ " + ("║" if "up" in PATH else " ") + " ┃"
+    aff3 = ("══" if "left" in PATH else "┃ ") + center + ("══" if "right" in PATH else " ┃")
+    aff4 = "┃ " + ("║" if "down" in PATH else " ") + " ┃"
+    aff5 = "┗━" + ("║" if "down" in PATH else "━") + "━┛"
+
+    return [aff1, aff2, aff3, aff4, aff5]
