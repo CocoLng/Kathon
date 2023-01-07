@@ -120,66 +120,27 @@ class ConnectionEdge:
 # les chemins j'usqua l'objet source
     
     def reconstruc_path(self,source_flag):
-        if not(self.is_check):
             in_out = [self.outputo[i] if i < len(self.outputo) else self.inputo[i-len(self.outputo)-1] for i in range(len(self.outputo)+len(self.inputo))]
             # melange les input et les output de l'objet et les redefinies
             # en fonction de la direction de la source
             # par la suite on isoleras la source et considererons que tous les autres ports
-            # de l'objet sont des output de ce dernier si il a plus d'une output on serat sur un noeud
-            # le programe commnceras par explorer une direction de ce noeud une fois l'exploration de la ligne terminé
-            # nous retournons sur le noeud et explorons une autre direction
-            self.is_check = True   
+            # de l'objet sont des output de ce dernier 
+            # la recontstruction de chemin ce base sur le fait que si le prochaine
+            # segment de chemin est deja connecté a la source recheché on ce permet de 
+            # l'ignorer et de continuer a parcourir les ports de no blocs
+
             
             for i in in_out:
-                if i.WARNING == 0:
-                    if not(i.is_check): 
-                        if not(i.source):
-                            if i != source_flag:
-                                print(self.name,i.name)
-                                #on verifie si l'objet suivent a deja ete verifier par le programme  
-                                # on detruit les chemins existent &aavant de 
-                                # les reconnecter a fin d'eviter une copie des input/output dans l'objet
-                                self.disconnect(i)
-                                i.connect(self)
-                                #si il ne la pas ete on continue la recontruction de chemin
-                                i.reconstruc_path(self)
-                                    
-                            else:
-                                # si on detect que 'i' correspond a la source on indique on programe
-                                # que l'on veut que 'i' soit l'input de notre objet
-                                self.disconnect(i)
-                                if not(self.source):
-                                    self.connect(i)
-                                else:
-                                    i.connect(self)
-                        else:
-                            
-                            if i == source_flag:
-                                self.disconnect(i)
-                                self.connect(i)
-                            else:
-                                if self != i:    
-                                    self.disconnect(i)
-                                    self.outputo = i
-                                    i.outputo = self
+                if i != source_flag:
+                    i.disconnect(self)
+                    if i.flag_loop == None:               
+                        i.connect(self)
+                        i.reconstruc_path(self)
                     else:
-                        if self in i.inputo:
-                            self.disconnect(i)
-                            self.outputo = i
-                            i.outputo = self
-                        self.WARNING += 1
-
+                        i.output = self
+                        self.outputo = i
                 else:
-                    i.WARNING -= 1  
-                    print(i,i.WARNING)
-                    
-        if self.WARNING > 0:
-            self.WARNING -= 1
-        # permet de gerer les fin de lignes conecter a des noeuds
-        if self.WARNING == 0:
-            self.is_check = False
-        print(self,self.WARNING)
+                    i.disconnect(self)
+                    self.connect(i)
 
-        
-# cette classe serat utilisé afin de gere entre sorti des 
 # cartes chemins ainssi que leurs connections intern
