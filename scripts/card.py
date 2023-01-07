@@ -423,7 +423,9 @@ def DOOR(self):
     
     IO = []
     IND = []
-      
+    for i in self.borders: 
+        i.source = False
+        
     for i in self.borders:
         if i.flag_loop != None:
             IND.append(i.flag_loop)
@@ -431,7 +433,6 @@ def DOOR(self):
         else:
             IND.append(i.flag_loop)
             IO.append(i)
-
     if IND[0] != IND[1]:
     
         if 'START' in IND:
@@ -440,9 +441,7 @@ def DOOR(self):
                 if co != self.name and co != 'START':
                     co.flag = self.name             
             IO[IND.index('START')-1].source = True
-                    
-        elif (self.name in IND) and(None in IND):
-            
+        elif (self.name in IND) and(None in IND):    
             IO[IND.index(self.name)].source = True
         else:
             for co in self.borders:
@@ -454,11 +453,7 @@ def DOOR(self):
                 IO[IND.index('D')].source = True
         for i in self.borders:
             if i.source == True:
-                i.reconstruc_path(i)
-    else:   
-        for i in self.borders: 
-            i.source = False
-            
+                i.reconstruc_path(i)   
             
 def START(self):
     for i in self.borders:
