@@ -116,18 +116,18 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward):
         nb_deleted = 0
         
         if status_win : #les chercheurs ont gagnés
-            for i in range(len(P_list)) :
-                if P_list[i-nb_deleted].role.name[0] != "C" :
-                    del P_list[i-nb_deleted]
-                    nb_deleted +=1
-                    
             Deck_Reward.list_card.sort(key=lambda card: card.pepite, reverse=True)
             if len(P_list)>= 10 :
                 Deck_Reward.list_card.append(Deck_Reward.list_card[-1])#s'il y a 10 joueurs
                 Deck_Reward.list_card[-1].pepite = "0"
             [P_list.append(P_list.pop(0)) for x in P_list if x != P_round[0]]
             P_list.insert(0, P_list.pop()) #Fait repasser le joueur qui a trouver la pépite, devant
+            for i in range(len(P_list)) :
+                if P_list[i-nb_deleted].role.name[0] != "C" :
+                    del P_list[i-nb_deleted]
+                    nb_deleted +=1
             for i,card_reward in enumerate(Deck_Reward.list_card,0):
+                if i== len(P_list)-1 : break
                 P_list[i].score += int(card_reward.pepite)
                 
         else : #les Saboteurs ont gagnés
