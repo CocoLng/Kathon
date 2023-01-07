@@ -73,10 +73,15 @@ class BoardGame:
                     
                     card_p.append(self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)])
                     borders_to_connect.append(card.borders[INTE.index(True)])
-                    
+                    #
+                    for SSS in self.__map_[pos[0]+x_y][pos[1]].borders:
+                        if SSS.flag_loop != None:
+                            print('True',SSS.name)
+                        else:
+                            print('False',SSS.name)   
                     if self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)].flag_loop != None:
                         flag = True
-                else:
+                else:                         
                     print('Probleme lors de la connection des cartes en X')
                     return False  
             except(AttributeError,IndexError,ValueError):
@@ -89,10 +94,14 @@ class BoardGame:
                 INTE = [True if I.name == antipode_d_u[(x_y-1)//2] else False for I in card.borders ] 
 
                 if (True in INTE) == (True in INTE1):
-                    
+                        
                         card_p.append(self.__map_[pos[0]][pos[1]+x_y].borders[INTE1.index(True)])
                         borders_to_connect.append(card.borders[INTE.index(True)])
-
+                        for SSS in self.__map_[pos[0]+x_y][pos[1]].borders:
+                            if SSS.flag_loop != None:
+                                print('True',SSS.name)
+                            else:
+                                print('False',SSS.name)   
                         if self.__map_[pos[0]][pos[1]+x_y].borders[INTE1.index(True)].flag_loop != None:
                             flag = True
                 else:
