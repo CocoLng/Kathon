@@ -92,10 +92,8 @@ class Human():
             for porte in card.borders:
                 if porte.name in antipode_d_u:
                     porte.name = antipode_d_u[antipode_d_u.index(porte.name)-1]
-            
-            for porte in card.borders:
                 if porte.name in antipode_l_r:  
-                    porte.name = porte.name[antipode_l_r.index(porte.name)-1]
+                    porte.name = antipode_l_r[antipode_l_r.index(porte.name)-1]
     
             card.aff = True
         except (IndexError,ValueError):
