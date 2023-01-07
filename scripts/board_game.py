@@ -5,6 +5,8 @@ class BoardGame:
         self.__map_ = [[[]]]
         self.__decalage = [0,0]
         self.L = []
+        
+        self.liste_spe = ['PIERRE','PEPITE']
     
     def __str__(self):
         aff = ""
@@ -76,6 +78,7 @@ class BoardGame:
         
         flag = False
         
+        
         for x_y in [-1,1]:          
           if  pos[0]+x_y >= 0 and pos[0]+x_y < len(self.__map_):
             try:
@@ -90,9 +93,10 @@ class BoardGame:
   
                     if self.__map_[pos[0]+x_y][pos[1]].borders[INTE1.index(True)].flag_loop != None:
                         flag = True
-                else:                         
-                    print('Probleme lors de la connection des cartes en X')
-                    return False  
+                else:
+                    if not(self.__map_[pos[0]+x_y][pos[1]].special in self.liste_spe):                         
+                        print('Probleme lors de la connection des cartes en X')
+                        return False  
             except(AttributeError,IndexError,ValueError):
                 pass
 
@@ -109,15 +113,22 @@ class BoardGame:
                         if self.__map_[pos[0]][pos[1]+x_y].borders[INTE1.index(True)].flag_loop != None:
                             flag = True
                 else:
-                    print('Probleme lors de la connection des cartes en Y')
-                    return False
+                    if not(self.__map_[pos[0]][pos[1]+x_y].special in self.liste_spe):    
+                        print('Probleme lors de la connection des cartes en Y')
+                        return False
             except(AttributeError,IndexError,ValueError):
                 pass
-            
-        if not(flag):
-            print('Non connecté au start')
-            return False
-        
+                
+            if not(flag):
+                print('Non connecté au start')
+
+                return False
+        for x_y in [-1,1]:
+             if self.__map_[pos[0]][pos[1]+x_y] != []: 
+                  self.__map_[pos[0]][pos[1]+x_y].reveal = True
+             if self.__map_[pos[0]+x_y][pos[1]] != []:
+                  self.__map_[pos[0]+x_y][pos[1]].reveal = True
+             
         for exterieur,interieur in zip(card_p,borders_to_connect):
             interieur.connect(exterieur)
 
