@@ -117,10 +117,11 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward):
         nb_deleted = 0
         
         if status_win : #les chercheurs ont gagnés
-            for i,player in enumerate(P_list,0) :
-                if player.role != "Chercheur" : 
+            for i in range(len(P_list)) :
+                if P_list[i-nb_deleted].role.name[0] != "C" :
                     del P_list[i-nb_deleted]
                     nb_deleted +=1
+                    
             Deck_Reward.list_card.sort(key=lambda card: card.pepite, reverse=True)
             if len(P_list)>= 10 :
                 Deck_Reward.list_card.append(Deck_Reward.list_card[-1])#s'il y a 10 joueurs
@@ -132,13 +133,10 @@ def reward_time(extension,P_list,P_round,status_win,Deck_Reward):
                 
         else : #les Saboteurs ont gagnés
             [print(player.name) for player in P_list]
-            print("splor")
             for i in range(len(P_list)) :
-                if P_list[i-nb_deleted].role.name != "Saboteur" : 
-                    print("DELETE :",P_list[i-nb_deleted].role.name,P_list[i-nb_deleted].name,"nb;",nb_deleted)
+                if P_list[i-nb_deleted].role.name[0] != "S" : 
                     del P_list[i-nb_deleted]
                     nb_deleted +=1
-            [print(player.name) for player in P_list]
             nb_pepites = 4-len(P_list)//2
             for player in P_list :
                 player.score += int(nb_pepites)
