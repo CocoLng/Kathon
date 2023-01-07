@@ -15,7 +15,7 @@ class Main:  # Classe principale
         self.list_players = self.init_player()
         while self.recap:
             p_list = self.list_players.copy()
-            game.game_handler(p_list,self.extension)
+            game.game_handler(p_list, self.extension)
             self.nb_manches += 1
         exit()
 
