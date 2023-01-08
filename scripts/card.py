@@ -370,15 +370,15 @@ def secret_plan(self):  # Plan Secret, permet de visualiser une des 3 cartes d'a
     while True:
         print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
         selected = input_player(1, 3)
-        if selected == 1 and not (
+        if selected == 3 and not (
                 self.arg[1].current([8, 2]).reveal):  # on vérifie que la carte n'est pas déja visible, on sait jamais..
-            print(f"\nLa carte du Haut est un/une {self.arg[1].current([8, 2]).name}\n")
+            print(f"\nLa carte du Bas est un/une {self.arg[1].current([8, 2]).name}\n")
             return True
         elif selected == 2 and not self.arg[1].current([8, 0]).reveal:
             print(f"\nLa carte du Milieu est un/une {self.arg[1].current([8, 0]).name}\n")
             return True
-        elif selected == 3 and not self.arg[1].current([8, -2]).reveal:
-            print(f"\nLa carte en Bas est un/une {self.arg[1].current([8, -2]).name}\n")
+        elif selected == 1 and not self.arg[1].current([8, -2]).reveal:
+            print(f"\nLa carte en Haut est un/une {self.arg[1].current([8, -2]).name}\n")
             return True
         print("\nCette carte est deja visible...Veuillez en choisir une autre")
 

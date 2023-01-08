@@ -54,6 +54,7 @@ class Game:
         [(player.status.clear(), player.main.clear()) for player in self.p_round]
         # assignment d'un role à chaque joueur, le deck role est déja mélangé
         for i, player in enumerate(self.p_round, 1): player.role = self.decks[1].list_card[i]
+        
     
     # Gere la répartition des cartes action/chemin entre les joueurs
     def repartition_card(self):
@@ -97,8 +98,8 @@ class Game:
             # Regarde si le joueur suivant est le premier, si oui, nous n'afficherons plus le role du joueur
             if first_player == self.p_round[0].name: first_turn = False
             
-            print("\nFIN de votre tour, analyser la map_game et retenez vos cartes si vous le désirez.")
-            input("Pressez enter quand vous avez fini pour confirmer la fin de votre tour\n...")
+            # print("\nFIN de votre tour, analyser la map_game et retenez vos cartes si vous le désirez.")
+            # input("Pressez enter quand vous avez fini pour confirmer la fin de votre tour\n...")
             
             self.next_player()  # Gere le passage au joueur suivant
     
@@ -106,9 +107,14 @@ class Game:
         """
         p_list va se faire filtrer de manière à conserver uniquement les gagnants du round
         nb_deleted est présent pour eviter de provoquer un décalage d'indice dans la list des joueurs
+        
+        Nous basons la recherche et le triage des gagnants sur le fait que la première lettre de leur role suffit à
+        identifier leur role, "B" = Boss, "C" = Chercheur...
+        Pour l'extension, nous regarderons le nom entier car il contient l'équipe du joueur
         """
         nb_deleted = 0
         if not self.extension:
+            
             if self.gold_found:  # les chercheurs ont gagné
                 self.decks[2].list_card.sort(key=lambda x: x.pepite, reverse=True)
                 if len(self.p_list) >= 10:
@@ -140,6 +146,9 @@ class Game:
             [P_voleur.append(player) for player in self.p_list if
              ("Voleur" in player.status) and not ("Emprisonnement" in player.status)]
             
+            # Check pour des potentiels profiteurs et les stocke dans une liste
+            list_profiteur = list(filter(lambda x: x.role.name == "P", self.p_list))
+            
             # DETECTION DES GEMMES GEOLOGUES
             nb_cristaux = 0
             for map_c in self.map.MAP:
@@ -152,42 +161,51 @@ class Game:
             
             if self.gold_found:  # les Chercheurs gagnent
                 # C'est un role de team qui a fait la connection
-                if self.p_round[0].role.name[0] == "C" or self.p_round[0].role.name[0] == "B":
-                    list_flag = self.map.detect(self.win_card)
-                    if 'START' in list_flag: # S'il n'y a pas de porte sur le chemin
-                        print('les', self.p_round[0].role.name, 'on gagné')
+                list_flag = self.map.detect(self.win_card)
+                if 'START' in list_flag:  # S'il n'y a pas de porte sur le chemin
+                    if self.p_round[0].role.name[0] == "C":
                         self.p_list = list(
-                            filter(lambda x: x.role.name == self.p_round[0].role.name or x.role.name[0] == "B", self.p_list))
+                            filter(lambda x: x.role.name in {self.p_round[0].role.name, 'Boss'},
+                                   self.p_list))
+                    # Si un role spécial trouve la pépite, et qu'il n'y a pas de porte, tout le monde gagne
+                    # Sauf les Saboteurs, si ses derniers trouvent la pépite alors nous avons décidé (pas de règle)
+                    # que tous les chercheurs gagnent
+                    elif self.p_round[0].role.name[0] in {"G", "P", "B", "S"}:
+                        self.p_list = list(
+                            filter(lambda x: x.role.name[0] in {'C', 'B'}, self.p_list))
+                else:
+                    if 'D' in list_flag:  # D pour Double, il y a deux portes de couleurs différentes sur le chemin
+                        if "B" not in self.p_list.role.name[0]:
+                            # Si le Boss n'est pas dans la game, on attribue la victoire aux saboteurs
+                            self.p_list = list(
+                                filter(lambda x: x.role.name[0] == 'S', self.p_list))
+                        else:
+                            self.p_list = list(
+                                filter(lambda x: x.role.name[0] == 'B', self.p_list))
                     
-                    else:
-                        if 'D' in list_flag: # D pour Double, il y a deux portes de couleurs différentes sur le chemin
-                            if not "B" in self.p_list.role.name[0]: # Si le boss n'est pas dans la game, on attribue la victoire aux
-                                # saboteurs
-                                self.p_list = [joueurs for joueurs in self.p_list if 'S' in joueurs.role.name]
-                            else :
-                                self.p_list = [joueurs for joueurs in self.p_list if 'B' in joueurs.role.name]
-                            
-                        elif 'GREEN' in list_flag or 'BLUE' in list_flag:
-                            et = "et"
-                            print(f"l'équipe {[et * (i - 1) + val for i, val in enumerate(list_flag)]} a gagné")
-                            nb_pepites = max(6 - len(self.p_list), 1)
-                            self.p_list = [joueurs for flag in list_flag for joueurs in self.p_list if
-                                           joueurs.role.name in flag or 'boss' in joueurs.role.name]
+                    elif 'GREEN' in list_flag or 'BLUE' in list_flag:
+                        # S'il y a une porte verte ou bleue sur le chemin
+                        self.p_list = list(  # On attribue la victoire aux chercheurs de la bonne couleurs
+                            filter(lambda x: x.role.name in {self.p_list.role.name, 'Boss'},
+                                   self.p_list))
             
             else:  # les saboteurs gagnent
-                self.p_list = list(filter(lambda x: x.role.name[0] == "S" or x.role.name[0] == "P", self.p_list))
+                self.p_list = list(filter(lambda x: x.role.name[0] == "S", self.p_list))
             
-            nb_pepites = max(6 - len(self.p_list), 1)  # Nombre de pépites en fonction du nombre de gagnants
-            for n in range(len(self.p_list)):
-                if self.p_list[n].role.name[0] == "C" or self.p_list[n].role.name[0] == "S":
-                    self.p_list[n].score += int(nb_pepites)
+            # Attribution des points
+            nb_pepites = max(6 - len(self.p_list), 1) + len(list_geologue)  # Nombre de pépites en fonction du nombre
+            # de gagnants
+            for player in self.p_list:
+                if player.role.name[0] in {'C', 'S'}:
+                    player.score += int(nb_pepites)
                 else:
-                    if self.p_list[n].role.name[0] == "B" and nb_pepites >1: self.p_list[n].score += int(nb_pepites)-1
-                    elif nb_pepites > 2 :
-                        self.p_list[n].score += int(nb_pepites) - 2  # les profiteurs gagnent 2 de moins
+                    if player.role.name[0] == "B" and nb_pepites > 1:  # Si le Boss gagne, il gagne un point de moins
+                        player.score += int(nb_pepites) - 1
+                    elif nb_pepites > 2:  # Si le profiteur gagne, il gagne deux points de moins
+                        player.score += int(nb_pepites) - 2  # les profiteurs gagnent 2 de moins
             
             # Liste des joueurs qui ont gagné, pour pouvoir les voler
-            p_gagnant = [x for n in (self.p_list, list_geologue) for x in n]
+            p_gagnant = [x for n in (self.p_list, list_geologue, list_profiteur) for x in n]
             # Si le score est nul, c'est que le gagnant a rien gagné
             # On va le retirer de la list des gagnants de manière à éviter qu'il puisse se faire voler
             # Tour des voleurs
@@ -195,13 +213,18 @@ class Game:
             if len(P_voleur) != 0 and len(p_gagnant) != 0 and not (
                     len(p_gagnant) == 1 and p_gagnant[0] == P_voleur[0]):
                 for player in P_voleur:
-                    self.next_player(P_voleur)  # ne peut voler que les joueurs qui viennent de gagner
-                    print("THIEF TIME hehe\nChoissez à quel gagnant vous souhaitez voler une pépite :\n")
-                    [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
-                     enumerate(p_gagnant, 1) if p_gagnant != player]
-                    selected = input_player(1, len(p_gagnant))
-                    p_gagnant[selected - 1].score -= 1
-                    player.score += 1
+                    self.next_player(P_voleur)  # On passe au voleur suivant
+                    while True:  # ne peut voler que les joueurs qui viennent de gagner
+                        P_voleur.remove(player)
+                        print("THIEF TIME hehe\nChoissez à quel gagnant vous souhaitez voler une pépite :\n")
+                        [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
+                         enumerate(p_gagnant, 1)]
+                        selected = input_player(1, len(p_gagnant))
+                        if p_gagnant[selected - 1].score > 0:
+                            p_gagnant[selected - 1].score -= 1
+                            player.score += 1
+                            P_voleur.append(player)
+                            break
 
 
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre

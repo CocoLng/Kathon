@@ -112,7 +112,7 @@ class Human:  # Classe du joueur humain
             print("Ceci va vous empêchez de posez des cartes chemins tant que vous ne vous en débarrassez pas.\n")
 
         # Si le joueur n'a pas de status, ou que le status est le voleur, alors il peut jouer aussi des cartes chemins
-        print("Voici votre main :")
+        print("\nVoici votre main :")
         [print(f"[{i}] {card.name}") for i, card in enumerate(self.main, 1)]  # Affiche la main du joueur
         options(extension)  # Affiche les options menu du joueur
         if extension:  # Si l'extension est activée, alors on peut défausser 2 cartes pour se retirer un malus

@@ -62,7 +62,7 @@ class Main:  # Classe principale
                     f'❌ Erreur, le nom "{New_input}" est deja utilisé ou trop long (20 charactères max), veuillez en '
                     f'sélectionner un autre.')
                 continue
-            except KeyboardInterrupt: # Si l'arret de la saisie est demandé
+            except KeyboardInterrupt: # Si l'arrêt de la saisie est demandé
                 if (len(self.list_players) < 3 and not self.extension) or (
                         len(self.list_players) < 2 and self.extension):
                     if self.extension: # Si le mode extension est activé, il faut au moins 2 joueurs
