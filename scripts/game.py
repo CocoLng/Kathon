@@ -47,7 +47,7 @@ class Game:
         L = [self.decks[0].draw_card(27) for i in range(3)]
         shuffle(L)  # Permet de mélanger les 3 cartes cachées
         [self.map.add_card(CARD, POS, True) for CARD, POS in zip(L, pos)]  # Ajoute les cartes cachées à la map_game
-        self.decks[0].list_card = self.decks[0].list_card[80:103]
+        #self.decks[0].list_card = self.decks[0].list_card[80:103]
         [shuffle(deck.list_card) for deck in self.decks]  # Mélange les cartes
         
         # Effacement des status et suppression des cartes restantes du précédent round, sécurité, si résidu de pointeur
@@ -200,7 +200,7 @@ class Game:
                         self.p_list[n].score += int(nb_pepites) - 1  # les saboteurs gagnent 1 de moins
                     
             p_gagnant = []
-            [p_gagnant for n in (self.p_list, list_geologue) for x in n]
+            [p_gagnant.append(n) for n in (self.p_list, list_geologue) for x in n]
             # Si le score est nul, c'est que le gagnant a rien gagné
             # On va le retirer de la list des gagnants de manière à éviter qu'il puisse se faire voler
             # Tour des voleurs
@@ -219,7 +219,8 @@ class Game:
 
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre
     # system('cls' if name=='nt' else 'clear')
-    sleep(1)  # Attend 1 seconde pour laisser le temps de clear la console
+    #sleep(1)  # Attend 1 seconde pour laisser le temps de clear la console
+    pass
 
 
 def readfile(path_join, part_explain=0):  # Permet de lire un fichier texte, ici principalement à but d'affichage
