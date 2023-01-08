@@ -10,12 +10,7 @@ class ConnectionEdge:
         self.__source = source
         self.__inputo = []
         self.__outputo = []
-        self.is_check = False
         self.__name = name
-        self.WARNING = 0
-
-    # def __str__(self):
-    #   return self.name
 
     # flag_loop et __flag_ pemettent de recuperer l'information a quelle source
     # est connecté l'objet concerné d'objet connecté a une source
@@ -135,7 +130,6 @@ class ConnectionEdge:
                 if i.flag_loop is None or i.flag_loop != self.flag_loop:
                     i.connect(self)
                     i.reconstruc_path(self)
-
                 else:
                     i.outputo = self
                     self.outputo = i

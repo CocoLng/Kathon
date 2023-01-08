@@ -129,7 +129,6 @@ class CardChemin(Card):
     def delete(self):
         for port in self.borders:
             port.delete_connection()
-        return True
     @property
     def special(self):
         return self.__special

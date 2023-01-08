@@ -119,15 +119,15 @@ target_player (player_targetable : list):player_targetable
 
 class CardChemin{
 +is_start: bool
-+special:
++special:bool
 +reveal: bool
-+config: str
-+port: str
-+borders
-+aff
++config: string
++borders: ConnectionEdge ArrayList
++aff: string
 __
 __inti__(arg : list)
 
+delete(): Void
 aff(update : bool)
 borders(port : list str )
 reveal(reveal : str)
@@ -146,13 +146,12 @@ class ConnectionEdge{
 -outputo: ConnectionEdge ArrayList
 +delet: bool
 +flag: string
-+is_check: bool
 __
-__init__(name :  str , flag = None : str , source : bool): void
-__flag_(start : ConnectionEdge
+__init__(name :  string , flag = None : string , source : bool): void
+__flag_(start : ConnectionEdge):string
 source(source : bool):
-name(name : str)
-flag_loop():str
+name(name : string)
+flag_loop():string
 inputo(obj : ConnectionEdge): void
 outputo(obj : ConnectionEdge): void
 connect(obj : ConnectionEdge): void
