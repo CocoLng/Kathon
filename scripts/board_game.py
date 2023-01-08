@@ -239,7 +239,7 @@ class BoardGame:
             # on ajoute la carte sur un tableau contenant les connection
             # cree par la carte chemin [up,left,down,right]
         if not(admin):
-            if not((pos[0] < -1 or pos[0] > len(self.__map_)+1) and ( pos[1] < -1 or pos[1] > len(self.__map_[0]+1))):
+            if not((pos[0] < -1 or pos[0] > len(self.__map_)+1) and ( pos[1] < -1 or pos[1] > len(self.__map_[0])+1)):
                 if self.card_set(card,[a,b]):
                     print('La pose de carte est reussite!')
                     return True

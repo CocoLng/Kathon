@@ -102,8 +102,12 @@ class CardAction{
 +arg
 __
 +arg
+target_player(player_targetable : list):player_targetable
+}
 
-
+class ConnectionEdge{
 
 }
+
+
 @enduml
