@@ -127,18 +127,17 @@ class ConnectionEdge:
         # la recontstruction de chemin ce base sur le fait que si le prochaine
         # segment de chemin est deja connecté a la source recheché on ce permet de
         # l'ignorer et de continuer a parcourir les ports de no blocs
+
         for i in in_out:
-
+            i.disconnect(self)
             if i != source_flag:
-                i.disconnect(self)
-                if i.flag_loop is None or i.flag_loop != self.flag_loop:
 
+                if i.flag_loop is None or i.flag_loop != self.flag_loop:
                     i.connect(self)
                     i.reconstruc_path(self)
+
                 else:
-                    i.output = self
+                    i.outputo = self
                     self.outputo = i
             else:
-                i.disconnect(self)
                 self.connect(i)
-        print(self.name, self.flag_loop)

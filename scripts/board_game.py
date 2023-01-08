@@ -139,11 +139,11 @@ class BoardGame:
         self.__map_[pos[0]][pos[1]] = card
 
         for i in self.__map_[-self.decalage[0]][-self.decalage[1]].borders:
-            print("--------" +i.name)
             i.reconstruc_path(i)
 
-
-        if card.special == "START" or card.special == 'DOOR':
+        if card.special == "START":
+            self.L.insert(0,[pos[0] + self.decalage[0], pos[1] + self.decalage[1]])
+        if card.special == 'DOOR':
             self.L.append([pos[0] + self.decalage[0],pos[1] + self.decalage[1]])
 
         for posl in self.L:
@@ -161,6 +161,17 @@ class BoardGame:
             else:
                 [i.delete_connection() for i in self.__map_[pos[0]][pos[1]].borders]
                 self.__map_[pos[0]][pos[1]] = []
+
+                for i in self.__map_[-self.decalage[0]][-self.decalage[1]].borders:
+                    i.reconstruc_path(i)
+                i = 0
+                for posl in self.L:
+                    i+= 0
+                    if self.__map_[posl[0] - self.decalage[0]][posl[1] - self.decalage[1]] != []:
+                        self.__map_[posl[0] - self.decalage[0]][posl[1] - self.decalage[1]].effect()
+                    else:
+                        self.L.pop(i)
+                        i-=1
             return True
         else:
             return False
