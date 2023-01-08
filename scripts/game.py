@@ -47,7 +47,7 @@ class Game:
         L = [self.decks[0].draw_card(27) for i in range(3)]
         shuffle(L)  # Permet de mélanger les 3 cartes cachées
         [self.map.add_card(CARD, POS, True) for CARD, POS in zip(L, pos)]  # Ajoute les cartes cachées à la map_game
-        #self.decks[0].list_card = self.decks[0].list_card[80:103]
+        self.decks[0].list_card = self.decks[0].list_card[80:103]
         [shuffle(deck.list_card) for deck in self.decks]  # Mélange les cartes
         
         # Effacement des status et suppression des cartes restantes du précédent round, sécurité, si résidu de pointeur
@@ -148,7 +148,9 @@ class Game:
                 for card in map_c:
                     if card != [] and card.special == "cristaux": nb_cristaux += 1
             list_geologue = list(filter(lambda x: x.role.name[0] == "G", self.p_list))
-            for player in list_geologue : player.score += nb_cristaux/len(list_geologue)
+            # Les geologues gagnent 1 point par cristal, divisé par le nombre de geologues
+            for player in list_geologue : player.score += (nb_cristaux/len(list_geologue))//1 # //1 permet d'arrondir
+            # à l'entier inférieur
             
             if self.gold_found:  # les Chercheurs gagnent
                 for i in self.p_round:
@@ -199,21 +201,21 @@ class Game:
                     else:
                         self.p_list[n].score += int(nb_pepites) - 1  # les saboteurs gagnent 1 de moins
                     
-            p_gagnant = []
-            [p_gagnant.append(n) for n in (self.p_list, list_geologue) for x in n]
+            # Liste des joueurs qui ont gagné, pour pouvoir les voler
+            p_gagnant = [x for n in (self.p_list, list_geologue) for x in n]
             # Si le score est nul, c'est que le gagnant a rien gagné
             # On va le retirer de la list des gagnants de manière à éviter qu'il puisse se faire voler
             # Tour des voleurs
             # S'il y a des voleurs et des gagnants, ou que le seul gagnant n'est pas le seul voleur
-            if len(P_voleur) != 0 and len(self.p_gagnant) != 0 and not (
-                    len(self.p_gagnant) == 1 and self.p_gagnant[0] == P_voleur[0]):
+            if len(P_voleur) != 0 and len(p_gagnant) != 0 and not (
+                    len(p_gagnant) == 1 and p_gagnant[0] == P_voleur[0]):
                 for player in P_voleur:
                     self.next_player(P_voleur)  # ne peut voler que les joueurs qui viennent de gagner
-                    print("THIEF TIME hehe\nChoissiez à quel gagnant vous souhaitez voler une pépite :\n")
+                    print("THIEF TIME hehe\nChoissez à quel gagnant vous souhaitez voler une pépite :\n")
                     [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
-                     enumerate(self.p_gagnant, 1)]
-                    selected = input_player(1, len(self.p_gagnant))
-                    self.p_gagnant[selected - 1].score -= 1
+                     enumerate(p_gagnant, 1) if p_gagnant!=player]
+                    selected = input_player(1, len(p_gagnant))
+                    p_gagnant[selected - 1].score -= 1
                     player.score += 1
 
 
