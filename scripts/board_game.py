@@ -4,8 +4,7 @@ class BoardGame:
         #initialise une carte de X = 0 y = 0
         self.__map_ = [[[]]]
         self.decalage = [0,0]
-        self.L = []
-
+        self.pos_spe = []
         self.liste_spe = ['PIERRE','PEPITE']
     @property
     def MAP (self):
@@ -63,7 +62,7 @@ class BoardGame:
              if not card.borders[0].flag_loop in flag:
                  flag.append(card.borders[0].flag_loop)
 
-        for posl in self.L:
+        for posl in self.pos_spe :
             self.__map_[posl[0]-self.decalage[0]][posl[1]-self.decalage[1]].effect()
             if not(card.borders[0].flag_loop in flag):
                 flag.append(card.borders[0].flag_loop)
@@ -142,11 +141,11 @@ class BoardGame:
             i.reconstruc_path(i)
 
         if card.special == "START":
-            self.L.insert(0,[pos[0] + self.decalage[0], pos[1] + self.decalage[1]])
+            self.pos_spe.insert(0,[pos[0] + self.decalage[0], pos[1] + self.decalage[1]])
         if card.special == 'DOOR':
-            self.L.append([pos[0] + self.decalage[0],pos[1] + self.decalage[1]])
+            self.pos_spe.append([pos[0] + self.decalage[0],pos[1] + self.decalage[1]])
 
-        for posl in self.L:
+        for posl in self.pos_spe:
             self.__map_[posl[0]-self.decalage[0]][posl[1]-self.decalage[1]].effect()
 
         return True
@@ -165,12 +164,12 @@ class BoardGame:
                 for i in self.__map_[-self.decalage[0]][-self.decalage[1]].borders:
                     i.reconstruc_path(i)
                 i = 0
-                for posl in self.L:
+                for posl in self.pos_spe:
                     i+= 0
                     if self.__map_[posl[0] - self.decalage[0]][posl[1] - self.decalage[1]] != []:
                         self.__map_[posl[0] - self.decalage[0]][posl[1] - self.decalage[1]].effect()
                     else:
-                        self.L.pop(i)
+                        self.pos_spe.pop(i)
                         i-=1
             return True
         else:

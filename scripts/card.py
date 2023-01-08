@@ -27,10 +27,10 @@ class Deck:
         self.load_cards(nb_players)
     
     # Permet de piocher une carte
-    def draw_card(self, i=0):  # sert pour la pioche d'une carte
-        # i est le nombre de cartes que l'on souhaite piocher
+    def draw_card(self, indice=0):  # sert pour la pioche d'une carte
+        # indice correspond a quelle carte on veux piocher dans le deck
         if len(self.list_card) == 0: return False
-        return self.list_card.pop(i)  # sinon envoie la première carte et la supprime
+        return self.list_card.pop(indice)  # sinon envoie la première carte et la supprime
     
     # Permet de charger les cartes
     def load_cards(self, nb_players):  # Gere le chargement des cartes en le lisant dans un fichier txt
@@ -88,12 +88,6 @@ class Deck:
                         print("deck avec le nom de propriété indéfinis ! ERREUR")
                         exit()
                     i += 1
-    
-    def __str__(self):
-        res = "o-----o " + self.__class__.__name__ + ":" + self.name + " o-----o"
-        res += "\nCeci est un deck de cartes"
-        return res
-
 
 ###############################################################################
 #                             Structures Cartes                               #

@@ -6,6 +6,7 @@ abstract AbstractCollection
 interface List
 interface Collection
 
+
 List <|-- AbstractList
 Collection <|-- AbstractCollection
 
@@ -27,4 +28,82 @@ recap(self)
 init_players(self)
 }
 
+class BoarGame{
+-map_         #stock la map actuelle
++decalage  # stock l'indice de decalage de la map (permet que l entree reste a l indice x=0 y=0)
++pos_spe #stock la position d'element speciaux qui on besoin d'etre appeler en dans certain cas (permet d'optimiser la gestion des connections entre les cartes)
++liste_spe #stock le nom des elements non destructible du jeu
+__
+__init__()
+__str__():str
+
+detect (card : CartChemin):str
+card_set (card : CartChemin , pos : list of int): bool
+del_card (pos : list of int): bool
+add_card (card : CartChemin, pos : list of int,admin : bool): bool
+current (pos : list of int):CardChemin
+
+@getter
+MAP ():list CardChemin
+}
+
+class Deck{
++name
++extension
++replace
++list_cards
++load_cards
+__
+__init__()
+draw_card (indice : int):CardChemin
+load_card (nb_players : int):void
+}
+
+class Card{
++name
++description
+__
+__init__(name :  str ,description : str)
+__str__():str
+
+}
+
+
+class CardChemin{
++is_start
++special
++reveal
++config
++port
++borders
++aff
+__
+__inti__(arg : list)
+
+aff(update : bool)
+borders(port : list str )
+reveal(reveal : str)
+is_start(is_start : str)
+special(special : str)
+
+}
+
+class CardRole{
+__
+__init__(
+}
+
+class CardReward{
++pepipte
+}
+
+class CardAction{
++effect
++arg
+__
++arg
+
+
+
+}
 @enduml
