@@ -355,9 +355,19 @@ def impact_tools(self):
 ###############################################################################
 
 def collapsing(self):  # Avalanche/Éboulement
-    pos = self.arg[0][0].ask_pos()
-    if not pos: return False
-    return self.arg[1].del_card(pos)
+    while True:
+        VAL = input(f'chosir x entre {self.arg[1].decalage[0]} et {len(self.arg[1].MAP)+self.arg[1].decalage[0]-1}\n'
+                      f'chosir y entre {self.arg[1].decalage[1]} et {len(self.arg[1].MAP[0]+self.arg[1].decalage[1]-1)}\n'
+                      ' x y:\n')
+        VAL =VAL.split(' ')
+        if VAL == 'stop' :
+            return False
+        try:
+            VAL = [int(i) for i in VAL]
+            break
+        except ValueError:
+            print('incorrect value')
+    return self.arg[1].del_card(VAL)
 
 
 def secret_plan(self):  # Plan Secret, permet de visualiser une des 3 cartes d'arrivée
