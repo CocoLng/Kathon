@@ -1,9 +1,9 @@
 @startuml
 'https://plantuml.com/class-diagram
 class Main {
-+extension
-+list_players
-+nb_manches
++extension: bool
++list_players: Player List
++nb_manches: int
 __
 __init__()
 recap(): bool
@@ -14,78 +14,76 @@ run_game(): True
 Game "1" <-->  "1" Main
 
 class Game{
-+extension
-+p_list
-+p_round
-+deck
-+win_card
-+map
-+gold_found
++extension: bool
++p_list: player List
++p_round: player List
++deck: Card ArrayList
++win_card: Card
++map: CardChemin ArrayList
++gold_found: bool
 __
 __init__(main : Main ): void
-next_player( next_player = None : player):void
+next_player( next_player = None : Player):void
 init_round(): void
 repartition_card(): void
 run_round(): void
 reward_time(): void
 }
 
-Game *- BoarGame
-Game *- Human
-Game *- "3" Deck
+Game"1" *- BoarGame
+Game"1..12" *- Player
+Game"3" *- Deck
 
 
 
 class BoarGame{
--map_
-+decalage
-+pos_spe
-+liste_spe
+-map_: string ArrayList
++decalage: int list
++pos_spe: int ArrayList
++liste_spe: string list
 __
 __init__()
 __str__():str
-
 detect (card : CartChemin):str
 card_set (card : CartChemin , pos : list of int): bool
 del_card (pos : list of int): bool
 add_card (card : CartChemin, pos : list of int,admin : bool): bool
 current (pos : list of int): CardChemin
 }
-BoarGame "4..*" *-- Card
+BoarGame "4..*" o-- Card
 
-class Human{
-+score
-+name
-+role
-+main
-+status
+class Player{
++score: int
++name: string
++role: CardRole
++main: Card List
++status: string
 __
-__init__(name,str): void
+__init__(name,string): void
 del_card(extension=False : bool, deck=None : ArrayList, quantitee=1 : int): bool
-play(p_list : ArrayList, map_game :ArrayList:, extension : bool, deck : ArrayList ): bool
-get_card(deck : ArrayList,nbr_tirage :int): bool
+play(p_list :Player List, map_game :ArrayList:, extension : bool, deck : ArrayList): bool
+get_card(deck : Card List,nbr_tirage :int): bool
 }
-Human"5" -- Card
+Player --> "0..5" Card
 
 
 class Deck{
-+name
-+extension
-+replace
-+list_cards
-+load_cards
++name: string
++extension: bool
++replace: bool
++list_cards: Card List
 __
 __init__()
 draw_card (indice : int):CardChemin
 load_card (nb_players : int):void
 }
-Deck "1..*" *-- Card
+Deck --> "1..*" Card
 
 
 
 abstract class Card{
-+name
-+description
++name: string
++description: string
 __
 __init__(name :  str ,description : str)
 __str__():str
@@ -102,16 +100,16 @@ __inti__(name : str, description : str): void
 }
 
 class CardReward{
-+pepipte
++pepipte: string
 __
 __init__(name : str,description : str,pepite : str): void
 }
 
 class CardAction{
-+effect
-+arg
++effect: Methode
++arg: string ArrayList
 __
-__init__(name : str, description : str, effect : str ,arg = None : list)
+__init__(name : string, description : string, effect : string ,arg = None : string ArrayList)
 target_player (player_targetable : list):player_targetable
 }
 
@@ -125,14 +123,14 @@ class CardChemin{
 +borders: ConnectionEdge ArrayList
 +aff: string
 __
-__inti__(arg : list)
+__inti__(arg : string list)
 
 delete(): Void
 aff(update : bool)
-borders(port : list str )
-reveal(reveal : str)
-is_start(is_start : str)
-special(special : str)
+borders(port : string list  )
+reveal(reveal : string)
+is_start(is_start : string)
+special(special : string)
 
 }
 CardChemin"1..*" *- ConnectionEdge
@@ -142,8 +140,8 @@ CardChemin"1..*" *- ConnectionEdge
 class ConnectionEdge{
 -name: string
 -source: bool
--inputo: ConnectionEdge ArrayList
--outputo: ConnectionEdge ArrayList
+-inputo: ConnectionEdge List
+-outputo: ConnectionEdge List
 +delet: bool
 +flag: string
 __
