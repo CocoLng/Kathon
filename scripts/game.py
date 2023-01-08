@@ -151,8 +151,6 @@ class Game:
             # d'arrondir à l'entier inférieur
             
             if self.gold_found:  # les Chercheurs gagnent
-                for i in self.p_round:
-                    print(i.role.name)
                 # C'est un role de team qui a fait la connection
                 if self.p_round[0].role.name[0] == "C" or self.p_round[0].role.name[0] == "B":
                     list_flag = self.map.detect(self.win_card)
@@ -160,46 +158,33 @@ class Game:
                         print('les', self.p_round[0].role.name, 'on gagné')
                         self.p_list = list(
                             filter(lambda x: x.role.name == self.p_round[0].role.name or x.role.name[0] == "B", self.p_list))
-                        nb_pepites = max(6 - len(self.p_list), 1)
-                        for n in self.p_list: # Attribution des points
-                            if n.role.name != 'boss':
-                                n.score += int(nb_pepites)
-                            else:
-                                n.score += int(nb_pepites) - 1
-                            print(f'le joueur {n.name} est victorieux et a {n.score} il était {n.role.name}')
+                    
                     else:
                         if 'D' in list_flag: # D pour Double, il y a deux portes de couleurs différentes sur le chemin
-                            self.p_list = [joueurs for joueurs in self.p_list if 'boss' in joueurs.role.name]
-                            if not self.p_list: # Si le boss n'est pas dans la game, on attribue la victoire aux
+                            if not "B" in self.p_list.role.name[0]: # Si le boss n'est pas dans la game, on attribue la victoire aux
                                 # saboteurs
-                                self.p_list = [joueurs for joueurs in self.p_list if 'sabo' in joueurs.role.name] #PLIST EST VIDE
-                            nb_pepites = max(6 - len(self.p_list), 1)
-                            for n in self.p_list:
-                                n.score += int(nb_pepites) - 1
-                                print(f'le joueur {n.name} est victorieux et a {n.score} il était {n.role.name}')
-                        
+                                self.p_list = [joueurs for joueurs in self.p_list if 'S' in joueurs.role.name]
+                            else :
+                                self.p_list = [joueurs for joueurs in self.p_list if 'B' in joueurs.role.name]
+                            
                         elif 'GREEN' in list_flag or 'BLUE' in list_flag:
                             et = "et"
                             print(f"l'équipe {[et * (i - 1) + val for i, val in enumerate(list_flag)]} a gagné")
                             nb_pepites = max(6 - len(self.p_list), 1)
                             self.p_list = [joueurs for flag in list_flag for joueurs in self.p_list if
                                            joueurs.role.name in flag or 'boss' in joueurs.role.name]
-                            for n in self.p_list:
-                                if n.role.name != 'boss':
-                                    n.score += int(nb_pepites)
-                                else:
-                                    n.score += int(nb_pepites) - 1
-                                print(f'le joueur {n.name} est victorieux et a {n.score} il était {n.role.name}')
             
             else:  # les saboteurs gagnent
                 self.p_list = list(filter(lambda x: x.role.name[0] == "S" or x.role.name[0] == "P", self.p_list))
-                
-                nb_pepites = max(6 - len(self.p_list), 1)  # Nombre de pépites en fonction du nombre de gagnants
-                for n in range(len(self.p_list)):
-                    if self.p_list[n].role.name[0] == "S":
-                        self.p_list[n].score += int(nb_pepites)
-                    else:
-                        self.p_list[n].score += int(nb_pepites) - 1  # les saboteurs gagnent 1 de moins
+            
+            nb_pepites = max(6 - len(self.p_list), 1)  # Nombre de pépites en fonction du nombre de gagnants
+            for n in range(len(self.p_list)):
+                if self.p_list[n].role.name[0] == "C" or self.p_list[n].role.name[0] == "S":
+                    self.p_list[n].score += int(nb_pepites)
+                else:
+                    if self.p_list[n].role.name[0] == "B" and nb_pepites >1: self.p_list[n].score += int(nb_pepites)-1
+                    elif nb_pepites > 2 :
+                        self.p_list[n].score += int(nb_pepites) - 2  # les profiteurs gagnent 2 de moins
             
             # Liste des joueurs qui ont gagné, pour pouvoir les voler
             p_gagnant = [x for n in (self.p_list, list_geologue) for x in n]
