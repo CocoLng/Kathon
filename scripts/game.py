@@ -47,7 +47,7 @@ class Game:
         L = [self.decks[0].draw_card(27) for i in range(3)]
         shuffle(L)  # Permet de mélanger les 3 cartes cachées
         [self.map.add_card(CARD, POS, True) for CARD, POS in zip(L, pos)]  # Ajoute les cartes cachées à la map_game
-        self.decks[0].list_card = self.decks[0].list_card[80:103]
+        #self.decks[0].list_card = self.decks[0].list_card[80:103]
         [shuffle(deck.list_card) for deck in self.decks]  # Mélange les cartes
         
         # Effacement des status et suppression des cartes restantes du précédent round, sécurité, si résidu de pointeur
