@@ -71,16 +71,16 @@ class Deck:
                             [self.list_card.append(CardChemin(line)) for i in range(int(line[0]))]
                     elif status == "ROLE":
                         if not self.extension:
-                            nb = 3  # le nombre de chercheurs de base est défini à 3
+                            nb = 3  # le nombre de chercheurs de base est défini à trois
                             if nb_players == 4: nb += 1  # s'il y a quatre joueurs, nous passons à 4 chercheurs
                             while nb / nb_players < 0.7: nb += 1  # la proportion de chercheur doit toujours est au
                             # moins de 70% dans la manche
-                            if line[2] == "saboteur": nb = (nb_players - nb) + 1  # formule pour obtenir le nombre de
+                            if line[0][0] == "S": nb = (nb_players - nb) + 1  # formule pour obtenir le nombre de
                             # saboteur
-                            self.list_card += nb * [CardRole(line[0], line[1], line[2])]
+                            self.list_card += nb * [CardRole(line[0], line[1])]
                         else:  # Quand l'extension est activée nous chargeons toutes les cartes, peu importe le nb
                             # de joueurs
-                            self.list_card += int(line[0]) * [CardRole(line[1], line[2], line[3])]
+                            self.list_card += int(line[0]) * [CardRole(line[1], line[2])]
                     
                     elif status == "REWARD":
                         self.list_card += int(line[0]) * [CardReward(line[1], line[2], line[3])]
@@ -197,9 +197,8 @@ class CardChemin(Card):
 
 class CardRole(Card):
     # Permet de créer une carte rôle
-    def __init__(self, name, description, role):
+    def __init__(self, name, description):
         super().__init__(name, description)
-        self.role = role
 
 
 class CardReward(Card):
@@ -234,8 +233,9 @@ class CardAction(Card):
     
     def target_player(self, list_player_targetable):
         print(f'Sur quel joueur voulez vous appliquer {self.name}')
-        [print(i, ': ', x.name, sep='', end='  ') for i, x in
+        [print('┃', i, ': ', x.name, sep=' ', end='┃') for i, x in
          enumerate(list_player_targetable, 1)]  # laisse le joueur pouvoir se cibler
+        print("\n")
         return list_player_targetable[input_player(1, len(list_player_targetable)) - 1]
 
 
@@ -462,7 +462,7 @@ def thief_handler(self):
     list_Player_targetable = []
     [list_Player_targetable.append(player) for player in self.arg[0] if "Voleur" in player.status]
     if len(list_Player_targetable) == 0:
-        print("\nPersonne n'as le statut de voleur.... Veuillez faire une autre choix\n")
+        print("\nPersonne n'as le statut de voleur.... Veuillez faire un autre choix\n")
         return False
     Target_P = self.target_player(list_Player_targetable)
     return edit_status(False, "Voleur", Target_P)

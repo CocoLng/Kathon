@@ -153,8 +153,9 @@ class Human:  # Classe du joueur humain
                         print("[1] Continuer\n[2] Tourner la carte\n[3] Retour selection")
                         rep = input_player(1, 3)
                         if rep == 1: # Si le joueur veut jouer la carte
+                            print(self.map)
                             pos = ask_pos()
-                            if pos and map_game.add_card(card, pos): # Si la carte a été posé, on la retire de la main
+                            if pos and map_game.add_card(card, pos): # Si la carte a été posée, on la retire de la main
                                 self.main.remove(card)
                                 return True
                             else:

@@ -110,7 +110,7 @@ class Game:
         nb_deleted = 0
         if not self.extension:
             if self.gold_found:  # les chercheurs ont gagné
-                self.decks[2].list_card.sort(key=lambda card: card.pepite, reverse=True)
+                self.decks[2].list_card.sort(key=lambda x: x.pepite, reverse=True)
                 if len(self.p_list) >= 10:
                     self.decks[2].list_card.append(self.decks[2].list_card[-1])  # s'il y a 10 joueurs
                     self.decks[2].list_card[-1].pepite = "0"
@@ -133,7 +133,7 @@ class Game:
                 for player in self.p_list:
                     player.score += int(nb_pepites)
         
-        else: # Si l'extension est activée
+        else:  # Si l'extension est activée
             
             # Check pour des potentiels voleurs
             P_voleur = []
@@ -142,36 +142,37 @@ class Game:
             
             # DETECTION DES GEMMES GEOLOGUES
             nb_cristaux = 0
-            card = None
             for map_c in self.map.MAP:
                 for card in map_c:
                     if card != [] and card.special == "cristaux": nb_cristaux += 1
             list_geologue = list(filter(lambda x: x.role.name[0] == "G", self.p_list))
             # Les geologues gagnent 1 point par cristal, divisé par le nombre de geologues
-            for player in list_geologue : player.score += (nb_cristaux/len(list_geologue))//1 # //1 permet d'arrondir
-            # à l'entier inférieur
+            for player in list_geologue: player.score += int((nb_cristaux / len(list_geologue)) // 1)  # //1 permet
+            # d'arrondir à l'entier inférieur
             
             if self.gold_found:  # les Chercheurs gagnent
                 for i in self.p_round:
                     print(i.role.name)
-                if self.p_round[0].role.name[0] != "C":  # C'est un role spécial qui a fait la connection
+                # C'est un role de team qui a fait la connection
+                if self.p_round[0].role.name[0] == "C" or self.p_round[0].role.name[0] == "B":
                     list_flag = self.map.detect(self.win_card)
-                    if 'START' in list_flag:
+                    if 'START' in list_flag: # S'il n'y a pas de porte sur le chemin
                         print('les', self.p_round[0].role.name, 'on gagné')
-                        self.p_list = [joueurs for joueurs in self.p_list if
-                                       self.p_round[0].role.name == joueurs.role.name]
+                        self.p_list = list(
+                            filter(lambda x: x.role.name == self.p_round[0].role.name or x.role.name[0] == "B", self.p_list))
                         nb_pepites = max(6 - len(self.p_list), 1)
-                        for n in self.p_list:
+                        for n in self.p_list: # Attribution des points
                             if n.role.name != 'boss':
                                 n.score += int(nb_pepites)
                             else:
                                 n.score += int(nb_pepites) - 1
                             print(f'le joueur {n.name} est victorieux et a {n.score} il était {n.role.name}')
                     else:
-                        if 'D' in list_flag:
+                        if 'D' in list_flag: # D pour Double, il y a deux portes de couleurs différentes sur le chemin
                             self.p_list = [joueurs for joueurs in self.p_list if 'boss' in joueurs.role.name]
-                            if not self.p_list:
-                                self.p_list = [joueurs for joueurs in self.p_list if 'sabo' in joueurs.role.name]
+                            if not self.p_list: # Si le boss n'est pas dans la game, on attribue la victoire aux
+                                # saboteurs
+                                self.p_list = [joueurs for joueurs in self.p_list if 'sabo' in joueurs.role.name] #PLIST EST VIDE
                             nb_pepites = max(6 - len(self.p_list), 1)
                             for n in self.p_list:
                                 n.score += int(nb_pepites) - 1
@@ -199,7 +200,7 @@ class Game:
                         self.p_list[n].score += int(nb_pepites)
                     else:
                         self.p_list[n].score += int(nb_pepites) - 1  # les saboteurs gagnent 1 de moins
-                    
+            
             # Liste des joueurs qui ont gagné, pour pouvoir les voler
             p_gagnant = [x for n in (self.p_list, list_geologue) for x in n]
             # Si le score est nul, c'est que le gagnant a rien gagné
@@ -212,7 +213,7 @@ class Game:
                     self.next_player(P_voleur)  # ne peut voler que les joueurs qui viennent de gagner
                     print("THIEF TIME hehe\nChoissez à quel gagnant vous souhaitez voler une pépite :\n")
                     [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
-                     enumerate(p_gagnant, 1) if p_gagnant!=player]
+                     enumerate(p_gagnant, 1) if p_gagnant != player]
                     selected = input_player(1, len(p_gagnant))
                     p_gagnant[selected - 1].score -= 1
                     player.score += 1
@@ -220,7 +221,7 @@ class Game:
 
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre
     # system('cls' if name=='nt' else 'clear')
-    #sleep(1)  # Attend 1 seconde pour laisser le temps de clear la console
+    # sleep(1)  # Attend 1 seconde pour laisser le temps de clear la console
     pass
 
 
