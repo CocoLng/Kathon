@@ -127,7 +127,10 @@ class CardChemin(Card):
     
     # La carte chemin est lu par le boardgame, player
     # Il y a des conditions sur comment ses valeurs sont attribuées, d'où l'usage de setter
-    
+    def delete(self):
+        for port in self.borders:
+            port.delete_connection()
+        return True
     @property
     def special(self):
         return self.__special
@@ -354,7 +357,7 @@ def collapsing(self):  # Avalanche/Éboulement
         VAL = input(
             f'Chosir x entre {self.arg[1].decalage[0]} et {len(self.arg[1].MAP) + self.arg[1].decalage[0] - 1}\n'
             f'Chosir y entre {self.arg[1].decalage[1]} et {len(self.arg[1].MAP[0]) + self.arg[1].decalage[1] - 1}\n'
-            ' x y:\n')
+            'x y:\n')
         VAL = VAL.split(' ')
         if VAL == 'stop':
             return False

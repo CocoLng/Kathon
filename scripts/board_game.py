@@ -155,10 +155,11 @@ class BoardGame:
     def del_card(self,pos):
         pos = [po-deca for deca,po in zip(self.decalage,pos)]
         if self.__map_[pos[0]][pos[1]] != []:
-            if self.__map_[pos[0]][pos[1]].special == 'ENTREE' or self.__map_[pos[0]][pos[1]].special == 'PIERRE' or self.__map_[pos[0]][pos[1]].special == 'GOLD':
+            if self.__map_[pos[0]][pos[1]].special in ['PIERRE','PEPITE','ENTREE']:
                 print("Vous ne pouvez pas detruire une carte special")
+                return False
             else:
-                [i.delete_connection() for i in self.__map_[pos[0]][pos[1]].borders]
+                self.__map_[pos[0]][pos[1]].delete()
                 self.__map_[pos[0]][pos[1]] = []
 
                 for i in self.__map_[-self.decalage[0]][-self.decalage[1]].borders:
