@@ -25,13 +25,13 @@ class Deck:
         self.list_card = []
         # Appel de la fonction qui charge les cartes
         self.load_cards(nb_players)
-
+    
     # Permet de piocher une carte
     def draw_card(self, i=0):  # sert pour la pioche d'une carte
         # i est le nombre de cartes que l'on souhaite piocher
         if len(self.list_card) == 0: return False
         return self.list_card.pop(i)  # sinon envoie la première carte et la supprime
-
+    
     # Permet de charger les cartes
     def load_cards(self, nb_players):  # Gere le chargement des cartes en le lisant dans un fichier txt
         i = 1
@@ -81,14 +81,14 @@ class Deck:
                         else:  # Quand l'extension est activée nous chargeons toutes les cartes, peu importe le nb
                             # de joueurs
                             self.list_card += int(line[0]) * [CardRole(line[1], line[2], line[3])]
-
+                    
                     elif status == "REWARD":
                         self.list_card += int(line[0]) * [CardReward(line[1], line[2], line[3])]
                     else:  # Sert à savoir si le nom saisi est faux, utile pour debug
                         print("deck avec le nom de propriété indéfinis ! ERREUR")
                         exit()
                     i += 1
-
+    
     def __str__(self):
         res = "o-----o " + self.__class__.__name__ + ":" + self.name + " o-----o"
         res += "\nCeci est un deck de cartes"
@@ -103,7 +103,7 @@ class Card(ABC):  # Classe abstraite qui sert de base pour les cartes
     def __init__(self, name, description):  # chaque carte possède un nom et une description
         self.name = name
         self.description = description
-
+    
     def __str__(self):
         A = len(self.description) // 2
         res = "o-----o " + self.name + " o-----o"
@@ -119,7 +119,7 @@ class CardChemin(Card):
     def __init__(self, arg):
         # arg contient toute la ligne lu dans cardinit.txt
         super().__init__(arg[1], arg[2])
-
+        
         self.is_start = arg  # Si la carte est une carte de spawn
         self.special = arg  # Si la carte possède un effet spécial
         self.reveal = arg  # Si la carte est révélée
@@ -130,34 +130,34 @@ class CardChemin(Card):
         if len(arg) >= 9:
             if arg[8]:
                 self.effect = MethodType(globals()[self.special], self)
-
+    
     # La carte chemin est lu par le boardgame, player
     # Il y a des conditions sur comment ses valeurs sont attribuées, d'où l'usage de setter
-
+    
     @property
     def special(self):
         return self.__special
-
+    
     @special.setter
     def special(self, special):
         self.__special = None
         if len(special) >= 7:
             self.__special = special[6]  # non destructible si special, spawn et gold
-
+    
     @property
     def is_start(self):
         return self.__is_start
-
+    
     @is_start.setter
     def is_start(self, is_start):
         self.__is_start = False
         if len(is_start) >= 8:
             self.__is_start = bool(is_start[7])
-
+    
     @property
     def reveal(self):
         return self.__reveal
-
+    
     @reveal.setter
     def reveal(self, reveal):
         # soit bool, soit list
@@ -168,24 +168,24 @@ class CardChemin(Card):
                     self.__reveal = False
         except TypeError:
             self.__reveal = reveal
-
+    
     @property
     def borders(self):
         return self.__borders
-
+    
     @borders.setter
     def borders(self, port):
         self.__borders = []
         [self.__borders.append(ConnectionEdge(i, self.special, self.special == 'START')) for i in port]
         for chemins, portes in zip(self.config, self.borders):
             [portes.connect(portes_) for connections, portes_ in zip(chemins, self.borders) if int(connections) == 1]
-
+    
     @property
     def aff(self):
         if self.reveal:
             return self.__aff
         return ["┏━━━┓", "┃   ┃", "┃   ┃", "┃   ┃", "┗━━━┛"]
-
+    
     @aff.setter
     def aff(self, update):
         self.__aff = aff_ch(self.borders, self.special, self.name)
@@ -214,14 +214,14 @@ class CardAction(Card):
     def __init__(self, name, description, effect,
                  arg=None):  # les cartes actions ne nécessitent pas tous la liste des joueurs
         super().__init__(name, description)
-
+        
         self.effect = MethodType(globals()[effect], self)
         # on ajoute la méthode contenant le nom effect dans notre object, les autres
         # ne sont pas chargés car inutiles
         if arg is None:
             arg = []
         self.arg = arg
-
+    
     ###############################################################################
     #                             Méthodes Communes                               #
     ###############################################################################
@@ -231,7 +231,7 @@ class CardAction(Card):
     arg[0] contient la liste des Joueurs, le joueurs actuel est en position 0
     arg[1] contient la map_game
     """
-
+    
     def target_player(self, list_player_targetable):
         print(f'Sur quel joueur voulez vous appliquer {self.name}')
         [print(i, ': ', x.name, sep='', end='  ') for i, x in
@@ -272,14 +272,15 @@ def input_player(mini, maxi):  # demande un input entre mini et maxi et return l
             selected = int(selected)
             if selected < mini or selected > maxi:
                 raise ValueError
-            if selected == 0: raise KeyboardInterrupt  # permet de quittez si 0 est entrer et que nous sommes dans le menu
+            if selected == 0: raise KeyboardInterrupt  # permet de quittez si 0 est entrer et que nous sommes dans le
+            # menu
             break
         except ValueError:
             print(f'❌ Valeur "{selected}" incorrecte, veuillez réessayer entre {mini} et {maxi}\n')
             continue
         except KeyboardInterrupt:
             try:
-                confirm = input("\n/!\ Confirmer de quitter le programme y/n ? ")
+                confirm = input("\n/!\ Confirmer de quitter le programme y/n ?")
                 if confirm[:1].upper() == "Y":
                     raise KeyboardInterrupt
                 else:
@@ -324,19 +325,18 @@ Donc effect = impact_tools a l'initialisation pour appeler la fonction
 
 
 def impact_tools(self):
-    Done = False
     Name_list = self.name.split()
     list_Player_targetable = []
     if Name_list[0] == "Cassage":  # Si nous ne cassons pas nous réparons
         [list_Player_targetable.append(player) for player in self.arg[0] if not (Name_list[2]) in player.status]
         if len(list_Player_targetable) == 0:
-            print(f"\nTous le monde a déja son/sa {Name_list[2]} de cassé.... Veuillez faire une autre choix\n")
+            print(f"\nTous le monde a deja son/sa {Name_list[2]} de cassé.... Veuillez faire un autre choix\n")
             return False
         Target_P = self.target_player(list_Player_targetable)
         return edit_status(True, Name_list[2], Target_P)
     [list_Player_targetable.append(player) for player in self.arg[0] if Name_list[2] in player.status]
     if len(list_Player_targetable) == 0:
-        print("\nPersonne n'as besoin de la reparation que vous proposez.... Veuillez faire une autre choix\n")
+        print("\nPersonne n'as besoin de la réparation que vous proposez.... Veuillez faire un autre choix\n")
         return False
     Target_P = self.target_player(list_Player_targetable)
     if len(Name_list) == 5:  # Si nous avons deux effet pour la réparation    
@@ -345,8 +345,9 @@ def impact_tools(self):
         Done = Done or Done2
     else:
         Done = edit_status(False, Name_list[2], Target_P)
-    if not (Done): print(
-        f"\nAIE, l'opération sur {Target_P.name} est un échec, il n'as pas besoin de notre cadeau/l'as deja reçus.\n")
+    if not Done: print(
+        f"\nAIE, l'opération sur {Target_P.name} est un échec, il/elle n'as pas besoin de notre cadeau/l'as deja "
+        f"reçus.\n")
     return Done
 
 
@@ -356,11 +357,12 @@ def impact_tools(self):
 
 def collapsing(self):  # Avalanche/Éboulement
     while True:
-        VAL = input(f'chosir x entre {self.arg[1].decalage[0]} et {len(self.arg[1].MAP)+self.arg[1].decalage[0]-1}\n'
-                      f'chosir y entre {self.arg[1].decalage[1]} et {len(self.arg[1].MAP[0])+self.arg[1].decalage[1]-1}\n'
-                      ' x y:\n')
-        VAL =VAL.split(' ')
-        if VAL == 'stop' :
+        VAL = input(
+            f'Chosir x entre {self.arg[1].decalage[0]} et {len(self.arg[1].MAP) + self.arg[1].decalage[0] - 1}\n'
+            f'Chosir y entre {self.arg[1].decalage[1]} et {len(self.arg[1].MAP[0]) + self.arg[1].decalage[1] - 1}\n'
+            ' x y:\n')
+        VAL = VAL.split(' ')
+        if VAL == 'stop':
             return False
         try:
             VAL = [int(i) for i in VAL]
@@ -379,12 +381,12 @@ def secret_plan(self):  # Plan Secret, permet de visualiser une des 3 cartes d'a
             print(f"\nLa carte du Haut est un/une {self.arg[1].current([8, 2]).name}\n")
             return True
         elif selected == 2 and not self.arg[1].current([8, 0]).reveal:
-            print(f"\nLa carte du Miieu est un/une {self.arg[1].current([8, 0]).name}\n")
+            print(f"\nLa carte du Milieu est un/une {self.arg[1].current([8, 0]).name}\n")
             return True
         elif selected == 3 and not self.arg[1].current([8, -2]).reveal:
             print(f"\nLa carte en Bas est un/une {self.arg[1].current([8, -2]).name}\n")
             return True
-        print("\nCette carte est déja visible... Veuillez en choisir une autre")
+        print("\nCette carte est deja visible...Veuillez en choisir une autre")
 
 
 ###############################################################################
@@ -392,7 +394,6 @@ def secret_plan(self):  # Plan Secret, permet de visualiser une des 3 cartes d'a
 ###############################################################################
 
 def inspect(self):  # Inspection, permet de voir le role d'un joueur
-    Done = False
     Target_P = self.target_player(self.arg[0])
     print(f"SPOILER ALERTE :\n{Target_P.name} est en réalité un :\n{Target_P.role}.")
     Done = True
@@ -400,7 +401,6 @@ def inspect(self):  # Inspection, permet de voir le role d'un joueur
 
 
 def switch_role(self):  # Changement de Role, permet de changer le role d'un joueur
-    Done = False
     print("Sélectionnez un joueur avec qui changer de role :")
     Target_P = self.target_player(self.arg[0])
     temp = Target_P.role
@@ -412,7 +412,6 @@ def switch_role(self):  # Changement de Role, permet de changer le role d'un jou
 
 
 def switch_hand(self):  # Changement de Main, permet de changer la main d'un joueur avec la sienne
-    Done = False
     print("Avec quel joueur souhaitez-vous inverser votre deck de cartes ?")
     Target_P = self.target_player(self.arg[0])
     self.arg[0][0].main.remove(self)
@@ -437,14 +436,14 @@ def jail_handler(self):
     if self.name == "Emprisonnement":  # Réutilisation de edit_effet
         [list_Player_targetable.append(player) for player in self.arg[0] if not (self.name) in player.status]
         if len(list_Player_targetable) == 0:
-            print("\nTous le monde est en prison.... Veuillez faire une autre choix\n")
+            print("\nTous le monde est en prison....Veuillez faire un autre choix\n")
             return False
         Target_P = self.target_player(list_Player_targetable)
         return edit_status(True, "Emprisonnement", Target_P)
     # si on n'emprisonne pas alors on libère
     [list_Player_targetable.append(player) for player in self.arg[0] if "Emprisonnement" in player.status]
     if len(list_Player_targetable) == 0:
-        print("\nPersonne n'est en prison.... Veuillez faire une autre choix\n")
+        print("\nPersonne n'est en prison....Veuillez faire un autre choix\n")
         return False
     Target_P = self.target_player(list_Player_targetable)
     return edit_status(False, "Emprisonnement", Target_P)
@@ -480,7 +479,7 @@ def DOOR(self):  # Effet Porte, utilise pour l'exetension, permet de mettre un f
     IND = []
     for i in self.borders:
         i.source = False
-
+    
     for i in self.borders:
         if i.flag_loop is not None:
             IND.append(i.flag_loop)
@@ -489,9 +488,9 @@ def DOOR(self):  # Effet Porte, utilise pour l'exetension, permet de mettre un f
             IND.append(i.flag_loop)
             IO.append(i)
     if IND[0] != IND[1]:
-
+        
         if 'START' in IND:
-
+            
             for co in self.borders:
                 if co != self.name and co != 'START':
                     co.flag = self.name
@@ -521,88 +520,88 @@ def START(self):  # Initialise les bordures de la carte
 ###############################################################################
 def aff_ch(card, special, name):
     C = [True for creat in range(14)]
-
+    
     HELLO_I = [K.inputo for K in card]
     HELLO_O = [K.outputo for K in card]
-
+    
     PATH = []
     COM = []
-
+    
     for K, connect_I, connect_O in zip(card, HELLO_I, HELLO_O):
         if not (K.name in PATH):
             PATH.append(K.name)
-
+            
             for CI in connect_I:
-
+                
                 if CI in card:
                     if COM == [] and CI != []:
                         COM.append(K)
-
+                    
                     if COM != [] and (K in COM):
                         for CI_ in connect_I:
                             if CI_ in card:
                                 if not (CI_ in COM):
                                     COM.append(CI_)
             for CO in connect_O:
-
+                
                 if CO in card:
                     if COM == [] and CO != []:
                         COM.append(K)
-
+                    
                     if COM != [] and (K in COM):
                         for CO_ in connect_O:
                             if CO_ in card:
                                 if not (CO_ in COM):
                                     COM.append(CO_)
-
+    
     C[4], C[5], C[6], C[9], C[10] = False, False, False, False, False
     if not ('up' in PATH):
         C = [not val for val in C]
-
+    
     lock = [val for val in C]
-
+    
     C[3], C[7], C[8], C[9], C[10] = False, False, False, False, False
     if not ('down' in PATH):
-        C = [not c if l == True else False for l, c in zip(lock, C)]
-
+        C = [not c if l is True else False for l, c in zip(lock, C)]
+    
     lock = [val for val in C]
-
+    
     C[1], C[5], C[7], C[9], C[11] = False, False, False, False, False
     if not ('left' in PATH):
-        C = [not c if l == True else False for l, c in zip(lock, C)]
-
+        C = [not c if l is True else False for l, c in zip(lock, C)]
+    
     lock = [val for val in C]
-
+    
     C[2], C[6], C[8], C[9], C[11] = False, False, False, False, False
     if not ('right' in PATH):
-        C = [not (c) if l == True else False for l, c in zip(lock, C)]
-
+        C = [not c if l is True else False for l, c in zip(lock, C)]
+    
     if len(COM) == 4:
         C = [False for val in C]
         C[0] = True
-
+    
     if len(COM) == 2 and C[12]:
         C = [False for val in C]
         NAME = [K.name for K in COM]
-
+        
         if "up" in NAME and "left" in NAME or "down" in NAME and "right" in NAME:
             C[12] = True
         elif "up" in NAME and "right" in NAME or "down" in NAME and "left" in NAME:
             C[13] = True
         elif "up" in NAME and "down" in NAME or "right" in NAME and "left" in NAME:
             C[11] = True
-
+    
     if len(COM) == 0:
         C = [False for val in C]
         C[9] = True
-
+    
     center = "╬" * C[0] + "╠" * C[1] + "╣" * C[2] + "╩" * C[3] + "╦" * C[4] + "╔" * C[5] + "╗" * C[6] + "╚" * C[
         7] + "╝" * C[8] + "░" * C[9] + "═" * C[10] + "║" * C[11] + '▚' * C[12] + '▞' * C[13]
     if special == 'DOOR':
         center = 'G'
         if name == 'DOOR_B':
             center = 'B'
-
+    
     if special == 'cristaux':
         center = 'C'
     if special == 'START':
@@ -611,11 +610,11 @@ def aff_ch(card, special, name):
         center = 'G'
     if special == 'PIERRE':
         center = 'P'
-
+    
     aff1 = "┏━" + ("║" if "up" in PATH else "━") + "━┓"
     aff2 = "┃ " + ("║" if "up" in PATH else " ") + " ┃"
     aff3 = ("══" if "left" in PATH else "┃ ") + center + ("══" if "right" in PATH else " ┃")
     aff4 = "┃ " + ("║" if "down" in PATH else " ") + " ┃"
     aff5 = "┗━" + ("║" if "down" in PATH else "━") + "━┛"
-
+    
     return [aff1, aff2, aff3, aff4, aff5]

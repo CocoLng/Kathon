@@ -22,7 +22,7 @@ class Game:
         self.map = BoardGame()  # Création de la map_game
         
         self.init_round(), self.repartition_card()
-        self.gold_found = self.run_round  # Renvoie si la pépite a était trouvée ou non à la fin de la manche
+        self.gold_found = self.run_round  # Renvoie si la pépite a été trouvée ou non à la fin de la manche
         self.reward_time()
         cls_screen()  # Efface le terminal
     
@@ -47,7 +47,7 @@ class Game:
         L = [self.decks[0].draw_card(27) for i in range(3)]
         shuffle(L)  # Permet de mélanger les 3 cartes cachées
         [self.map.add_card(CARD, POS, True) for CARD, POS in zip(L, pos)]  # Ajoute les cartes cachées à la map_game
-        self.decks[0].list_card = self.decks[0].list_card[80:103]
+        
         [shuffle(deck.list_card) for deck in self.decks]  # Mélange les cartes
         
         # Effacement des status et suppression des cartes restantes du précédent round, sécurité, si résidu de pointeur
@@ -136,7 +136,6 @@ class Game:
         else: # Si l'extension est activée
             
             # Check pour des potentiels voleurs
-            self.p_list[0].status.append("Voleur")
             P_voleur = []
             [P_voleur.append(player) for player in self.p_list if
              ("Voleur" in player.status) and not ("Emprisonnement" in player.status)]
