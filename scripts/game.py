@@ -44,7 +44,7 @@ class Game:
         # Retire la carte spawn, et les pierre/gold
         self.map.add_card(self.decks[0].draw_card(30), [0, 0], True)
         # Retire les trois cartes cachées
-        L = [self.decks[0].draw_card(27) for i in range(3)]
+        L = [self.decks[0].draw_card(27) for _ in range(3)]
         shuffle(L)  # Permet de mélanger les 3 cartes cachées
         [self.map.add_card(CARD, POS, True) for CARD, POS in zip(L, pos)]  # Ajoute les cartes cachées à la map_game
         
@@ -54,19 +54,18 @@ class Game:
         [(player.status.clear(), player.main.clear()) for player in self.p_round]
         # assignment d'un role à chaque joueur, le deck role est déja mélangé
         for i, player in enumerate(self.p_round, 1): player.role = self.decks[1].list_card[i]
-        
     
     # Gere la répartition des cartes action/chemin entre les joueurs
     def repartition_card(self):
         if self.extension:
             self.decks[0].list_card = self.decks[0].list_card[9:]  # On retire les 10 premières cartes
-            [player.main.append(self.decks[0].draw_card()) for player in self.p_round for i in range(6)]
+            [player.main.append(self.decks[0].draw_card()) for player in self.p_round for _ in range(6)]
         
         else:
             # S'il n'y a pas l'extension alors :
             # Tous les 2 joueurs, une carte en moins est donnée initialement
             nb_P_repart = 7 - len(self.p_round) // 2
-            [player.main.append(self.decks[0].draw_card()) for player in self.p_round for i in range(nb_P_repart)]
+            [player.main.append(self.decks[0].draw_card()) for player in self.p_round for _ in range(nb_P_repart)]
     
     # Gere la manche en cours
     @property
@@ -175,7 +174,7 @@ class Game:
                             filter(lambda x: x.role.name[0] in {'C', 'B'}, self.p_list))
                 else:
                     if 'D' in list_flag:  # D pour Double, il y a deux portes de couleurs différentes sur le chemin
-                        if "B" not in self.p_list.role.name[0]:
+                        if any(player.role.name == "Boss" for player in self.p_list):
                             # Si le Boss n'est pas dans la game, on attribue la victoire aux saboteurs
                             self.p_list = list(
                                 filter(lambda x: x.role.name[0] == 'S', self.p_list))
@@ -186,7 +185,7 @@ class Game:
                     elif 'GREEN' in list_flag or 'BLUE' in list_flag:
                         # S'il y a une porte verte ou bleue sur le chemin
                         self.p_list = list(  # On attribue la victoire aux chercheurs de la bonne couleurs
-                            filter(lambda x: x.role.name in {self.p_list.role.name, 'Boss'},
+                            filter(lambda x: x.role.name in {self.p_list, 'Boss'},
                                    self.p_list))
             
             else:  # les saboteurs gagnent

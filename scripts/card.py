@@ -89,6 +89,7 @@ class Deck:
                         exit()
                     i += 1
 
+
 ###############################################################################
 #                             Structures Cartes                               #
 ###############################################################################
@@ -118,7 +119,7 @@ class CardChemin(Card):
         self.special = arg  # Si la carte possède un effet spécial
         self.reveal = arg  # Si la carte est révélée
         self.config = list(arg[3].split(":"))  # Contient les informations de la carte
-        self.borders =  list(arg[4].split(","))  # Sert a définir les connexions de la carte avec ses voisines
+        self.borders = list(arg[4].split(","))  # Sert a définir les connexions de la carte avec ses voisines
         self.aff = True
         if len(arg) >= 9:
             if arg[8]:
@@ -129,6 +130,7 @@ class CardChemin(Card):
     def delete(self):
         for port in self.borders:
             port.delete_connection()
+    
     @property
     def special(self):
         return self.__special

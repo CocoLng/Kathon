@@ -2,7 +2,7 @@ from sys import exit
 
 from scripts.card import input_player  # nous réutilisons la fonction input player de card.py
 from scripts.game import Game, readfile
-from scripts.player import Human
+from scripts.player import Player
 
 
 ###############################################################################
@@ -47,13 +47,13 @@ class Main:  # Classe principale
                 New_input = New_input.strip()  # enlève les espaces au début/fin
                 if New_input == "": raise KeyboardInterrupt  # fin de saisie si rien n'est envoyé et que 2 ou 3j sont
                 # crées
-                if New_input.upper() == "STOP": exit()  # Quitte de force la saisie, utilse car KeyboardInterrupt
+                if New_input.upper() == "STOP": exit()  # Quitte de force la saisie, utilsé car KeyboardInterrupt
                 # sert à continuer, car plus rapide en test/jeu
                 if len(New_input) > 20: raise ValueError
                 for player in self.list_players:
                     if player.name.lower() == New_input.lower():
                         raise ValueError
-                self.list_players.append(Human(New_input))
+                self.list_players.append(Player(New_input))
                 if (len(self.list_players) == 10 and not self.extension) or (
                         len(self.list_players) == 12 and self.extension): raise KeyboardInterrupt
 

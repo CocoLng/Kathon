@@ -45,7 +45,7 @@ def flip_card(card):  # Retourne la carte que le joueur a choisie
     return True
 
 
-class Human:  # Classe du joueur humain
+class Player:  # Classe du joueur humain
 
     def __init__(self, name):
         self.score = 0
