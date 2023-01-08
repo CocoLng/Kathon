@@ -9,10 +9,11 @@ from scripts.player import Player
 
 class Game:
     def __init__(self, main):
+        self.p_list = None
         self.extension = main.extension
         self.list_players = [Player(player) for player in main.list_players]  # Liste des joueurs
     
-    def __enter__(self):
+    def __enter__(self) :
         cls_screen()  # Efface le terminal
         self.p_list = self.list_players.copy()  # Nous permets de conserver la liste des joueurs initiaux,
         # pour les reward a la fin
@@ -30,10 +31,6 @@ class Game:
         self.gold_found = self.run_round  # Renvoie si la pépite a été trouvée ou non à la fin de la manche
         self.reward_time()
         
-        for player in self.p_list:
-            for l_player in self.list_players:
-                if player.name == l_player.name:
-                    l_player.score += player.score
         return self.list_players
     
     def next_player(self, next_player=None):  # Gere le passage au joueur suivant
@@ -59,7 +56,7 @@ class Game:
         [self.map.add_card(CARD, POS, True) for CARD, POS in zip(L, pos)]  # Ajoute les cartes cachées à la map_game
         
         [shuffle(deck.list_card) for deck in self.decks]  # Mélange les cartes
-        
+        self.decks[0].list_card = self.decks[0].list_card[:27]
         # Effacement des status et suppression des cartes restantes du précédent round, sécurité, si résidu de pointeur
         [(player.status.clear(), player.main.clear()) for player in self.p_round]
         # assignment d'un role à chaque joueur, le deck role est déja mélangé
@@ -195,7 +192,7 @@ class Game:
                     elif 'GREEN' in list_flag or 'BLUE' in list_flag:
                         # S'il y a une porte verte ou bleue sur le chemin
                         self.p_list = list(  # On attribue la victoire aux chercheurs de la bonne couleurs
-                            filter(lambda x: x.role.name in {self.p_list, 'Boss'},
+                            filter(lambda x: x.role.name in {self.p_round.role.name, 'Boss'},
                                    self.p_list))
             
             else:  # les saboteurs gagnent

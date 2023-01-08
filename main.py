@@ -14,7 +14,7 @@ class Main:  # Classe principale
 
     def recap(self) -> bool:
         print("Enter", self.nb_manches)
-        if self.nb_manches == 0: return True  # Si c'est la première manche, on n'affiche rien
+        [print("Inside", player.name,player.score) for player in self.list_players] # Affiche les scores des joueurs
         readfile('..\\ressources\\SaboteurTxt.txt', 2)
         self.list_players.sort(key=lambda player: player.score, reverse=True)
         [(print(i, ': ', player.name, '[', player.score, 'pts]', '(', player.role.name, ')', sep='', end='\n')) for
@@ -27,10 +27,9 @@ class Main:  # Classe principale
             print(
                 f"\nLe grand gagnant est {self.list_players[0].name} !! \nFélicitation, en espérant être ré-exécuter "
                 f"prochainement.\nEt n'oubliez pas de rester zen, comme mon code source")
-            return False
+            
         print("\n[1] Continuez la partie\n[0] /!\ Quittez le programme (Ctrl + C)\n")
         input_player(0, 1)
-        return True
 
     def init_player(self) -> list:
         # Gere la creations des Joueurs via la saisie de leur nom, avec une résistance prévu a toute épreuve,
@@ -79,10 +78,12 @@ class Main:  # Classe principale
 
     def run_game(self): # Gere le déroulement du jeu
         game = Game(self) # Création de la partie
-        while self.recap(): # Comptes les nombres de manches jouées, sort quand 3 manches sont jouées
+        while True: # Comptes les nombres de manches jouées, sort quand 3 manches sont jouées
             self.list_players = game.__enter__() # Lance la manche
             self.nb_manches += 1 # Incrémente le nombre de manches jouées
-        return True if self.nb_manches == 3 else False
+            self.recap() # Affiche le récapitulatif de la manche
+            if self.nb_manches == 3: break
+        #return True if self.nb_manches == 3 else False
 
 
 ###############################################################################
@@ -105,6 +106,6 @@ def Menu() -> bool: # Menu de lancement, retourne True si l'extension est activ�
 ###############################################################################
 #                                   Main                                      #
 ###############################################################################
-if __name__ == '__main__':
-    main = Main() # Initialisation le jeu
-    main.run_game() # Lance le jeu
+
+main = Main() # Initialisation le jeu
+main.run_game() # Lance le jeu
