@@ -118,11 +118,11 @@ target_player (player_targetable : list):player_targetable
 
 
 class CardChemin{
-+is_start
-+special
-+reveal
-+config
-+port
++is_start: bool
++special:
++reveal: bool
++config: str
++port: str
 +borders
 +aff
 __
@@ -140,13 +140,13 @@ CardChemin"1..*" *- ConnectionEdge
 
 
 class ConnectionEdge{
--name
--source
--inputo
--outputo
-+delet
-+flag
-+is_check
+-name: string
+-source: bool
+-inputo: ConnectionEdge ArrayList
+-outputo: ConnectionEdge ArrayList
++delet: bool
++flag: string
++is_check: bool
 __
 __init__(name :  str , flag = None : str , source : bool): void
 __flag_(start : ConnectionEdge

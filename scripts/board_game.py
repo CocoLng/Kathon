@@ -142,7 +142,7 @@ class BoardGame:
 
         if card.special == "START":
             self.pos_spe.insert(0,[pos[0] + self.decalage[0], pos[1] + self.decalage[1]])
-        if card.special == 'DOOR':
+        if card.special == "DOOR":
             self.pos_spe.append([pos[0] + self.decalage[0],pos[1] + self.decalage[1]])
 
         for posl in self.pos_spe:
@@ -155,7 +155,7 @@ class BoardGame:
     def del_card(self,pos):
         pos = [po-deca for deca,po in zip(self.decalage,pos)]
         if self.__map_[pos[0]][pos[1]] != []:
-            if self.__map_[pos[0]][pos[1]].special in ['PIERRE','PEPITE','ENTREE']:
+            if self.__map_[pos[0]][pos[1]].special in ["PIERRE",'PEPITE','ENTREE']:
                 print("Vous ne pouvez pas detruire une carte special")
                 return False
             else:
