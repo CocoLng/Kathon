@@ -127,11 +127,11 @@ class BoardGame:
 
         for x_y in [-1,1]:
             if pos[0] + x_y >= 0 and pos[0] + x_y < len(self.__map_):
-                 if self.__map_[pos[0]][pos[1]+x_y] != []:
-                      self.__map_[pos[0]][pos[1]+x_y].reveal = True
-            if pos[0] + x_y >= 0 and pos[0] + x_y < len(self.__map_):
-                if self.__map_[pos[0]+x_y][pos[1]] != []:
+                 if self.__map_[pos[0]+x_y][pos[1]] != []:
                       self.__map_[pos[0]+x_y][pos[1]].reveal = True
+            if pos[1] + x_y >= 0 and pos[1] + x_y < len(self.__map_[0]):
+                if self.__map_[pos[0]][pos[1]+x_y] != []:
+                      self.__map_[pos[0]][pos[1]+x_y].reveal = True
 
         for exterieur,interieur in zip(card_p,borders_to_connect):
             interieur.connect(exterieur)
