@@ -599,7 +599,7 @@ def aff_ch(card, special, name):
         7] + "╝" * C[8] + "░" * C[9] + "═" * C[10] + "║" * C[11] + '▚' * C[12] + '▞' * C[13]
     if special == 'DOOR':
         center = 'G'
-        if name == 'DOOR_B':
+        if name == 'BLUE':
             center = 'B'
     
     if special == 'cristaux':

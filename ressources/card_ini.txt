@@ -48,8 +48,8 @@ EXTENSION
 2;Echelle;a_la_croiser_des_chemins;0;down;True;START;False;True
 2;Echelle;a_la_croiser_des_chemins;0;left;True;START;False;True
 2;DoubleCourbe;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
-3;GREEN;a_la_croiser_des_chemins;00:00;left,down;True;DOOR;False;True
-3;BLUE;a_la_croiser_des_chemins;00:00;left,down;True;DOOR;False;True
+3;GREEN;a_la_croiser_des_chemins;00:00;left,up;True;DOOR;False;True
+3;BLUE;a_la_croiser_des_chemins;00:00;left,up;True;DOOR;False;True
 10;PontChemin avec un CRISTAL;a_la_croiser_des_chemins;000:000:110;up,left,down;True;cristaux;False
 
 
