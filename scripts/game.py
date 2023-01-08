@@ -13,7 +13,7 @@ class Game:
         self.extension = main.extension
         self.list_players = [Player(player) for player in main.list_players]  # Liste des joueurs
     
-    def __enter__(self) :
+    def __enter__(self):
         cls_screen()  # Efface le terminal
         self.p_list = self.list_players.copy()  # Nous permets de conserver la liste des joueurs initiaux,
         # pour les reward a la fin
@@ -192,15 +192,15 @@ class Game:
                     elif 'GREEN' in list_flag or 'BLUE' in list_flag:
                         # S'il y a une porte verte ou bleue sur le chemin
                         self.p_list = list(  # On attribue la victoire aux chercheurs de la bonne couleurs
-                            filter(lambda x: x.role.name in {self.p_round.role.name, 'Boss'},
+                            filter(lambda x: x.role.name in {self.p_round[0].role.name, 'Boss'},
                                    self.p_list))
             
             else:  # les saboteurs gagnent
                 self.p_list = list(filter(lambda x: x.role.name[0] == "S", self.p_list))
             
             # Attribution des points
-            nb_pepites = max(6 - len(self.p_list), 1) + len(list_geologue)  # Nombre de pépites en fonction du nombre
-            # de gagnants
+            nb_pepites = max(6 - len(self.p_list), 1) + len(list_geologue) + len(list_profiteur)  # Nombre de pépites
+            # en fonction du nombre de gagnants
             for player in self.p_list:
                 if player.role.name[0] in {'C', 'S'}:
                     player.score += int(nb_pepites)
