@@ -81,12 +81,8 @@ class Main:  # Classe principale
 
     def run_game(self): # Gere le déroulement du jeu
         while self.recap(): # Comptes les nombres de manches jouées, sort quand 3 manches sont jouées
-            if Game(self): # Si le jeu retourne True, c'est que la manche est finie
-                self.nb_manches += 1
-            else: # Principalement pour le debug
-                print("Erreur, le jeu n'a pas pu être lancé, veuillez réessayer.")
-                return False  # Le jeu s'est mal déroulé
-        return True  # Le jeu s'est bien déroulé
+            Game(self) # Lance la manche
+            self.nb_manches += 1 # Incrémente le nombre de manches jouées
 
 
 ###############################################################################
