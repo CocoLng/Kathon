@@ -2,7 +2,6 @@ from sys import exit
 
 from scripts.card import input_player  # nous réutilisons la fonction input player de card.py
 from scripts.game import Game, readfile
-from scripts.player import Player
 
 
 ###############################################################################
@@ -11,7 +10,7 @@ class Main:  # Classe principale
     def __init__(self):
         self.extension = Menu()  # Menu de lancement
         self.nb_manches = 0  # Nombre de manches jouées
-        self.list_players = self.init_player()  # Liste des joueurs
+        self.list_players = self.init_player()  # Liste de noms des joueurs
 
     def recap(self) -> bool:
         print("Enter", self.nb_manches)
@@ -51,9 +50,9 @@ class Main:  # Classe principale
                 # sert à continuer, car plus rapide en test/jeu
                 if len(New_input) > 20: raise ValueError
                 for player in self.list_players:
-                    if player.name.lower() == New_input.lower():
+                    if player.lower() == New_input.lower():
                         raise ValueError
-                self.list_players.append(Player(New_input))
+                self.list_players.append(New_input)
                 if (len(self.list_players) == 10 and not self.extension) or (
                         len(self.list_players) == 12 and self.extension): raise KeyboardInterrupt
 
@@ -73,14 +72,15 @@ class Main:  # Classe principale
                         f"\n❌ Le nombre de joueurs minimum n'est pas atteint, veuillez rajouter encore {New_input} joueurs.")
                     continue
                 print("\n\nFin de la saisie des Joueurs, voici la liste :")
-                [(print('P', i, ': ', x.name, sep='', end='  ')) for i, x in enumerate(self.list_players, 1)] #
+                [(print('P', i, ': ', x, sep='', end='  ')) for i, x in enumerate(self.list_players, 1)] #
                 break
 
         return self.list_players
 
     def run_game(self): # Gere le déroulement du jeu
+        game = Game(self) # Création de la partie
         while self.recap(): # Comptes les nombres de manches jouées, sort quand 3 manches sont jouées
-            Game(self) # Lance la manche
+            self.list_players = game.__enter__() # Lance la manche
             self.nb_manches += 1 # Incrémente le nombre de manches jouées
         return True if self.nb_manches == 3 else False
 
@@ -94,7 +94,7 @@ def Menu() -> bool: # Menu de lancement, retourne True si l'extension est activ�
         res_input = input_player(0, 3)
         if res_input == 1: # Partie texte explicative
             readfile('..\\ressources\\PresentationSubMenu.txt')
-            readfile('..\\ressources\\PresentationSubMenu.txt', input_player(0, 2))
+            readfile('..\\ressources\\PresentationSubMenu.txt', input_player(0, 3))
             input_player(0, 1)
         elif res_input == 2: # Sans extension
             return False
