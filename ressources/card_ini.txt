@@ -21,7 +21,7 @@ ACTION_CHEMIN
 
 1;PIERRE;juste une pierre...;00:10;left,down;False;PIERRE;False
 1;PIERRE;ejuste une pierre...;00:10;down,right;False;PIERRE;False
-1;GOLD;de l'or!!!;0000:0000:0000:1110;up,left,down,right;True;PEPITE	
+1;GOLD;de l'or!!!;0000:0000:0000:1110;up,left,down,right;True;PEPITE;False	
 1;ENTREE;entre_de_la_mine;0000:0000:0000:0000;up,left,down,right;True;START;True
 
 5;Croisement;A la croiser des chemins;0000:0000:0000:1110;up,left,down,right
@@ -47,7 +47,7 @@ EXTENSION
 2;PontChemin;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
 2;Echelle;a_la_croiser_des_chemins;0;down;True;START;False;True
 2;Echelle;a_la_croiser_des_chemins;0;left;True;START;False;True
-2;DoubleCourbe;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
+2;DoubleCourbe;a_la_croiser_des_chemins;0000:0100:000:0010;up,left,down,right
 3;GREEN;a_la_croiser_des_chemins;00:00;left,up;True;DOOR;False;True
 3;BLUE;a_la_croiser_des_chemins;00:00;left,up;True;DOOR;False;True
 10;PontChemin avec un CRISTAL;a_la_croiser_des_chemins;000:000:110;up,left,down;True;cristaux;False

@@ -161,16 +161,21 @@ class BoardGame:
     def del_card(self, pos):
         pos = [po - deca for deca, po in zip(self.decalage, pos)]
         if self.__map_[pos[0]][pos[1]] != []:
-            if self.__map_[pos[0]][pos[1]].special in ["PIERRE", 'PEPITE', 'ENTREE']:
+            #on regrade si la carte a un attribut special que l'on ne peut pas detruire
+            if self.__map_[pos[0]][pos[1]].special in ["PIERRE", 'PEPITE'] or self.__map_[pos[0]][pos[1]].name =="ENTREE":
                 print("Vous ne pouvez pas detruire une carte special")
                 return False
             else:
+                #si elle est destructible on demande a la carte de ce deconnecter
                 self.__map_[pos[0]][pos[1]].delete()
                 self.__map_[pos[0]][pos[1]] = []
                 
                 for i in self.__map_[-self.decalage[0]][-self.decalage[1]].borders:
+                    # apres avoir rajouté la carte il reconstruit le chemin en partant des
+                    # #sources pour etre sur que les portes soit bien connecté
                     i.reconstruc_path(i)
                 i = 0
+                #ici on stock l indice des source contenue dans la map pour pouvoir les recuper facilement
                 for posl in self.pos_spe:
                     i += 0
                     if self.__map_[posl[0] - self.decalage[0]][posl[1] - self.decalage[1]] != []:
@@ -182,21 +187,23 @@ class BoardGame:
         else:
             return False
     
-    # permet de rajouter des carte a une position precise
-    # si la carte est en dehors de la __map deja cree
-    # des lignes/colonnes ou les deux seront ajouté pour pouvoir placer la carte
+# permet de rajouter des cartes a une position precise
+# si la carte est en dehors de la map deja cree
+# des lignes/colonnes ou les deux seront ajouté pour pouvoir placer la carte
     
-    def add_card(self, card, pos, admin=False):
+    def add_card(self,card,pos,admin = False):
         
-        # on verifie si la carte est en dehors de la __map"
-        # debut verification"
+        #on ajoute le decalage de l'indice zeros pour que l'on puisse avoir des valeure negative dans les positions
         pos[0] = pos[0] - self.decalage[0]
         pos[1] = pos[1] - self.decalage[1]
         
         # si elle est a l exterieur nous devont ettendre la carte
         a = pos[0]
         b = pos[1]
-        
+
+        #on verifie la taille de la map par rapport a la position demande
+        #si la position demande est en dehors de la map alors Xa/Ya = True
+        #cela indique que l'on vas agrandir la map soit sur l axe des X soit Y ou les deux
         if len(self.__map_) <= pos[0] or pos[0] < 0:
             Xa = True
         else:
@@ -206,35 +213,43 @@ class BoardGame:
             Ya = True
         else:
             Ya = False
-        
-        # si elle est a l interieur de la carte crée on peut la rajouter
+
+
+        # on regarde si la position ou l on veux poser la carte est deja prise
         if not (Xa) and not (Ya):
             if not (self.__map_[pos[0]][pos[1]] == []):
                 print("Carte deja presente")
                 return False
+
         else:
-            # Xa et Ya nous donne l information sur si on est a l'exteriur en x ou en y donc soit rajouter une/des ligne(s) ou une/des colonne(s)
-            # ici Xa donc rajout de case sur X
+            # Xa et Ya nous donne l information sur si on est a l'exterieur
+            # en x ou en y donc soit rajouter une/des ligne(s) ou une/des colonne(s)
+
             if Xa:
-                
+                # Xa activé donc on on va augmenter la map sur l axe des X
                 L = len(self.__map_[0])
+
+                # on regarde si l'indice cherché est  negatif si il est negatif on agrandi la map en fesant un insert a l indice 0 sinon un append
+                # on recupere en meme temps l information de combien de case on doit agrandir la map
                 if pos[0] >= 0:
                     Xlen = pos[0] - len(self.__map_) + 1
+
                 else:
                     a = 0
                     Xlen = abs(pos[0])
                     self.decalage[0] += pos[0]
                 
-                # on une colonne soit a gauche de la carte soit a la fin
+                # on une colonne soit au debut de la carte soit a la fin
                 [self.__map_.append([]) if a > 0 else self.__map_.insert(0, []) for i in range(Xlen)]
                 
                 # si des case en X sont rajouter on doit rajouter des cases sur l axe Y afin que notre carte soit carré
                 for k in range(len(self.__map_)):
                     if len(self.__map_[k]) < L:
                         [self.__map_[k].append([]) if pos[1] > i else self.__map_[k].insert(0, []) for i in range(L)]
-            # ici Xa donc rajout de case sur Y
+
             if Ya:
-                
+                # on regarde si l'indice cherché est  negatif si il est negatif on agrandi la map en fesant un insert a l indice 0 sinon un append
+                # on recupere en meme temps l information de combien de case on doit agrandir la map
                 if pos[1] >= 0:
                     Ylen = pos[1] - len(self.__map_[0]) + 1
                 else:
@@ -245,11 +260,13 @@ class BoardGame:
                 # on rajoute une ligne soit en haut de la __map soit en bas de la __map
                 for j in range(len(self.__map_)):
                     [self.__map_[j].append([]) if b > 0 else self.__map_[j].insert(0, []) for i in range(Ylen)]
-            # on ajoute la carte sur un tableau contenant les connection
-            # cree par la carte chemin [up,left,down,right]
+
+        #apres avoir mis a jour la taille de la map on vas ranger la carte dans notre tableau
+        #on regarde si on est en mod admin si oui on poseras la carte sans ondition si non on regarderais si l acarte est pausable
         if not (admin):
             if not ((pos[0] < -1 or pos[0] > len(self.__map_) + 1) and (
                     pos[1] < -1 or pos[1] > len(self.__map_[0]) + 1)):
+                #cette methode permet d ajouter la carte a la map
                 if self.card_set(card, [a, b]):
                     print('La pose de carte est reussite!')
                     return True
