@@ -1,38 +1,46 @@
 @startuml
 'https://plantuml.com/class-diagram
-
-abstract class AbstractList
-abstract AbstractCollection
-interface List
-interface Collection
-
-
-List <|-- AbstractList
-Collection <|-- AbstractCollection
-
-Collection <|- List
-AbstractCollection <|- AbstractList
-AbstractList <|-- ArrayList
-
-class ArrayList {
-Object[] elementData
-size()
-}
-
 class Main {
 +extension
 +list_players
 +nb_manches
-__init__(self)
-recap(self)
-init_players(self)
+__
+__init__()
+recap(): bool
+init_players(): ArrayList
+run_game(): True
 }
 
+Game "1" <-->  "1" Main
+
+class Game{
++extension
++p_list
++p_round
++deck
++win_card
++map
++gold_found
+__
+__init__(main : Main ): void
+next_player( next_player = None : player):void
+init_round(): void
+repartition_card(): void
+run_round(): void
+reward_time(): void
+}
+
+Game *- BoarGame
+Game *- Human
+Game *- "3" Deck
+
+
+
 class BoarGame{
--map_         #stock la map actuelle
-+decalage  # stock l'indice de decalage de la map (permet que l entree reste a l indice x=0 y=0)
-+pos_spe #stock la position d'element speciaux qui on besoin d'etre appeler en dans certain cas (permet d'optimiser la gestion des connections entre les cartes)
-+liste_spe #stock le nom des elements non destructible du jeu
+-map_
++decalage
++pos_spe
++liste_spe
 __
 __init__()
 __str__():str
@@ -41,11 +49,24 @@ detect (card : CartChemin):str
 card_set (card : CartChemin , pos : list of int): bool
 del_card (pos : list of int): bool
 add_card (card : CartChemin, pos : list of int,admin : bool): bool
-current (pos : list of int):CardChemin
-
-@getter
-MAP ():list CardChemin
+current (pos : list of int): CardChemin
 }
+BoarGame "4..*" *-- Card
+
+class Human{
++score
++name
++role
++main
++status
+__
+__init__(name,str): void
+del_card(extension=False : bool, deck=None : ArrayList, quantitee=1 : int): bool
+play(p_list : ArrayList, map_game :ArrayList:, extension : bool, deck : ArrayList ): bool
+get_card(deck : ArrayList,nbr_tirage :int): bool
+}
+Human"5" -- Card
+
 
 class Deck{
 +name
@@ -58,15 +79,42 @@ __init__()
 draw_card (indice : int):CardChemin
 load_card (nb_players : int):void
 }
+Deck "1..*" *-- Card
 
-class Card{
+
+
+abstract class Card{
 +name
 +description
 __
 __init__(name :  str ,description : str)
 __str__():str
-
 }
+
+Card <|-- CardChemin
+Card <|-- CardRole
+Card <|-- CardReward
+Card <|-- CardAction
+
+class CardRole{
+__
+__inti__(name : str, description : str): void
+}
+
+class CardReward{
++pepipte
+__
+__init__(name : str,description : str,pepite : str): void
+}
+
+class CardAction{
++effect
++arg
+__
+__init__(name : str, description : str, effect : str ,arg = None : list)
+target_player (player_targetable : list):player_targetable
+}
+
 
 
 class CardChemin{
@@ -87,27 +135,29 @@ is_start(is_start : str)
 special(special : str)
 
 }
+CardChemin"1..*" *- ConnectionEdge
 
-class CardRole{
-__
-__init__(
-}
 
-class CardReward{
-+pepipte
-}
-
-class CardAction{
-+effect
-+arg
-__
-+arg
-target_player(player_targetable : list):player_targetable
-}
 
 class ConnectionEdge{
-
+-name
+-source
+-inputo
+-outputo
++delet
++flag
++is_check
+__
+__init__(name :  str , flag = None : str , source : bool): void
+__flag_(start : ConnectionEdge
+source(source : bool):
+name(name : str)
+flag_loop():str
+inputo(obj : ConnectionEdge): void
+outputo(obj : ConnectionEdge): void
+connect(obj : ConnectionEdge): void
+disconnect(obj : ConnectionEdge): void
+delete_connection(): void
+reconstruc_path(source_flag : ConnectionEdge):void
 }
-
-
 @enduml
