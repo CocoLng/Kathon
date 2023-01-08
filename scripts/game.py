@@ -56,7 +56,7 @@ class Game:
         [self.map.add_card(CARD, POS, True) for CARD, POS in zip(L, pos)]  # Ajoute les cartes cachées à la map_game
         
         [shuffle(deck.list_card) for deck in self.decks]  # Mélange les cartes
-        self.decks[0].list_card = self.decks[0].list_card[:27]
+        #self.decks[0].list_card = self.decks[0].list_card[:27]
         # Effacement des status et suppression des cartes restantes du précédent round, sécurité, si résidu de pointeur
         [(player.status.clear(), player.main.clear()) for player in self.p_round]
         # assignment d'un role à chaque joueur, le deck role est déja mélangé
