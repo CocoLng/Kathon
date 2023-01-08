@@ -180,11 +180,11 @@ class Human:  # Classe du joueur humain
             print("Vous n'avez pas asser de cartes")
             return False
 
-    def get_card(self, deck, i=1): # Fonction qui permet au joueur de piocher des cartes
+    def get_card(self, deck, nbr_carte=1): # Fonction qui permet au joueur de piocher des cartes
         Done = False
         if len(deck.list_card) != 0: # Si le deck n'est pas vide
             Done = True
-            for n in range(i): # On pioche autant de carte que demandé
+            for n in range(nbr_carte): # On pioche autant de carte que demandé
                 card = deck.draw_card()
                 if card:
                     self.main.append(card)
