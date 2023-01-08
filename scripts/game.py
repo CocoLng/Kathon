@@ -4,12 +4,17 @@ from time import sleep
 
 from scripts.board_game import BoardGame
 from scripts.card import Deck, input_player
+from scripts.player import Player
 
 
 class Game:
     def __init__(self, main):
         self.extension = main.extension
-        self.p_list = main.list_players.copy()  # Nous permets de conserver la liste des joueurs initiaux,
+        self.list_players = [Player(player) for player in main.list_players]  # Liste des joueurs
+    
+    def __enter__(self):
+        cls_screen()  # Efface le terminal
+        self.p_list = self.list_players.copy()  # Nous permets de conserver la liste des joueurs initiaux,
         # pour les reward a la fin
         
         shuffle(self.p_list)  # Mélange la liste des joueurs
@@ -24,7 +29,12 @@ class Game:
         self.init_round(), self.repartition_card()
         self.gold_found = self.run_round  # Renvoie si la pépite a été trouvée ou non à la fin de la manche
         self.reward_time()
-        cls_screen()  # Efface le terminal
+        
+        for player in self.p_list:
+            for l_player in self.list_players:
+                if player.name == l_player.name:
+                    l_player.score += player.score
+        return self.list_players
     
     def next_player(self, next_player=None):  # Gere le passage au joueur suivant
         if next_player is None: next_player = self.p_round
