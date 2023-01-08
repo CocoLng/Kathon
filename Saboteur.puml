@@ -2,7 +2,6 @@
 'https://plantuml.com/class-diagram
 class Main {
 +extension: bool
-+list_players: Player List
 +nb_manches: int
 __
 __init__()
@@ -11,7 +10,7 @@ init_players(): ArrayList
 run_game(): True
 }
 
-Game "1" <-->  "1" Main
+
 
 class Game{
 +extension: bool
