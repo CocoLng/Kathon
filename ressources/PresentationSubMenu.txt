@@ -69,7 +69,23 @@ SUB_PART
 |                       Implementation du jeu                          |
 +======================================================================+
 
-explique le code python et notre approche
+Dans ce projet, nous avons fait une approche de programmation par objet. 
+
+Le module Main gère le nombre de manches et l'initialisation de chaque round. C'est également celui qui est lancé initialement.
+
+Le module game, va gérer l'intégralité d'un round en se basant sur les modules suivants :
+– Deck, qui est un deck de cartes, les cartes peuvent être variables. Elles peuvent être de rôle chemin, reward, role ou encore action.
+- Player, qui représente l'état de notre joueur dans le round actuel, sauf le score qui perdure entre les manches.
+- BoardGame, peut être assimilé à un plateau de jeu, il contient toutes les cartes poser.
+
+Pour notre systeme de flag, nous avons decide de creer des objets portes que nous allons attaché aux cartes chemins. 
+La carte contiendra un nombre de porte equivalent a son nom d entree/sortie, et avec ses portes, nous allons generer un reseau de connexion qui correspondra aux connexion des cartes chemins, il nous suffira qu a verifier si une carte start est connectee a notre reseau de porte. 
+Si oui, alors nous pouvons rajouter une carte chemin en bordure de notre groupe de carte de start.
+
+
+Ce projet de Master à été réalisé dans le cadre universitaire afin d'apprendre la programmation objets.
+Étudiants impliqués : Lange Corentin & Carree Antoine
+Universite : Sorbonne Universite
 
 [0] Quittez le programme (Ctrl + C)
 [1] Retour au menu principal
