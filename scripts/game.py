@@ -144,10 +144,11 @@ class Game:
             # DETECTION DES GEMMES GEOLOGUES
             nb_cristaux = 0
             card = None
-            for map_c in self.map._BoardGame__map_:
+            for map_c in self.map.MAP:
                 for card in map_c:
                     if card != [] and card.special == "cristaux": nb_cristaux += 1
-            list_geologue = list(filter(lambda x: x.role.name[0] == "S" or x.role.name[0] == "P", self.p_list))
+            list_geologue = list(filter(lambda x: x.role.name[0] == "G", self.p_list))
+            for player in list_geologue : player.score += nb_cristaux/len(list_geologue)
             
             if self.gold_found:  # les Chercheurs gagnent
                 for i in self.p_round:
@@ -198,23 +199,22 @@ class Game:
                     else:
                         self.p_list[n].score += int(nb_pepites) - 1  # les saboteurs gagnent 1 de moins
                     
-                    # p.append(plaer) for list geo list gagnt si score !=0
-            p_gagnant  = [x for n in (self.p_list, list_geologue) for x in n]
+            p_gagnant = []
+            [p_gagnant for n in (self.p_list, list_geologue) for x in n]
             # Si le score est nul, c'est que le gagnant a rien gagné
             # On va le retirer de la list des gagnants de manière à éviter qu'il puisse se faire voler
             # Tour des voleurs
             # S'il y a des voleurs et des gagnants, ou que le seul gagnant n'est pas le seul voleur
-            if len(P_voleur) != 0 and len(self.p_list) != 0 and not (
-                    len(self.p_list) == 1 and self.p_list[0] == P_voleur[0]):
+            if len(P_voleur) != 0 and len(self.p_gagnant) != 0 and not (
+                    len(self.p_gagnant) == 1 and self.p_gagnant[0] == P_voleur[0]):
                 for player in P_voleur:
                     self.next_player(P_voleur)  # ne peut voler que les joueurs qui viennent de gagner
                     print("THIEF TIME hehe\nChoissiez à quel gagnant vous souhaitez voler une pépite :\n")
                     [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
-                     enumerate(self.p_list, 1)]
-                    selected = input_player(1, len(self.p_list))
-                    self.p_list[selected - 1].score -= 1
+                     enumerate(self.p_gagnant, 1)]
+                    selected = input_player(1, len(self.p_gagnant))
+                    self.p_gagnant[selected - 1].score -= 1
                     player.score += 1
-                    del P_voleur[0]
 
 
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre
