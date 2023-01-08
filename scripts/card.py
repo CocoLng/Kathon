@@ -357,7 +357,7 @@ def impact_tools(self):
 def collapsing(self):  # Avalanche/Éboulement
     while True:
         VAL = input(f'chosir x entre {self.arg[1].decalage[0]} et {len(self.arg[1].MAP)+self.arg[1].decalage[0]-1}\n'
-                      f'chosir y entre {self.arg[1].decalage[1]} et {len(self.arg[1].MAP[0]+self.arg[1].decalage[1]-1)}\n'
+                      f'chosir y entre {self.arg[1].decalage[1]} et {len(self.arg[1].MAP[0])+self.arg[1].decalage[1]-1}\n'
                       ' x y:\n')
         VAL =VAL.split(' ')
         if VAL == 'stop' :
