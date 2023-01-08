@@ -58,7 +58,7 @@ class BoardGame:
             aff += aff1 + "\n" + aff2 + "\n" + aff3 + "\n" + aff4 + "\n" + aff5 + "\n"
         return aff_barre + "\n" + aff
     
-    # permet de verifier si la carte poser est en accord avec les regles de conection de cartes
+    # permet de verifier si la carte posé est en accord avec les regles de conection de cartes
     # permet de verifier si la carte poser est en acord avec les regles de conection de cartes
     def detect(self, card):
         flag = []
@@ -97,7 +97,7 @@ class BoardGame:
                         card_p.append(self.__map_[pos[0] + x_y][pos[1]].borders[INTE1.index(True)])
                         borders_to_connect.append(card.borders[INTE.index(True)])
                         
-                        if self.__map_[pos[0] + x_y][pos[1]].borders[INTE1.index(True)].flag_loop != None:
+                        if self.__map_[pos[0] + x_y][pos[1]].borders[INTE1.index(True)].flag_loop is not None:
                             flag = True
                     else:
                         if not (self.__map_[pos[0] + x_y][pos[1]].special in self.liste_spe):
@@ -106,7 +106,7 @@ class BoardGame:
                 except(AttributeError, IndexError, ValueError):
                     pass
             
-            if pos[1] + x_y >= 0 and pos[1] + x_y < len(self.__map_[0]):
+            if 0 <= pos[1] + x_y < len(self.__map_[0]):
                 try:
                     
                     INTE1 = [True if I.name == antipode_d_u[(x_y + 1) // 2] else False for I in
@@ -117,7 +117,7 @@ class BoardGame:
                         card_p.append(self.__map_[pos[0]][pos[1] + x_y].borders[INTE1.index(True)])
                         borders_to_connect.append(card.borders[INTE.index(True)])
                         
-                        if self.__map_[pos[0]][pos[1] + x_y].borders[INTE1.index(True)].flag_loop != None:
+                        if self.__map_[pos[0]][pos[1] + x_y].borders[INTE1.index(True)].flag_loop is not None:
                             flag = True
                     else:
                         if not (self.__map_[pos[0]][pos[1] + x_y].special in self.liste_spe):
@@ -126,16 +126,16 @@ class BoardGame:
                 except(AttributeError, IndexError, ValueError):
                     pass
         
-        if not (flag):
+        if not flag:
             print('Non connecté au start')
             return False
         
         for x_y in [-1, 1]:
-            if pos[0] + x_y >= 0 and pos[0] + x_y < len(self.__map_):
-                if self.__map_[pos[0] + x_y][pos[1]] != []:
+            if 0 <= pos[0] + x_y < len(self.__map_):
+                if self.__map_[pos[0] + x_y][pos[1]]:
                     self.__map_[pos[0] + x_y][pos[1]].reveal = True
-            if pos[1] + x_y >= 0 and pos[1] + x_y < len(self.__map_[0]):
-                if self.__map_[pos[0]][pos[1] + x_y] != []:
+            if 0 <= pos[1] + x_y < len(self.__map_[0]):
+                if self.__map_[pos[0]][pos[1] + x_y]:
                     self.__map_[pos[0]][pos[1] + x_y].reveal = True
         
         for exterieur, interieur in zip(card_p, borders_to_connect):
@@ -160,13 +160,14 @@ class BoardGame:
     
     def del_card(self, pos):
         pos = [po - deca for deca, po in zip(self.decalage, pos)]
-        if self.__map_[pos[0]][pos[1]] != []:
-            #on regrade si la carte a un attribut special que l'on ne peut pas detruire
-            if self.__map_[pos[0]][pos[1]].special in ["PIERRE", 'PEPITE'] or self.__map_[pos[0]][pos[1]].name =="ENTREE":
+        if self.__map_[pos[0]][pos[1]]:
+            # on regrade si la carte a un attribut special que l'on ne peut pas detruire
+            if self.__map_[pos[0]][pos[1]].special in ["PIERRE", 'PEPITE'] or self.__map_[pos[0]][
+                pos[1]].name == "ENTREE":
                 print("Vous ne pouvez pas detruire une carte special")
                 return False
             else:
-                #si elle est destructible on demande a la carte de ce deconnecter
+                # si elle est destructible on demande a la carte de ce deconnecter
                 self.__map_[pos[0]][pos[1]].delete()
                 self.__map_[pos[0]][pos[1]] = []
                 
@@ -175,10 +176,10 @@ class BoardGame:
                     # #sources pour etre sur que les portes soit bien connecté
                     i.reconstruc_path(i)
                 i = 0
-                #ici on stock l indice des source contenue dans la map pour pouvoir les recuper facilement
+                # ici on stock l indice des source contenue dans la map pour pouvoir les recuper facilement
                 for posl in self.pos_spe:
                     i += 0
-                    if self.__map_[posl[0] - self.decalage[0]][posl[1] - self.decalage[1]] != []:
+                    if self.__map_[posl[0] - self.decalage[0]][posl[1] - self.decalage[1]]:
                         self.__map_[posl[0] - self.decalage[0]][posl[1] - self.decalage[1]].effect()
                     else:
                         self.pos_spe.pop(i)
@@ -187,23 +188,23 @@ class BoardGame:
         else:
             return False
     
-# permet de rajouter des cartes a une position precise
-# si la carte est en dehors de la map deja cree
-# des lignes/colonnes ou les deux seront ajouté pour pouvoir placer la carte
+    # permet de rajouter des cartes a une position precise
+    # si la carte est en dehors de la map deja cree
+    # des lignes/colonnes ou les deux seront ajouté pour pouvoir placer la carte
     
-    def add_card(self,card,pos,admin = False):
+    def add_card(self, card, pos, admin=False):
         
-        #on ajoute le decalage de l'indice zeros pour que l'on puisse avoir des valeure negative dans les positions
+        # on ajoute le decalage de l'indice zeros pour que l'on puisse avoir des valeure negative dans les positions
         pos[0] = pos[0] - self.decalage[0]
         pos[1] = pos[1] - self.decalage[1]
         
         # si elle est a l exterieur nous devont ettendre la carte
         a = pos[0]
         b = pos[1]
-
-        #on verifie la taille de la map par rapport a la position demande
-        #si la position demande est en dehors de la map alors Xa/Ya = True
-        #cela indique que l'on vas agrandir la map soit sur l axe des X soit Y ou les deux
+        
+        # on verifie la taille de la map par rapport a la position demande
+        # si la position demande est en dehors de la map alors Xa/Ya = True
+        # cela indique que l'on vas agrandir la map soit sur l axe des X soit Y ou les deux
         if len(self.__map_) <= pos[0] or pos[0] < 0:
             Xa = True
         else:
@@ -213,43 +214,44 @@ class BoardGame:
             Ya = True
         else:
             Ya = False
-
-
+        
         # on regarde si la position ou l on veux poser la carte est deja prise
-        if not (Xa) and not (Ya):
+        if not Xa and not Ya:
             if not (self.__map_[pos[0]][pos[1]] == []):
                 print("Carte deja presente")
                 return False
-
+        
         else:
             # Xa et Ya nous donne l information sur si on est a l'exterieur
             # en x ou en y donc soit rajouter une/des ligne(s) ou une/des colonne(s)
-
+            
             if Xa:
                 # Xa activé donc on on va augmenter la map sur l axe des X
                 L = len(self.__map_[0])
-
-                # on regarde si l'indice cherché est  negatif si il est negatif on agrandi la map en fesant un insert a l indice 0 sinon un append
-                # on recupere en meme temps l information de combien de case on doit agrandir la map
+                
+                # on regarde si l'indice cherché est  negatif si il est negatif on agrandi la map en fesant un insert
+                # a l indice 0 sinon un append on recupere en meme temps l information de combien de case on doit
+                # agrandir la map
                 if pos[0] >= 0:
                     Xlen = pos[0] - len(self.__map_) + 1
-
+                
                 else:
                     a = 0
                     Xlen = abs(pos[0])
                     self.decalage[0] += pos[0]
                 
                 # on une colonne soit au debut de la carte soit a la fin
-                [self.__map_.append([]) if a > 0 else self.__map_.insert(0, []) for i in range(Xlen)]
+                [self.__map_.append([]) if a > 0 else self.__map_.insert(0, []) for _ in range(Xlen)]
                 
                 # si des case en X sont rajouter on doit rajouter des cases sur l axe Y afin que notre carte soit carré
                 for k in range(len(self.__map_)):
                     if len(self.__map_[k]) < L:
                         [self.__map_[k].append([]) if pos[1] > i else self.__map_[k].insert(0, []) for i in range(L)]
-
+            
             if Ya:
-                # on regarde si l'indice cherché est  negatif si il est negatif on agrandi la map en fesant un insert a l indice 0 sinon un append
-                # on recupere en meme temps l information de combien de case on doit agrandir la map
+                # on regarde si l'indice cherché est  negatif si il est negatif on agrandi la map en fesant un insert
+                # a l indice 0 sinon un append on recupere en meme temps l information de combien de case on doit
+                # agrandir la map
                 if pos[1] >= 0:
                     Ylen = pos[1] - len(self.__map_[0]) + 1
                 else:
@@ -259,14 +261,14 @@ class BoardGame:
                 
                 # on rajoute une ligne soit en haut de la __map soit en bas de la __map
                 for j in range(len(self.__map_)):
-                    [self.__map_[j].append([]) if b > 0 else self.__map_[j].insert(0, []) for i in range(Ylen)]
-
-        #apres avoir mis a jour la taille de la map on vas ranger la carte dans notre tableau
-        #on regarde si on est en mod admin si oui on poseras la carte sans ondition si non on regarderais si l acarte est pausable
-        if not (admin):
+                    [self.__map_[j].append([]) if b > 0 else self.__map_[j].insert(0, []) for _ in range(Ylen)]
+        
+        # apres avoir mis a jour la taille de la map on vas ranger la carte dans notre tableau on regarde si on est
+        # en mod admin si oui on poseras la carte sans ondition sinon on regarderais si la carte est possable
+        if not admin:
             if not ((pos[0] < -1 or pos[0] > len(self.__map_) + 1) and (
                     pos[1] < -1 or pos[1] > len(self.__map_[0]) + 1)):
-                #cette methode permet d ajouter la carte a la map
+                # cette methode permet d ajouter la carte à la map
                 if self.card_set(card, [a, b]):
                     print('La pose de carte est reussite!')
                     return True

@@ -431,7 +431,7 @@ L'effet doit être "jail_handler"
 def jail_handler(self):
     list_Player_targetable = []
     if self.name == "Emprisonnement":  # Réutilisation de edit_effet
-        [list_Player_targetable.append(player) for player in self.arg[0] if not (self.name) in player.status]
+        [list_Player_targetable.append(player) for player in self.arg[0] if self.name not in player.status]
         if len(list_Player_targetable) == 0:
             print("\nTous le monde est en prison....Veuillez faire un autre choix\n")
             return False
@@ -516,7 +516,7 @@ def START(self):  # Initialise les bordures de la carte
 #                          Affichage d'une Carte                              #
 ###############################################################################
 def aff_ch(card, special, name):
-    C = [True for creat in range(14)]
+    C = [True for _ in range(14)]
     
     HELLO_I = [K.inputo for K in card]
     HELLO_O = [K.outputo for K in card]
@@ -574,11 +574,11 @@ def aff_ch(card, special, name):
         C = [not c if l is True else False for l, c in zip(lock, C)]
     
     if len(COM) == 4:
-        C = [False for val in C]
+        C = [False for _ in C]
         C[0] = True
     
     if len(COM) == 2 and C[12]:
-        C = [False for val in C]
+        C = [False for _ in C]
         NAME = [K.name for K in COM]
         
         if "up" in NAME and "left" in NAME or "down" in NAME and "right" in NAME:
@@ -589,7 +589,7 @@ def aff_ch(card, special, name):
             C[11] = True
     
     if len(COM) == 0:
-        C = [False for val in C]
+        C = [False for _ in C]
         C[9] = True
     
     center = "╬" * C[0] + "╠" * C[1] + "╣" * C[2] + "╩" * C[3] + "╦" * C[4] + "╔" * C[5] + "╗" * C[6] + "╚" * C[

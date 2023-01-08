@@ -12,9 +12,7 @@ class Main:  # Classe principale
         self.nb_manches = 0  # Nombre de manches jouées
         self.list_players = self.init_player()  # Liste de noms des joueurs
 
-    def recap(self) -> bool:
-        print("Enter", self.nb_manches)
-        [print("Inside", player.name,player.score) for player in self.list_players] # Affiche les scores des joueurs
+    def recap(self): # Affiche le récapitulatif de la manche
         readfile('..\\ressources\\SaboteurTxt.txt', 2)
         self.list_players.sort(key=lambda player: player.score, reverse=True)
         [(print(i, ': ', player.name, '[', player.score, 'pts]', '(', player.role.name, ')', sep='', end='\n')) for
@@ -27,9 +25,9 @@ class Main:  # Classe principale
             print(
                 f"\nLe grand gagnant est {self.list_players[0].name} !! \nFélicitation, en espérant être ré-exécuter "
                 f"prochainement.\nEt n'oubliez pas de rester zen, comme mon code source")
-            
-        print("\n[1] Continuez la partie\n[0] /!\ Quittez le programme (Ctrl + C)\n")
-        input_player(0, 1)
+        else :
+            print("\n[1] Continuez la partie\n[0] /!\ Quittez le programme (Ctrl + C)\n")
+            input_player(0, 1)
 
     def init_player(self) -> list:
         # Gere la creations des Joueurs via la saisie de leur nom, avec une résistance prévu a toute épreuve,
@@ -83,7 +81,7 @@ class Main:  # Classe principale
             self.nb_manches += 1 # Incrémente le nombre de manches jouées
             self.recap() # Affiche le récapitulatif de la manche
             if self.nb_manches == 3: break
-        #return True if self.nb_manches == 3 else False
+        return True if self.nb_manches == 3 else False
 
 
 ###############################################################################
@@ -107,5 +105,6 @@ def Menu() -> bool: # Menu de lancement, retourne True si l'extension est activ�
 #                                   Main                                      #
 ###############################################################################
 
-main = Main() # Initialisation le jeu
-main.run_game() # Lance le jeu
+if __name__ == '__main__':
+    main = Main() # Initialisation le jeu
+    main.run_game() # Lance le jeu

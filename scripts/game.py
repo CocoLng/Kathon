@@ -56,7 +56,6 @@ class Game:
         [self.map.add_card(CARD, POS, True) for CARD, POS in zip(L, pos)]  # Ajoute les cartes cachées à la map_game
         
         [shuffle(deck.list_card) for deck in self.decks]  # Mélange les cartes
-        #self.decks[0].list_card = self.decks[0].list_card[:27]
         # Effacement des status et suppression des cartes restantes du précédent round, sécurité, si résidu de pointeur
         [(player.status.clear(), player.main.clear()) for player in self.p_round]
         # assignment d'un role à chaque joueur, le deck role est déja mélangé
@@ -99,7 +98,8 @@ class Game:
             if self.win_card.borders[0].flag_loop is not None: return True  # Si la pépite est trouvée
             # Une fois que le joueur a joué nous passons au suivant, stocké en position 0
             # Le joueur qui vient de finir son tour passe en dernière position
-            if P_Alive: self.p_round = self.p_round[1:] + self.p_round[:1]  # Si le joueur est mort, on ne le remet
+            
+            if P_Alive: self.p_round.append(self.p_round.pop(0))# Si le joueur est mort, on ne le remet
             # pas en fin de liste
             # Regarde si le joueur suivant est le premier, si oui, nous n'afficherons plus le role du joueur
             if first_player == self.p_round[0].name: first_turn = False
