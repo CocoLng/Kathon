@@ -12,7 +12,6 @@ class Main:  # Classe principale
         self.extension = Menu()  # Menu de lancement
         self.nb_manches = 0  # Nombre de manches jouées
         self.list_players = self.init_player()  # Liste des joueurs
-        self.run_game() # Lance le jeu, retourne True si le jeu s'est bien déroulé, False sinon
 
     def recap(self) -> bool:
         print("Enter", self.nb_manches)
@@ -39,7 +38,7 @@ class Main:  # Classe principale
         # normalement...
         self.list_players = []  # Liste des joueurs
         print(
-            "\nSaisir 'STOP' pour forcer l'arret.\nNe rien taper (ou Ctrl+C), si le nombre de joueur minimum est "
+            "\nSaisir 'STOP' pour forcer l'arrêt.\nNe rien taper (ou Ctrl+C), si le nombre de joueur minimum est "
             "atteint, pour poursuivre vers l'initialisation.")
         while True:
             New_input = ''
@@ -83,6 +82,7 @@ class Main:  # Classe principale
         while self.recap(): # Comptes les nombres de manches jouées, sort quand 3 manches sont jouées
             Game(self) # Lance la manche
             self.nb_manches += 1 # Incrémente le nombre de manches jouées
+        return True if self.nb_manches == 3 else False
 
 
 ###############################################################################
@@ -106,4 +106,5 @@ def Menu() -> bool: # Menu de lancement, retourne True si l'extension est activ�
 #                                   Main                                      #
 ###############################################################################
 if __name__ == '__main__':
-    Main()  # on lance le programme
+    main = Main() # Initialisation le jeu
+    main.run_game() # Lance le jeu

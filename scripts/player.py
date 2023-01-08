@@ -76,7 +76,7 @@ class Human:  # Classe du joueur humain
             print("Vous n'avez pas asser de cartes")
             return False
         if len(deck.list_card) == 0:  # Si le paquet de carte est vide
-            print("\n❌ Le deck est vide. Vous ne récupérez pas de cartes.\n Continuez ?\n[1]Oui\n[2]Non")
+            print("\n❌ Le deck est vide. Vous ne récupérez pas de cartes.\nContinuez ?\n[1]Oui\n[2]Non")
             res = input_player(1, 2)  # Demande au joueur s'il veut continuer, si oui, il ne récupère pas de carte
             if res == 2: return False
         elif extension and deck and quantitee == 1:  # Si l'extension est activée et que le joueur veut défausser une
@@ -94,7 +94,7 @@ class Human:  # Classe du joueur humain
                 card = self.main[card - 1]
             else:
                 return False
-            if card in self.main:  # Carte qui va être défausser
+            if card in self.main:  # Carte qui va être défaussé
                 print(f"\nVous avez défaussée {card.name}")
                 self.main.remove(card)
             else:

@@ -5,9 +5,10 @@ from types import MethodType
 
 from scripts.detect_region import ConnectionEdge
 
+# Chemin vers le fichier texte pour l'initialisation des cartes
 path_init = path.join(path.dirname(__file__), '..\\ressources\\card_ini.txt')
 ###############################################################################
-#                              deck                                           #
+#                              Deck                                           #
 ###############################################################################
 """
 Name correspond au nom du deck que nous souhaitons crée, il doit s'appeler comme ceci :

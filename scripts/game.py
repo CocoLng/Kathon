@@ -22,16 +22,16 @@ class Game:
         self.map = BoardGame()  # Création de la map_game
         
         self.init_round(), self.repartition_card()
-        self.gold_found = self.run_round()  # Renvoie si la pépite a était trouvée ou non à la fin de la manche
+        self.gold_found = self.run_round  # Renvoie si la pépite a était trouvée ou non à la fin de la manche
         self.reward_time()
         cls_screen()  # Efface le terminal
     
-    def next_player(self, nextP = None):  # Gere le passage au joueur suivant
-        if nextP is None: nextP = self.p_round[0]
+    def next_player(self, next_player=None):  # Gere le passage au joueur suivant
+        if next_player is None: next_player = self.p_round
         cls_screen()  # Efface le terminal
         sleep(1)  # temps de nettoyer l'écran
         readfile('..\\ressources\\SaboteurTxt.txt', 4)
-        print(f"C'est au tour de {nextP.name} !\n")
+        print(f"C'est au tour de {next_player[0].name} !\n")
         input("Pressez enter pour continuer, sinon on peut aussi attendre tranquillement\n...")
     
     def init_round(self):  # Initialise une manche
@@ -68,6 +68,7 @@ class Game:
             [player.main.append(self.decks[0].draw_card()) for player in self.p_round for i in range(nb_P_repart)]
     
     # Gere la manche en cours
+    @property
     def run_round(self) -> bool:
         # Verifies que la pépite n'est pas trouvée et qu'un joueur a toujours au moins une carte
         first_player = self.p_round[0].name
@@ -83,6 +84,7 @@ class Game:
             print(self.map)  # Affiche la nouvelle map_game
             if not (self.p_round[0].get_card(self.decks[0])):  # Si la pioche est vide
                 if len(self.p_round[0].main) == 0:  # Si le joueur n'a plus de carte
+                    if len(self.p_round) == 1: return False  # S'il est le dernier joueur, la partie est perdue
                     self.p_round.pop(0)  # On le supprime de la liste des joueurs
                     P_Alive = False  # Le joueur est mort, car il n'a plus de carte
                 else:
@@ -92,10 +94,9 @@ class Game:
             # Le joueur qui vient de finir son tour passe en dernière position
             if P_Alive: self.p_round = self.p_round[1:] + self.p_round[:1]  # Si le joueur est mort, on ne le remet
             # pas en fin de liste
-            try:  # Regarde si le joueur suivant est le premier, si oui, nous n'afficherons plus le role du joueur
-                if first_player == self.p_round[0].name: first_turn = False
-            except IndexError:
-                return False  # Si la liste des joueurs est vide, la partie est finie
+            # Regarde si le joueur suivant est le premier, si oui, nous n'afficherons plus le role du joueur
+            if first_player == self.p_round[0].name: first_turn = False
+            
             print("\nFIN de votre tour, analyser la map_game et retenez vos cartes si vous le désirez.")
             input("Pressez enter quand vous avez fini pour confirmer la fin de votre tour\n...")
             
@@ -106,7 +107,6 @@ class Game:
         p_list va se faire filtrer de manière à conserver uniquement les gagnants du round
         nb_deleted est présent pour eviter de provoquer un décalage d'indice dans la list des joueurs
         """
-        print(self.gold_found)
         nb_deleted = 0
         if not self.extension:
             if self.gold_found:  # les chercheurs ont gagné
@@ -133,19 +133,21 @@ class Game:
                 for player in self.p_list:
                     player.score += int(nb_pepites)
         
-        else:
+        else: # Si l'extension est activée
+            
             # Check pour des potentiels voleurs
             self.p_list[0].status.append("Voleur")
             P_voleur = []
             [P_voleur.append(player) for player in self.p_list if
              ("Voleur" in player.status) and not ("Emprisonnement" in player.status)]
+            
             # DETECTION DES GEMMES GEOLOGUES
             nb_cristaux = 0
             card = None
             for map_c in self.map._BoardGame__map_:
                 for card in map_c:
                     if card != [] and card.special == "cristaux": nb_cristaux += 1
-                print(card, nb_cristaux)
+            list_geologue = list(filter(lambda x: x.role.name[0] == "S" or x.role.name[0] == "P", self.p_list))
             
             if self.gold_found:  # les Chercheurs gagnent
                 for i in self.p_round:
@@ -187,25 +189,23 @@ class Game:
                                 print(f'le joueur {n.name} est victorieux et a {n.score} il était {n.role.name}')
             
             else:  # les saboteurs gagnent
-                for n, player in enumerate(self.p_list, 0):
-                    if player.role.name[0] != ("S" or "P"):  # Saboteur or Profiteur
-                        del self.p_list[n - nb_deleted]
-                        nb_deleted += 1
-                nb_pepites = max(6 - len(self.p_list), 1)  # Nombre de pépites en fonction du nombre de gagnants
+                self.p_list = list(filter(lambda x: x.role.name[0] == "S" or x.role.name[0] == "P", self.p_list))
                 
+                nb_pepites = max(6 - len(self.p_list), 1)  # Nombre de pépites en fonction du nombre de gagnants
                 for n in range(len(self.p_list)):
                     if self.p_list[n].role.name[0] == "S":
                         self.p_list[n].score += int(nb_pepites)
                     else:
-                        self.p_list[n].score += int(nb_pepites) - 1  # les saboteurs gagne 1 de moins
+                        self.p_list[n].score += int(nb_pepites) - 1  # les saboteurs gagnent 1 de moins
                     
                     # p.append(plaer) for list geo list gagnt si score !=0
-            
-            # if player.score == 0 : p_list.remove(player) #Si le score est nul, c'est que le gagnant a rien gagné
+            p_gagnant  = [x for n in (self.p_list, list_geologue) for x in n]
+            # Si le score est nul, c'est que le gagnant a rien gagné
             # On va le retirer de la list des gagnants de manière à éviter qu'il puisse se faire voler
             # Tour des voleurs
-            [print(player.name, player.score) for player in self.p_list]
-            if len(P_voleur) != 0 and len(self.p_list) != 0:  # S'il y a des voleurs et des gagnants
+            # S'il y a des voleurs et des gagnants, ou que le seul gagnant n'est pas le seul voleur
+            if len(P_voleur) != 0 and len(self.p_list) != 0 and not (
+                    len(self.p_list) == 1 and self.p_list[0] == P_voleur[0]):
                 for player in P_voleur:
                     self.next_player(P_voleur)  # ne peut voler que les joueurs qui viennent de gagner
                     print("THIEF TIME hehe\nChoissiez à quel gagnant vous souhaitez voler une pépite :\n")
