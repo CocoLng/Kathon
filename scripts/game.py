@@ -9,6 +9,7 @@ from scripts.player import Player
 
 class Game:
     def __init__(self, main):
+        self.win_card = None
         self.p_list = None
         self.extension = main.extension
         self.list_players = [Player(player) for player in main.list_players]  # Liste des joueurs
@@ -34,10 +35,10 @@ class Game:
         return self.list_players
     
     def next_player(self, next_player=None):  # Gere le passage au joueur suivant
-        if next_player is None: next_player = self.p_round
+        if next_player is None: next_player = self.p_round[0]
         cls_screen()  # Efface le terminal
         readfile('..\\ressources\\SaboteurTxt.txt', 4)
-        print(f"C'est au tour de {next_player[0].name} !\n")
+        print(f"C'est au tour de {next_player.name} !\n")
         input("Pressez enter pour continuer, sinon on peut aussi attendre tranquillement\n...")
     
     def init_round(self):  # Initialise une manche
@@ -78,6 +79,7 @@ class Game:
         # Verifies que la pépite n'est pas trouvée et qu'un joueur a toujours au moins une carte
         first_player = self.p_round[0].name
         first_turn = True  # Permet de savoir si c'est le premier tour de la manche, pour afficher le role du joueur
+        self.next_player()
         while True:
             P_Alive = True  # Permet de savoir si le joueur est encore en vie
             print(self.map)
@@ -221,7 +223,7 @@ class Game:
             if len(P_voleur) != 0 and len(p_gagnant) != 0 and not (
                     len(p_gagnant) == 1 and p_gagnant[0] == P_voleur[0]):
                 for player in P_voleur:
-                    self.next_player(P_voleur)  # On passe au voleur suivant
+                    self.next_player(player)  # On passe au voleur suivant
                     while True:  # ne peut voler que les joueurs qui viennent de gagner
                         print("THIEF TIME hehe\nChoissez à quel gagnant vous souhaitez voler une pépite :\n")
                         [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
@@ -233,7 +235,8 @@ class Game:
                             player.score += 1
                             break
                         else:
-                            print("Ce joueur n'a plus de pépites à voler, ou sinon vous essayez de vous voler vous-même")
+                            print("\nCe joueur n'a plus de pépites à voler, ou sinon vous essayez de vous voler "
+                                  "vous-même\n")
 
 
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre

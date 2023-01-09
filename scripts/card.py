@@ -452,7 +452,7 @@ L'effet doit être "thief_handler"
 
 def thief_handler(self) -> bool:
     if self.name == "Voleur":  # Réutilisation de edit_effet
-        if has_effect("Voleur", self.arg[0][0]):
+        if has_effect("Voleur", self.arg[0][0]): # on vérifie que le joueur n'a pas déjà l'effet voleur
             print("\nVous êtes déja un voleur\n")
             return False
         return edit_status(True, "Voleur", self.arg[0][0])  # applique l'effet voleur au joueur actuel

@@ -73,8 +73,8 @@ Dans ce projet, nous avons fait une approche de programmation par objet.
 
 Le module Main gere le nombre de manches et l initialisation de chaque round. C est egalement celui qui est lance initialement.
 
-Le module game, va gerer l intégralité d un round en se basant sur les modules suivants :
-– Deck, qui est un deck de cartes, les cartes peuvent etre variables. Elles peuvent etre de role chemin, reward, role ou encore action.
+Le module game, va gerer l integralite d un round en se basant sur les modules suivants :
+- Deck, qui est un deck de cartes, les cartes peuvent etre variables. Elles peuvent etre de role chemin, reward, role ou encore action.
 - Player, qui represente l etat de notre joueur dans le round actuel, sauf le score qui perdure entre les manches.
 - BoardGame, peut etre assimile a un plateau de jeu, il contient toutes les cartes poser.
 

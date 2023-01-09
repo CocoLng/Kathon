@@ -27,30 +27,30 @@ ACTION_CHEMIN
 5;Croisement;A la croiser des chemins;0000:0000:0000:1110;up,left,down,right
 5;Croisement T up,left,right;A la croiser des chemins;000:000:110;up,left,right
 5;Croisement T up,left,down;A la croiser des chemins;000:000:110;up,left,down
-4;Ligne up,down;a la croiser des chemins;00:10;up,down
-3;Ligne left,right;a la croiser des chemins;00:10;left,right
-4;Coin right,down;a la croiser des chemins;00:10;right,down
-5;Coin left,down;a la croiser des chemins;00:10;left,down
+4;Ligne up,down;A la croiser des chemins;00:10;up,down
+3;Ligne left,right;A la croiser des chemins;00:10;left,right
+4;Coin right,down;A la croiser des chemins;00:10;right,down
+5;Coin left,down;A la croiser des chemins;00:10;left,down
 
-1;Croisement, culs de sacs (culs de sacs);a la croiser des culs de sacs;0000:0000:0000:0000;up,left,down,right
-1;Croisement T up,left,right (culs de sacs);a la croiser des culs de sacs;000:000:000;up,left,right
-1;Croisement T up,left,down (culs de sacs);a la croiser des culs de sacs;000:000:000;up,left,down
+1;Croisement, culs de sacs (culs de sacs);A la croiser des culs de sacs;0000:0000:0000:0000;up,left,down,right
+1;Croisement T up,left,right (culs de sacs);A la croiser des culs de sacs;000:000:000;up,left,right
+1;Croisement T up,left,down (culs de sacs);A la croiser des culs de sacs;000:000:000;up,left,down
 
-1;Ligne up,down (culs de sacs);a la croiser des culs de sacs;00:00;up,down
-1;Ligne left,right (culs de sacs);a la croiser des culs de sacs;00:00;left,right
-1;Ligne right,down (culs de sacs);a la croiser des culs de sacs;00:00;right,down
-1;Ligne left,down (culs de sacs);a la croiser des culs de sacs;00:00;left,down
-1;Cul de sac (culs de sacs);a la croiser des culs de sacs;0;down
-1;Cul de sac (culs de sacs);a la croiser des culs de sacs;0;left
+1;Ligne up,down (culs de sacs);A la croiser des culs de sacs;00:00;up,down
+1;Ligne left,right (culs de sacs);A la croiser des culs de sacs;00:00;left,right
+1;Ligne right,down (culs de sacs);A la croiser des culs de sacs;00:00;right,down
+1;Ligne left,down (culs de sacs);A la croiser des culs de sacs;00:00;left,down
+1;Cul de sac;Culs de sacs;0;down
+1;Cul de sac;Culs de sacs;0;left
 
 EXTENSION
-2;PontChemin;a_la_croiser_des_chemins;0000:0000:1000:0100;up,left,down,right
-2;Echelle;a_la_croiser_des_chemins;0;down;True;START;False;True
-2;Echelle;a_la_croiser_des_chemins;0;left;True;START;False;True
-2;DoubleCourbe;a_la_croiser_des_chemins;0000:1000:000:0010;up,left,down,right
-3;GREEN;a_la_croiser_des_chemins;00:00;left,up;True;DOOR;False;True
-3;BLUE;a_la_croiser_des_chemins;00:00;left,up;True;DOOR;False;True
-10;PontChemin avec un CRISTAL;a_la_croiser_des_chemins;000:000:110;up,left,down;True;cristaux;False
+2;PontChemin;Pose un pont, gauche et droite sont relies, haut et bas aussi entre eux;0000:0000:1000:0100;up,left,down,right
+2;Echelle;Permet de poursuivre le tunnel, si le start est connecter aussi a une echelle;0;down;True;START;False;True
+2;Echelle;Permet de poursuivre le tunnel, si le start est connecter aussi a une echelle;0;left;True;START;False;True
+2;DoubleCourbe;2 chemins qui ne sont pas connectes;0000:1000:000:0010;up,left,down,right
+3;GREEN;Carte porte verte, toutes les cartes poses derriere appartiennent au vert;00:00;left,up;True;DOOR;False;True
+3;BLUE;Carte porte bleu, toutes les cartes poses derriere appartiennent au bleu;00:00;left,up;True;DOOR;False;True
+10;PontChemin avec un CRISTAL;C est un pont qui possede un cristal en sont centre, utile pour les geologues;000:000:110;up,left,down;True;cristaux;False
 
 
 
