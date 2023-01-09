@@ -184,7 +184,7 @@ class CardChemin(Card):
         return ["┏━━━┓", "┃   ┃", "┃   ┃", "┃   ┃", "┗━━━┛"]
     
     @aff.setter
-    def aff(self, update):
+    def aff(self, _):
         self.__aff = aff_ch(self.borders, self.special, self.name)
         if '\n' in self.description:
             self.description = self.description[:self.description.index('\n')]
@@ -251,7 +251,7 @@ def edit_status(ajout, effect_play, target_p) -> bool:
         target_p.status.append(effect_play)
         Done = True
         print(f"Mouhaha, l'opération sur {target_p.name} c'est déroulé sans accroc.\n")
-    # si on veut lui retirer(ajout=False), on regarde que la cible possède l'effet
+    # si on veut lui retirer (ajout=False), on regarde que la cible possède l'effet
     elif not ajout and has_effect(effect_play, target_p):
         target_p.status.remove(effect_play)
         Done = True

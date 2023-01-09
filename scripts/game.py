@@ -147,16 +147,22 @@ class Game:
                     player.score += int(nb_pepites)
         
         else:  # Si l'extension est activée
-            
-            # Check pour des potentiels voleurs
+    
+            ###############################################################################
+            #                             Liste les voleurs                              #
+            ###############################################################################
             P_voleur = []
             [P_voleur.append(player) for player in self.p_list if
              ("Voleur" in player.status) and not ("Emprisonnement" in player.status)]
             
             # Check pour des potentiels profiteurs et les stocke dans une liste
             list_profiteur = list(filter(lambda x: x.role.name == "P", self.p_list))
+
+            ###############################################################################
+            #                                   Géologues                                 #
+            ###############################################################################
             
-            # DETECTION DES GEMMES GEOLOGUES
+            # DETECTION DES GEMMES
             nb_cristaux = 0
             for map_c in self.map.MAP:
                 for card in map_c:
@@ -165,6 +171,11 @@ class Game:
             # Les geologues gagnent 1 point par cristal, divisé par le nombre de geologues
             for player in list_geologue: player.score += int((nb_cristaux / len(list_geologue)) // 1)  # //1 permet
             # d'arrondir à l'entier inférieur
+            
+            
+            ###############################################################################
+            #                             Sélection Gagnants                              #
+            ###############################################################################
             
             if self.gold_found:  # les Chercheurs gagnent
                 # C'est un role de team qui a fait la connection
@@ -192,17 +203,24 @@ class Game:
                     
                     elif 'GREEN' in list_flag or 'BLUE' in list_flag:
                         # S'il y a une porte verte ou bleue sur le chemin
-                        if 'GREEN' in list_flag:
+                        if 'GREEN' in list_flag and self.p_round[0].role.name == "Chercheurs d or Team Vert":
                             self.p_list = list(
                                 filter(lambda x: x.role.name in {'Chercheurs d or Team Vert', 'Boss'}, self.p_list))
-                        else:
+                        elif 'BLUE' in list_flag and self.p_round[0].role.name == "Chercheurs d or Team Bleu":
                             self.p_list = list(
                                 filter(lambda x: x.role.name in {'Chercheurs d or Team Bleu', 'Boss'}, self.p_list))
-            
+                        else:  # Le boss crée la connexion
+                            self.p_list = list(
+                                filter(lambda x: x.role.name in {'Chercheurs d or Team Bleu', 'Chercheurs d or Team '
+                                                                                              'Vert', 'Boss'},
+                                       self.p_list))
             else:  # les saboteurs gagnent
                 self.p_list = list(filter(lambda x: x.role.name[0] == "S", self.p_list))
             
-            # Attribution des points
+            ###############################################################################
+            #                             Attribution Points                              #
+            ###############################################################################
+            
             nb_pepites = max(6 - len(self.p_list), 1) + len(list_profiteur)  # Nombre de pépites
             # en fonction du nombre de gagnants
             for player in self.p_list:
@@ -213,6 +231,10 @@ class Game:
                         player.score += int(nb_pepites) - 1
                     elif nb_pepites > 2:  # Si le profiteur gagne, il gagne deux points de moins
                         player.score += int(nb_pepites) - 2  # les profiteurs gagnent 2 de moins
+            
+            ###############################################################################
+            #                                   Voleur                                    #
+            ###############################################################################
             
             # Liste des joueurs qui ont gagné, pour pouvoir les voler
             p_gagnant = [x for n in (self.p_list, list_geologue, list_profiteur) for x in n if x.score != 0]
@@ -233,6 +255,7 @@ class Game:
                         if p_gagnant[selected - 1].score > 0 and player != p_gagnant[selected - 1]:
                             p_gagnant[selected - 1].score -= 1
                             player.score += 1
+                            if player not in p_gagnant: p_gagnant.append(player)
                             break
                         else:
                             print("\nCe joueur n'a plus de pépites à voler, ou sinon vous essayez de vous voler "

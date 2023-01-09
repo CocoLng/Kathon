@@ -10,7 +10,7 @@ recap(): void
 init_players(): string List
 run_game(): bool
 }
-
+Main <-- Game
 
 
 class Game{
@@ -32,9 +32,9 @@ run_round(): void
 reward_time(): void
 }
 
-Game"1" o- BoarGame
-Game"1..12" o- Player
-Game"3" o- Deck
+Game"1" o-- BoarGame
+Game"1..12" o-- Player
+Game"3" o-- Deck
 
 
 
@@ -52,7 +52,7 @@ del_card (pos : list of int): bool
 add_card (card : CardChemin, pos : list of int,admin : bool): bool
 current (pos : list of int): CardChemin
 }
-BoarGame "4..*" o-- Card
+BoarGame "4.*" o-- Card
 
 class Player{
 +score: int
@@ -156,6 +156,7 @@ flag_loop():string
 inputo(obj : ConnectionEdge): void
 outputo(obj : ConnectionEdge): void
 connect(obj : ConnectionEdge): void
+secu_connect(obj : ConnectionEdge): void
 disconnect(obj : ConnectionEdge): void
 delete_connection(): void
 reconstruc_path(source_flag : ConnectionEdge):void
