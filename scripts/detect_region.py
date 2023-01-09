@@ -77,13 +77,17 @@ class ConnectionEdge:  # Classe de connection entre les objets
             self.__outputo.remove(obj)
         else:
             self.__outputo.append(obj)
-    
     def connect(self, obj):  # Permet de connecter deux objets
         self.delet = False
         obj.delet = False
         self.inputo = obj
         obj.outputo = self
-    
+    def secu_connect(self, obj):  # Permet de liée deux objets de façon securisé
+        self.delet = False
+        obj.delet = False
+        self.outputo = obj
+        obj.outputo = self
+
     # deconnect deux objets
     # pour simplifier l'utilisation de la fonction, nous considérons que si l'utilisateur rentre
     # je veux déconnecter A et B sera la meme chose que déconnecter B et A
@@ -125,7 +129,6 @@ class ConnectionEdge:  # Classe de connection entre les objets
         for i in in_out:
             i.disconnect(self)
             if i != source_flag:
-                
                 if i.flag_loop is None or i.flag_loop != self.flag_loop:
                     i.connect(self)
                     i.reconstruc_path(self)

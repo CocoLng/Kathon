@@ -139,7 +139,7 @@ class BoardGame:
                     self.__map_[pos[0]][pos[1] + x_y].reveal = True
         
         for exterieur, interieur in zip(card_p, borders_to_connect):
-            interieur.connect(exterieur)
+            interieur.secu_connect(exterieur)
         
         self.__map_[pos[0]][pos[1]] = card
         
