@@ -213,7 +213,7 @@ class Game:
                         player.score += int(nb_pepites) - 2  # les profiteurs gagnent 2 de moins
             
             # Liste des joueurs qui ont gagné, pour pouvoir les voler
-            p_gagnant = [x for n in (self.p_list, list_geologue, list_profiteur) for x in n]
+            p_gagnant = [x for n in (self.p_list, list_geologue, list_profiteur) for x in n if x.score != 0]
             # Si le score est nul, c'est que le gagnant a rien gagné
             # On va le retirer de la list des gagnants de manière à éviter qu'il puisse se faire voler
             # Tour des voleurs
