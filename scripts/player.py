@@ -60,12 +60,12 @@ class Player:  # Classe du joueur humain
 
     @property
     def score(self):  # Retourne le score du joueur
-        return self.__score
+        return self.score
 
     @score.setter  # Modifie le score du joueur, vérifie que le score est positif
     def score(self, score):
         if score >= 0:
-            self.__score = score
+            self.score = score
         else:
             print("Impossible de retirer des point au joueur, il en a pas")
 

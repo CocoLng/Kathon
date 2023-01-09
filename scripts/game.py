@@ -181,7 +181,7 @@ class Game:
                             filter(lambda x: x.role.name[0] in {'C', 'B'}, self.p_list))
                 else:
                     if 'D' in list_flag:  # D pour Double, il y a deux portes de couleurs différentes sur le chemin
-                        if any(player.role.name == "Boss" for player in self.p_list):
+                        if not any(player.role.name == "Boss" for player in self.p_list):
                             # Si le Boss n'est pas dans la game, on attribue la victoire aux saboteurs
                             self.p_list = list(
                                 filter(lambda x: x.role.name[0] == 'S', self.p_list))
@@ -215,7 +215,6 @@ class Game:
             
             # Liste des joueurs qui ont gagné, pour pouvoir les voler
             p_gagnant = [x for n in (self.p_list, list_geologue, list_profiteur) for x in n]
-            [print(player.role.name,';',player.score) for player in p_gagnant]
             # Si le score est nul, c'est que le gagnant a rien gagné
             # On va le retirer de la list des gagnants de manière à éviter qu'il puisse se faire voler
             # Tour des voleurs

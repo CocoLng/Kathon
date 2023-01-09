@@ -19,10 +19,11 @@ class Game{
 +p_round: player List
 +deck: Card ArrayList
 +win_card: Card
++list_player: string List
 +map: CardChemin ArrayList
 +gold_found: bool
 __
-__init__(main : Main ): void
+__init__(main : Main )
 __enter__()
 next_player( next_player = None : Player):void
 init_round(): void
@@ -60,7 +61,7 @@ class Player{
 +main: Card List
 +status: string
 __
-__init__(name,string): void
+__init__(name:string): void
 del_card(extension=False : bool, deck=None : ArrayList, quantitee=1 : int): bool
 play(p_list :Player List, map_game :ArrayList:, extension : bool, deck : ArrayList): bool
 get_card(deck : Card List,nbr_tirage :int): bool
