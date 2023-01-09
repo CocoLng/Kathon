@@ -9,7 +9,7 @@ class Main:  # Classe principale
     
     def __init__(self):
         self.extension = Menu()  # Menu de lancement
-        self.nb_manches = 2  # Nombre de manches jouées
+        self.nb_manches = 0  # Nombre de manches jouées
         self.list_players = self.init_player()  # Liste de noms des joueurs
     
     def recap(self):  # Affiche le récapitulatif de la manche
@@ -24,7 +24,7 @@ class Main:  # Classe principale
             readfile('..\\ressources\\SaboteurTxt.txt', 3)
             print(
                 f"\nLe grand gagnant est {self.list_players[0].name} !! \nFélicitation, en espérant être ré-exécuter "
-                f"prochainement.\nEt n'oubliez pas de rester zen, comme mon code source")
+                f"prochainement.\nEt n'oubliez pas de rester zen, comme mon code source essaye de l'être !")
         else:
             print("\n[1] Continuez la partie\n[0] /!\ Quittez le programme (Ctrl + C)\n")
             input_player(0, 1)

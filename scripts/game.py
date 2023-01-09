@@ -222,16 +222,15 @@ class Game:
                     len(p_gagnant) == 1 and p_gagnant[0] == P_voleur[0]):
                 for player in P_voleur:
                     self.next_player(P_voleur)  # On passe au voleur suivant
-                    P_voleur.remove(player)  # On retire le voleur de la liste
                     while True:  # ne peut voler que les joueurs qui viennent de gagner
                         print("THIEF TIME hehe\nChoissez à quel gagnant vous souhaitez voler une pépite :\n")
                         [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
                          enumerate(p_gagnant, 1)]
+                        print("\n")
                         selected = input_player(1, len(p_gagnant))
-                        if p_gagnant[selected - 1].score > 0:
+                        if p_gagnant[selected - 1].score > 0 and player != p_gagnant[selected - 1]:
                             p_gagnant[selected - 1].score -= 1
                             player.score += 1
-                            P_voleur.append(player)
                             break
                         else:
                             print("Ce joueur n'a plus de pépites à voler")
