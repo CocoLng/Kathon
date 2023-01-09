@@ -147,7 +147,7 @@ class Game:
                     player.score += int(nb_pepites)
         
         else:  # Si l'extension est activée
-    
+            
             ###############################################################################
             #                              Liste les voleurs                              #
             ###############################################################################
@@ -157,7 +157,7 @@ class Game:
             
             # Check pour des potentiels profiteurs et les stocke dans une liste
             list_profiteur = list(filter(lambda x: x.role.name == "P", self.p_list))
-
+            
             ###############################################################################
             #                                   Géologues                                 #
             ###############################################################################
@@ -171,7 +171,6 @@ class Game:
             # Les geologues gagnent 1 point par cristal, divisé par le nombre de geologues
             for player in list_geologue: player.score += int((nb_cristaux / len(list_geologue)) // 1)  # //1 permet
             # d'arrondir à l'entier inférieur
-            
             
             ###############################################################################
             #                             Sélection Gagnants                              #
@@ -263,6 +262,7 @@ class Game:
                         else:
                             print("\nCe joueur n'a plus de pépites à voler, ou sinon vous essayez de vous voler "
                                   "vous-même\n")
+
 
 ###############################################################################
 #                                Fonctions                                    #
