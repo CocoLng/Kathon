@@ -27,8 +27,8 @@ class Deck:
         self.load_cards(nb_players)
     
     # Permet de piocher une carte
-    def draw_card(self, indice=0):  # sert pour la pioche d'une carte
-        # indice correspond a quelle carte on veux piocher dans le deck
+    def draw_card(self, indice=0) -> bool:  # sert pour la pioche d'une carte
+        # indice correspond a quelle carte on veut piocher dans le deck
         if len(self.list_card) == 0: return False
         return self.list_card.pop(indice)  # sinon envoie la première carte et la supprime
     
@@ -228,7 +228,7 @@ class CardAction(Card):
     arg[1] contient la map_game
     """
     
-    def target_player(self, list_player_targetable):
+    def target_player(self, list_player_targetable) -> int:
         print(f'Sur quel joueur voulez vous appliquer {self.name}')
         [print('┃', i, ': ', x.name, sep=' ', end='┃') for i, x in
          enumerate(list_player_targetable, 1)]  # laisse le joueur pouvoir se cibler
@@ -238,15 +238,15 @@ class CardAction(Card):
 
 # les fonctions si dessous sont appelables par tous types de cartes
 
-def has_effect(effect, target_p):
+def has_effect(effect, target_p) -> bool:
     if effect in target_p.status:  # regarde si le Target Player possède deja l'effet
         return True
     return False
 
 
-def edit_status(ajout, effect_play, target_p):
+def edit_status(ajout, effect_play, target_p) -> bool:
     Done = False
-    # si le joueur n'as pas déja l'effet alors on peut lui mettre
+    # si le joueur n'as pas déja l'effet alors on peut lui mettre l'effet
     if ajout and not (has_effect(effect_play, target_p)):
         target_p.status.append(effect_play)
         Done = True
@@ -261,7 +261,7 @@ def edit_status(ajout, effect_play, target_p):
     return Done
 
 
-def input_player(mini, maxi):  # demande un input entre mini et maxi et return le res
+def input_player(mini, maxi) -> int:  # demande un input entre mini et maxi et return le res
     selected = None
     while True:
         try:  # redemande jusqu'a validité
@@ -321,7 +321,7 @@ Donc effect = impact_tools a l'initialisation pour appeler la fonction
 """
 
 
-def impact_tools(self):
+def impact_tools(self) -> bool:
     Name_list = self.name.split()
     list_Player_targetable = []
     if Name_list[0] == "Cassage":  # Si nous ne cassons pas nous réparons
@@ -352,7 +352,7 @@ def impact_tools(self):
 #                         Avalanche & Plan Secret                             #
 ###############################################################################
 
-def collapsing(self):  # Avalanche/Éboulement
+def collapsing(self) -> bool:  # Avalanche/Éboulement
     while True:
         VAL = input(
             f'Chosir x entre {self.arg[1].decalage[0]} et {len(self.arg[1].MAP) + self.arg[1].decalage[0] - 1}\n'
@@ -369,7 +369,7 @@ def collapsing(self):  # Avalanche/Éboulement
     return self.arg[1].del_card(VAL)
 
 
-def secret_plan(self):  # Plan Secret, permet de visualiser une des 3 cartes d'arrivée
+def secret_plan(self) -> bool:  # Plan Secret, permet de visualiser une des 3 cartes d'arrivée
     while True:
         print("Quel carte souhaitez-vous visualiser ?\n 1-Haut 2-Milieu 3-Bas\n")
         selected = input_player(1, 3)
@@ -390,25 +390,23 @@ def secret_plan(self):  # Plan Secret, permet de visualiser une des 3 cartes d'a
 #                        Chargement d'une Extension                           #
 ###############################################################################
 
-def inspect(self):  # Inspection, permet de voir le role d'un joueur
+def inspect(self) -> bool:  # Inspection, permet de voir le role d'un joueur
     Target_P = self.target_player(self.arg[0])
     print(f"SPOILER ALERTE :\n{Target_P.name} est en réalité un :\n{Target_P.role}.")
-    Done = True
-    return Done
+    return True
 
 
-def switch_role(self):  # Changement de Role, permet de changer le role d'un joueur
+def switch_role(self) -> bool:  # Changement de Role, permet de changer le role d'un joueur
     print("Sélectionnez un joueur avec qui changer de role :")
     Target_P = self.target_player(self.arg[0])
     temp = Target_P.role
     Target_P.role = self.arg[0][0].role
     self.arg[0][0].role = temp
     print(f"Vous êtes désormais un {self.arg[0][0].role}")
-    Done = True
-    return Done
+    return True
 
 
-def switch_hand(self):  # Changement de Main, permet de changer la main d'un joueur avec la sienne
+def switch_hand(self) -> bool:  # Changement de Main, permet de changer la main d'un joueur avec la sienne
     print("Avec quel joueur souhaitez-vous inverser votre deck de cartes ?")
     Target_P = self.target_player(self.arg[0])
     self.arg[0][0].main.remove(self)
@@ -417,8 +415,7 @@ def switch_hand(self):  # Changement de Main, permet de changer la main d'un jou
     Target_P.main = self.arg[0][0].main
     self.arg[0][0].main = temp
     self.arg[0][0].main.remove(self.arg[0][0].main[-1])
-    Done = True
-    return Done
+    return True
 
 
 """
@@ -428,7 +425,7 @@ L'effet doit être "jail_handler"
 """
 
 
-def jail_handler(self):
+def jail_handler(self) -> bool:
     list_Player_targetable = []
     if self.name == "Emprisonnement":  # Réutilisation de edit_effet
         [list_Player_targetable.append(player) for player in self.arg[0] if self.name not in player.status]
@@ -453,7 +450,7 @@ L'effet doit être "thief_handler"
 """
 
 
-def thief_handler(self):
+def thief_handler(self) -> bool:
     if self.name == "Voleur":  # Réutilisation de edit_effet
         return edit_status(True, "Voleur", self.arg[0][0])  # applique l'effet voleur au joueur actuel
     list_Player_targetable = []
