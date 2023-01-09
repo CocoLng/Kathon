@@ -46,10 +46,10 @@ class BoarGame{
 __
 __init__()
 __str__():str
-detect (card : CartChemin):str
-card_set (card : CartChemin , pos : list of int): bool
+detect (card : CardChemin):str
+card_set (card : CardChemin , pos : list of int): bool
 del_card (pos : list of int): bool
-add_card (card : CartChemin, pos : list of int,admin : bool): bool
+add_card (card : CardChemin, pos : list of int,admin : bool): bool
 current (pos : list of int): CardChemin
 }
 BoarGame "4..*" o-- Card
@@ -62,6 +62,7 @@ class Player{
 +status: string
 __
 __init__(name:string): void
+__str__(): str
 del_card(extension=False : bool, deck=None : ArrayList, quantitee=1 : int): bool
 play(p_list :Player List, map_game :ArrayList:, extension : bool, deck : ArrayList): bool
 get_card(deck : Card List,nbr_tirage :int): bool
