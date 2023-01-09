@@ -193,15 +193,15 @@ class BoardGame:
     
     def add_card(self, card, pos, admin=False):
         
-        # on ajoute le decalage de l'indice zeros pour que l'on puisse avoir des valeure negative dans les positions
+        # on ajoute le décalage de l'indice zeros pour que l'on puisse avoir des valeurs negative dans les positions
         pos[0] = pos[0] - self.decalage[0]
         pos[1] = pos[1] - self.decalage[1]
         
-        # si elle est a l exterieur nous devont ettendre la carte
+        # si elle est à l'extérieur nous devons étendre la carte
         a = pos[0]
         b = pos[1]
-        print(pos)
-        # on verifie la taille de la map par rapport a la position demande
+        
+        # on vérifie la taille de la map par rapport a la position demande
         # si la position demande est en dehors de la map alors Xa/Ya = True
         # cela indique que l'on vas agrandir la map soit sur l axe des X soit Y ou les deux
         if -2 < pos[0] < len(self.__map_) + 1 and -2 < pos[1] < len(self.__map_[0]) + 1 or admin:
@@ -215,14 +215,14 @@ class BoardGame:
             else:
                 Ya = False
 
-            # on regarde si la position ou l on veux poser la carte est deja prise
+            # on regarde si la position ou l'on veut poser la carte est deja prise
             if not Xa and not Ya:
                 if not (self.__map_[pos[0]][pos[1]] == []):
                     print("Carte deja presente")
                     return False
 
             else:
-                # Xa et Ya nous donne l information sur si on est a l'exterieur
+                # Xa et Ya nous donne l'information sur si on est à l'extérieur
                 # en x ou en y donc soit rajouter une/des ligne(s) ou une/des colonne(s)
 
                 if Xa:
@@ -249,9 +249,9 @@ class BoardGame:
                             [self.__map_[k].append([]) if pos[1] > i else self.__map_[k].insert(0, []) for i in range(L)]
 
                 if Ya:
-                    # on regarde si l'indice cherché est  negatif si il est negatif on agrandi la map en fesant un insert
-                    # a l indice 0 sinon un append on recupere en meme temps l information de combien de case on doit
-                    # agrandir la map
+                    # on regarde si l'indice cherché est  negatif si il est negatif on agrandi la map en fesant un
+                    # insert a l indice 0 sinon un append on recupere en meme temps l information de combien de case
+                    # on doit agrandir la map
                     if pos[1] >= 0:
                         Ylen = pos[1] - len(self.__map_[0]) + 1
                     else:
@@ -263,8 +263,8 @@ class BoardGame:
                     for j in range(len(self.__map_)):
                         [self.__map_[j].append([]) if b > 0 else self.__map_[j].insert(0, []) for _ in range(Ylen)]
 
-            # apres avoir mis a jour la taille de la map on vas ranger la carte dans notre tableau on regarde si on est
-            # en mod admin si oui on poseras la carte sans ondition sinon on regarderais si la carte est possable
+            # apres avoir mis à jour la taille de la map on va ranger la carte dans notre tableau, on regarde si on est
+            # en mod admin si oui on posera la carte sans conditions sinon on regarderait si la carte est possable
         if not admin:
                 # cette methode permet d ajouter la carte à la map
                 if self.card_set(card, [a, b]):
