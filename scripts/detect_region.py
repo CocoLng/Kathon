@@ -33,9 +33,7 @@ class ConnectionEdge:  # Classe de connection entre les objets
             self.__name = name
         else:
             pass
-            # print('le nom de l'objet cree ne correspond pas aux different nom attendu, pour retier cette ligne de
-            # code, allez : detect_region.py ligne 33')
-    
+
     def __flag_(self, start):  # permet de recuperer l'information de la source
         if self.__source:
             return self.flag
