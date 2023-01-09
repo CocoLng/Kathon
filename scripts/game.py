@@ -104,8 +104,8 @@ class Game:
             # Regarde si le joueur suivant est le premier, si oui, nous n'afficherons plus le role du joueur
             if first_player == self.p_round[0].name: first_turn = False
             
-            # print("\nFIN de votre tour, analyser la map_game et retenez vos cartes si vous le désirez.")
-            # input("Pressez enter quand vous avez fini pour confirmer la fin de votre tour\n...")
+            print("\nFIN de votre tour, analyser la map_game et retenez vos cartes si vous le désirez.")
+            input("Pressez enter quand vous avez fini pour confirmer la fin de votre tour\n...")
             
             self.next_player()  # Gere le passage au joueur suivant
     
