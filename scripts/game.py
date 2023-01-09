@@ -12,7 +12,6 @@ class Game:
         self.p_list = None
         self.extension = main.extension
         self.list_players = [Player(player) for player in main.list_players]  # Liste des joueurs
-        cls_screen()
     
     def __enter__(self) -> list:
         cls_screen()  # Efface le terminal
