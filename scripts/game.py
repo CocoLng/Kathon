@@ -233,7 +233,7 @@ class Game:
                             player.score += 1
                             break
                         else:
-                            print("Ce joueur n'a plus de pépites à voler")
+                            print("Ce joueur n'a plus de pépites à voler, ou sinon vous essayez de vous voler vous-même")
 
 
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre
