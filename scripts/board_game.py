@@ -84,7 +84,6 @@ class BoardGame:
         flag = False
         
         for x_y in [-1, 1]:
-            print(x_y)
             if 0 <= pos[0] + x_y < len(self.__map_):
                 try:
                     
@@ -201,11 +200,11 @@ class BoardGame:
         # si elle est a l exterieur nous devont ettendre la carte
         a = pos[0]
         b = pos[1]
-        
+        print(pos)
         # on verifie la taille de la map par rapport a la position demande
         # si la position demande est en dehors de la map alors Xa/Ya = True
         # cela indique que l'on vas agrandir la map soit sur l axe des X soit Y ou les deux
-        if -1 < pos[0] < len(self.__map_) + 1 and -1 <  pos[1] > len(self.__map_[0]) + 1 or admin:
+        if -2 < pos[0] < len(self.__map_) + 1 and -2 < pos[1] < len(self.__map_[0]) + 1 or admin:
             if len(self.__map_) <= pos[0] or pos[0] < 0:
                 Xa = True
             else:
