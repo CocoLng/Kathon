@@ -191,9 +191,12 @@ class Game:
                     
                     elif 'GREEN' in list_flag or 'BLUE' in list_flag:
                         # S'il y a une porte verte ou bleue sur le chemin
-                        self.p_list = list(  # On attribue la victoire aux chercheurs de la bonne couleurs
-                            filter(lambda x: x.role.name in {self.p_round[0].role.name, 'Boss'},
-                                   self.p_list))
+                        if 'GREEN' in list_flag:
+                            self.p_list = list(
+                                filter(lambda x: x.role.name in {'Chercheurs d or Team Vert', 'Boss'}, self.p_list))
+                        else:
+                            self.p_list = list(
+                                filter(lambda x: x.role.name in {'Chercheurs d or Team Bleu', 'Boss'}, self.p_list))
             
             else:  # les saboteurs gagnent
                 self.p_list = list(filter(lambda x: x.role.name[0] == "S", self.p_list))
@@ -212,6 +215,7 @@ class Game:
             
             # Liste des joueurs qui ont gagné, pour pouvoir les voler
             p_gagnant = [x for n in (self.p_list, list_geologue, list_profiteur) for x in n]
+            [print(player.role.name,';',player.score) for player in p_gagnant]
             # Si le score est nul, c'est que le gagnant a rien gagné
             # On va le retirer de la list des gagnants de manière à éviter qu'il puisse se faire voler
             # Tour des voleurs
@@ -220,8 +224,8 @@ class Game:
                     len(p_gagnant) == 1 and p_gagnant[0] == P_voleur[0]):
                 for player in P_voleur:
                     self.next_player(P_voleur)  # On passe au voleur suivant
+                    P_voleur.remove(player) # On retire le voleur de la liste
                     while True:  # ne peut voler que les joueurs qui viennent de gagner
-                        P_voleur.remove(player)
                         print("THIEF TIME hehe\nChoissez à quel gagnant vous souhaitez voler une pépite :\n")
                         [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
                          enumerate(p_gagnant, 1)]
@@ -231,6 +235,8 @@ class Game:
                             player.score += 1
                             P_voleur.append(player)
                             break
+                        else:
+                            print("Ce joueur n'a plus de pépites à voler")
 
 
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre
