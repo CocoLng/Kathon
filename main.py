@@ -9,7 +9,7 @@ class Main:  # Classe principale
     
     def __init__(self):
         self.extension = Menu()  # Menu de lancement
-        self.nb_manches = 0  # Nombre de manches jouées
+        self.nb_manches = 2  # Nombre de manches jouées
         self.list_players = self.init_player()  # Liste de noms des joueurs
     
     def recap(self):  # Affiche le récapitulatif de la manche

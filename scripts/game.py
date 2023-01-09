@@ -1,4 +1,4 @@
-from os import path
+import os
 from random import shuffle
 from time import sleep
 
@@ -99,7 +99,7 @@ class Game:
             # Une fois que le joueur a joué nous passons au suivant, stocké en position 0
             # Le joueur qui vient de finir son tour passe en dernière position
             
-            if P_Alive: self.p_round.append(self.p_round.pop(0))# Si le joueur est mort, on ne le remet
+            if P_Alive: self.p_round.append(self.p_round.pop(0))  # Si le joueur est mort, on ne le remet
             # pas en fin de liste
             # Regarde si le joueur suivant est le premier, si oui, nous n'afficherons plus le role du joueur
             if first_player == self.p_round[0].name: first_turn = False
@@ -223,7 +223,7 @@ class Game:
                     len(p_gagnant) == 1 and p_gagnant[0] == P_voleur[0]):
                 for player in P_voleur:
                     self.next_player(P_voleur)  # On passe au voleur suivant
-                    P_voleur.remove(player) # On retire le voleur de la liste
+                    P_voleur.remove(player)  # On retire le voleur de la liste
                     while True:  # ne peut voler que les joueurs qui viennent de gagner
                         print("THIEF TIME hehe\nChoissez à quel gagnant vous souhaitez voler une pépite :\n")
                         [(print('[', i, ']', x.name, "(", x.role.name, ')', sep='', end='  ')) for i, x in
@@ -239,12 +239,11 @@ class Game:
 
 
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre
-    # system('cls' if name=='nt' else 'clear')
-    # sleep(1)  # Attend 1 seconde pour laisser le temps de clear la console
-    pass
+    os.system('cls' if os.name == 'nt' else 'clear')
+    sleep(1)  # Attend 1 seconde pour laisser le temps de clear la console
 
 
 def readfile(path_join, part_explain=0):  # Permet de lire un fichier texte, ici principalement à but d'affichage
-    with open(path.join(path.dirname(__file__), path_join), 'r') as f:
+    with open(os.path.join(os.path.dirname(__file__), path_join), 'r') as f:
         f_split = f.read().split("SUB_PART")  # Nous décomposons notre fichier tous les SUB_PART
         print(f_split[part_explain])  # Nous affichons la partie demandée

@@ -2,15 +2,15 @@
 # des objets à une source et de savoir si l'objet regardé est
 # connecté à la source voulue
 
-class ConnectionEdge: # Classe de connection entre les objets
+class ConnectionEdge:  # Classe de connection entre les objets
     
     def __init__(self, name, flag=None, source=False):
-        self.delet = False # permet d'activer ou de désactiver la fonction de suppression
-        self.flag = flag # permet de savoir si l'objet est connecté à la source
-        self.__source = source # permet de savoir si l'objet est la source
-        self.__inputo = [] # liste des objets connectés en input
-        self.__outputo = [] # liste des objets connectés en output
-        self.__name = name # nom de la connection
+        self.delet = False  # permet d'activer ou de désactiver la fonction de suppression
+        self.flag = flag  # permet de savoir si l'objet est connecté à la source
+        self.__source = source  # permet de savoir si l'objet est la source
+        self.__inputo = []  # liste des objets connectés en input
+        self.__outputo = []  # liste des objets connectés en output
+        self.__name = name  # nom de la connection
     
     # flag_loop et __flag_ permettent de récuperer l'information à quelle source
     # est connectée l'objet concerné d'objet connecté à une source
@@ -29,14 +29,14 @@ class ConnectionEdge: # Classe de connection entre les objets
     # condition propre aux jeux sur les noms de nos objets
     @name.setter
     def name(self, name):
-        if name in ['up', 'down', 'right', 'left']: # si le nom est une des quatres direction
+        if name in ['up', 'down', 'right', 'left']:  # si le nom est une des quatres direction
             self.__name = name
         else:
             pass
             # print('le nom de l'objet cree ne correspond pas aux different nom attendu, pour retier cette ligne de
             # code, allez : detect_region.py ligne 33')
     
-    def __flag_(self, start): # permet de recuperer l'information de la source
+    def __flag_(self, start):  # permet de recuperer l'information de la source
         if self.__source:
             return self.flag
         else:
@@ -78,7 +78,7 @@ class ConnectionEdge: # Classe de connection entre les objets
         else:
             self.__outputo.append(obj)
     
-    def connect(self, obj): # Permet de connecter deux objets
+    def connect(self, obj):  # Permet de connecter deux objets
         self.delet = False
         obj.delet = False
         self.inputo = obj
@@ -88,7 +88,7 @@ class ConnectionEdge: # Classe de connection entre les objets
     # pour simplifier l'utilisation de la fonction, nous considérons que si l'utilisateur rentre
     # je veux déconnecter A et B sera la meme chose que déconnecter B et A
     # donc l'ordre n'a plus d'importance lors de l'utilisation de la fonction
-    def disconnect(self, obj): # Permet de déconnecter deux objets
+    def disconnect(self, obj):  # Permet de déconnecter deux objets
         self.delet = True
         obj.delet = True
         try:

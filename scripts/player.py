@@ -38,7 +38,7 @@ def flip_card(card):  # Retourne la carte que le joueur a choisie
                 porte.name = antipode_d_u[antipode_d_u.index(porte.name) - 1]
             if porte.name in antipode_l_r:
                 porte.name = antipode_l_r[antipode_l_r.index(porte.name) - 1]
-
+        
         card.aff = True  # On affiche la carte tournée au joueur
     except (IndexError, ValueError):  # En cas d'erreur, on retourne False pour faire rejouer le joueur
         return False
@@ -46,29 +46,29 @@ def flip_card(card):  # Retourne la carte que le joueur a choisie
 
 
 class Player:  # Classe du joueur humain
-
+    
     def __init__(self, name):
         self.score = 0
         self.name = name
         self.role = None
         self.main = []  # Liste des cartes dans la main du joueur
         self.status = []  # Liste des malus du joueur, contient également l'attribut voleur
-
+    
     def __str__(self):
         Aff = "-" * 20
         return Aff + f"\n name = {self.name}" + f"\n score = {self.score}" + f"\n card = {[i.name for i in self.main]}" + '\n' + Aff
-
+    
     @property
     def score(self):  # Retourne le score du joueur
         return self.__score
-
+    
     @score.setter  # Modifie le score du joueur, vérifie que le score est positif
     def score(self, score):
         if score >= 0:
             self.__score = score
         else:
             print("Impossible de retirer des point au joueur, il en a pas")
-
+    
     def del_card(self, extension=False, deck=None, quantitee=1):  # Retire une carte de la main du joueur et la défause
         volontaire = False  # Permet de savoir si le joueur a choisi de se retirer un malus, si False, il se retire un
         # malus
@@ -84,7 +84,7 @@ class Player:  # Classe du joueur humain
             volontaire = True
             print(f"Combien de cartes voulez-vous piochez ? (1-{min(len(deck.list_card), 3)})")
             quantitee = input_player(1, min(len(deck.list_card), 3))
-
+        
         for i in range(quantitee):  # Pour chaque carte à défausser
             print("Voici votre main :")
             [print(f"[{i}] {card.name}") for i, card in enumerate(self.main, 1)]
@@ -103,14 +103,14 @@ class Player:  # Classe du joueur humain
         # Si le joueur était volontaire, alors il pioche autant de carte que demandé
         if volontaire: self.get_card(deck, quantitee - 1)  # -1 car a la fin du tour il re pioche
         return True
-
+    
     def play(self, p_list, map_game, extension, deck):  # Fonction qui permet au joueur de jouer
         # Regarde si le joueur a un malus, qui n'est pas le voleur
         if len(self.status) != 0 and not ((len(self.status) == 1) and self.status[0] == "Voleur"):
             print("Aie..\nVous êtes affectés par ceci :")
             [print(f"- {status}") for status in self.status if status != "Voleur"]
             print("Ceci va vous empêchez de posez des cartes chemins tant que vous ne vous en débarrassez pas.\n")
-
+        
         # Si le joueur n'a pas de status, ou que le status est le voleur, alors il peut jouer aussi des cartes chemins
         print("\nVoici votre main :")
         [print(f"[{i}] {card.name}") for i, card in enumerate(self.main, 1)]  # Affiche la main du joueur
@@ -120,14 +120,14 @@ class Player:  # Classe du joueur humain
         else:
             v_min = -2
         card = input_player(v_min, len(self.main))
-
+        
         try:
-            if card > 0: # Si le joueur a choisi une carte, pas le menu, alors on l'attribue
+            if card > 0:  # Si le joueur a choisi une carte, pas le menu, alors on l'attribue
                 card = self.main[card - 1]
-            else: # Si le joueur a choisi le menu
-                if card == -1: # Rappel du role du joueur
+            else:  # Si le joueur a choisi le menu
+                if card == -1:  # Rappel du role du joueur
                     print(f"\nRappel, vous êtes un :\n{self.role}\n")
-                    return False # On retourne False pour faire rejouer le joueur
+                    return False  # On retourne False pour faire rejouer le joueur
                 # Si le joueur veut défausser une carte, on vérifie qu'il a un malus à se retirer
                 if card == -3 and (("Voleur" not in self.status) and len(self.status) == 1) and len(self.status) != 0:
                     print("\nSélectionnez deux cartes que vous défaussait, puis vous perdrez un malus :\n")
@@ -138,56 +138,56 @@ class Player:  # Classe du joueur humain
                         return True
                     else:
                         return False
-                elif card == -3: # Si le joueur veut défausser deux carte mais qu'il n'a pas de malus
+                elif card == -3:  # Si le joueur veut défausser deux carte mais qu'il n'a pas de malus
                     print("\n❌ Vous n'avez pas de malus a supprimé, veuillez choisir une autre option.\n\n")
                     return False
                 else:
                     return self.del_card(extension, deck)
-
-            if card.__class__.__name__ == 'CardChemin': # Si la carte est un chemin
-                if len(self.status) == 0 or self.status[0] == 'Voleur': # Si le joueur n'a pas de malus, ou que le
+            
+            if card.__class__.__name__ == 'CardChemin':  # Si la carte est un chemin
+                if len(self.status) == 0 or self.status[0] == 'Voleur':  # Si le joueur n'a pas de malus, ou que le
                     # malus est le voleur
-
-                    while True: # Boucle pour demander au joueur ou il veut poser sa carte
+                    
+                    while True:  # Boucle pour demander au joueur ou il veut poser sa carte
                         print(f"Vous allez jouer :{print(card)}")
                         print("[1] Continuer\n[2] Tourner la carte\n[3] Retour selection")
                         rep = input_player(1, 3)
-                        if rep == 1: # Si le joueur veut jouer la carte
+                        if rep == 1:  # Si le joueur veut jouer la carte
                             print(map_game)
                             pos = ask_pos()
-                            if pos and map_game.add_card(card, pos): # Si la carte a été posée, on la retire de la main
+                            if pos and map_game.add_card(card, pos):  # Si la carte a été posée, on la retire de la main
                                 self.main.remove(card)
                                 return True
                             else:
                                 return False
-                        elif rep == 2: # Si le joueur veut tourner sa carte
+                        elif rep == 2:  # Si le joueur veut tourner sa carte
                             flip_card(card)
                         else:
                             return False
-
-            if card.__class__.__name__ == 'CardAction': # Si la carte est une action
-                card.arg = [p_list, map_game] # On lui donne les arguments du jeu actuel
-                if card.effect(): # Si l'effet de la carte a été appliqué
+            
+            if card.__class__.__name__ == 'CardAction':  # Si la carte est une action
+                card.arg = [p_list, map_game]  # On lui donne les arguments du jeu actuel
+                if card.effect():  # Si l'effet de la carte a été appliqué
                     try:
-                        self.main.remove(card) # On retire la carte de la main, certaines cartes peuvent s'auto
+                        self.main.remove(card)  # On retire la carte de la main, certaines cartes peuvent s'auto
                         # détruire d'ou le try
                     except ValueError:
                         pass  # la carte se détruit parfois d'elle meme, donc on ne fait rien dans ce cas
                     return True
             return False
-
+        
         except IndexError:
             print("Vous n'avez pas asser de cartes")
             return False
-
-    def get_card(self, deck, nbr_carte=1): # Fonction qui permet au joueur de piocher des cartes
+    
+    def get_card(self, deck, nbr_carte=1):  # Fonction qui permet au joueur de piocher des cartes
         Done = False
-        if len(deck.list_card) != 0: # Si le deck n'est pas vide
+        if len(deck.list_card) != 0:  # Si le deck n'est pas vide
             Done = True
-            for n in range(nbr_carte): # On pioche autant de carte que demandé
+            for n in range(nbr_carte):  # On pioche autant de carte que demandé
                 card = deck.draw_card()
                 if card:
                     self.main.append(card)
-                Done = card and Done # Si la carte a été piochée, alors Done est True
+                Done = card and Done  # Si la carte a été piochée, alors Done est True
                 print(f"Vous avez pioché : {self.main[-1].name}")
-        return Done # Si Done est True, alors le joueur a pioché une carte
+        return Done  # Si Done est True, alors le joueur a pioché une carte
