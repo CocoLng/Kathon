@@ -255,8 +255,10 @@ class Game:
                         if p_gagnant[selected - 1].score > 0 and player != p_gagnant[selected - 1]:
                             p_gagnant[selected - 1].score -= 1
                             player.score += 1
+                            # On ajoute le voleur à la liste des gagnants pour qu'il puisse se faire voler
                             if player not in p_gagnant: p_gagnant.append(player)
-                            if p_gagnant[selected - 1] == 0: p_gagnant.remove(player)
+                            # On retire le joueur volé de la liste des gagnants s'il n'a plus de pépites
+                            if p_gagnant[selected - 1].score == 0: p_gagnant.remove(player)
                             break
                         else:
                             print("\nCe joueur n'a plus de pépites à voler, ou sinon vous essayez de vous voler "
