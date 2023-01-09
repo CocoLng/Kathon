@@ -149,7 +149,7 @@ class Game:
         else:  # Si l'extension est activée
     
             ###############################################################################
-            #                             Liste les voleurs                              #
+            #                              Liste les voleurs                              #
             ###############################################################################
             P_voleur = []
             [P_voleur.append(player) for player in self.p_list if
@@ -256,12 +256,15 @@ class Game:
                             p_gagnant[selected - 1].score -= 1
                             player.score += 1
                             if player not in p_gagnant: p_gagnant.append(player)
+                            if p_gagnant[selected - 1] == 0: p_gagnant.remove(player)
                             break
                         else:
                             print("\nCe joueur n'a plus de pépites à voler, ou sinon vous essayez de vous voler "
                                   "vous-même\n")
 
-
+###############################################################################
+#                                Fonctions                                    #
+###############################################################################
 def cls_screen():  # Sert à effacer la console, utile pour masquer les informations d'un joueur à an autre
     os.system('cls' if os.name == 'nt' else 'clear')
     sleep(1)  # Attend 1 seconde pour laisser le temps de clear la console
