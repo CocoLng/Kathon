@@ -3,11 +3,12 @@
 class Main {
 +extension: bool
 +nb_manches: int
++list_player: string List
 __
 __init__()
-recap(): bool
-init_players(): ArrayList
-run_game(): True
+recap(): void
+init_players(): string List
+run_game(): bool
 }
 
 
@@ -22,6 +23,7 @@ class Game{
 +gold_found: bool
 __
 __init__(main : Main ): void
+__enter__()
 next_player( next_player = None : Player):void
 init_round(): void
 repartition_card(): void
@@ -29,9 +31,9 @@ run_round(): void
 reward_time(): void
 }
 
-Game"1" *- BoarGame
-Game"1..12" *- Player
-Game"3" *- Deck
+Game"1" o- BoarGame
+Game"1..12" o- Player
+Game"3" o- Deck
 
 
 
